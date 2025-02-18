@@ -78,6 +78,14 @@ class MockActor(Actor):
         while True:
             await asyncio.sleep(1)
 
+    @classmethod
+    async def create(
+        cls, initial_dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]
+    ) -> "MockActor":
+        """Create a new actor."""
+        actor = cls(initial_dispatch, receiver)
+        return actor
+
 
 @dataclass
 class TestEnv:
@@ -101,7 +109,7 @@ async def test_env() -> AsyncIterator[TestEnv]:
     channel = Broadcast[Dispatch](name="dispatch ready test channel")
 
     actors_service = ActorDispatcher(
-        actor_factory=MockActor,
+        actor_factory=MockActor.create,
         running_status_receiver=channel.new_receiver(),
         dispatch_identity=lambda dispatch: dispatch.id,
     )
@@ -296,14 +304,14 @@ async def test_manage_abstraction(
         ):
             await dispatcher.start_managing(
                 dispatch_type="MANAGE_TEST",
-                actor_factory=MockActor,
+                actor_factory=MockActor.create,
                 merge_strategy=strategy,
             )
 
         # pylint: disable=protected-access
         assert "MANAGE_TEST" in dispatcher._actor_dispatchers
         actor_manager = dispatcher._actor_dispatchers["MANAGE_TEST"]
-        assert actor_manager._actor_factory == MockActor
+        assert actor_manager._actor_factory == MockActor.create
 
         dispatch = Dispatch(
             replace(

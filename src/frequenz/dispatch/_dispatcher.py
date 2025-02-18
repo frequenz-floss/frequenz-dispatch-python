@@ -8,7 +8,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from asyncio import Event
-from typing import Callable
+from typing import Awaitable, Callable
 
 from frequenz.channels import Receiver
 from frequenz.client.dispatch import Client
@@ -236,7 +236,9 @@ class Dispatcher(BackgroundService):
         self,
         dispatch_type: str,
         *,
-        actor_factory: Callable[[DispatchInfo, Receiver[DispatchInfo]], Actor],
+        actor_factory: Callable[
+            [DispatchInfo, Receiver[DispatchInfo]], Awaitable[Actor]
+        ],
         merge_strategy: MergeStrategy | None = None,
     ) -> None:
         """Manage actors for a given dispatch type.

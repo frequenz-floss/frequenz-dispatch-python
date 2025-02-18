@@ -7,7 +7,7 @@ import asyncio
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Awaitable
 
 from frequenz.channels import Broadcast, Receiver
 from frequenz.client.dispatch.types import TargetComponents
@@ -136,7 +136,9 @@ class ActorDispatcher(BackgroundService):
 
     def __init__(
         self,
-        actor_factory: Callable[[DispatchInfo, Receiver[DispatchInfo]], Actor],
+        actor_factory: Callable[
+            [DispatchInfo, Receiver[DispatchInfo]], Awaitable[Actor]
+        ],
         running_status_receiver: Receiver[Dispatch],
         dispatch_identity: Callable[[Dispatch], int] | None = None,
     ) -> None:
@@ -189,7 +191,7 @@ class ActorDispatcher(BackgroundService):
         else:
             try:
                 _logger.info("Starting actor for dispatch type %r", dispatch.type)
-                actor = self._actor_factory(
+                actor = await self._actor_factory(
                     dispatch_update,
                     self._updates_channel.new_receiver(limit=1, warn_on_overflow=False),
                 )
