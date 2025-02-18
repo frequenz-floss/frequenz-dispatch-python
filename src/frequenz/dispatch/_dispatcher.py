@@ -221,7 +221,18 @@ class Dispatcher(BackgroundService):
         for instance in self._actor_dispatchers.values():
             instance.cancel()
 
-    async def start_dispatching(
+    def is_managed(self, dispatch_type: str) -> bool:
+        """Check if the dispatcher is managing actors for a given dispatch type.
+
+        Args:
+            dispatch_type: The type of the dispatch to check.
+
+        Returns:
+            True if the dispatcher is managing actors for the given dispatch type.
+        """
+        return dispatch_type in self._actor_dispatchers
+
+    async def start_managing(
         self,
         dispatch_type: str,
         *,
@@ -234,7 +245,7 @@ class Dispatcher(BackgroundService):
         start, stop and reconfigure actors based on received dispatches.
 
         You can await the `Dispatcher` instance to block until all types
-        registered with `start_dispatching()` are stopped using
+        registered with `start_managing()` are stopped using
         `stop_dispatching()`
 
         Args:
