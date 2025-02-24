@@ -184,7 +184,13 @@ class DispatchScheduler(BackgroundService):
 
         Returns:
             A new receiver for running state status.
+
+        Raises:
+            RuntimeError: If the dispatch service is not running.
         """
+        if not self._tasks:
+            raise RuntimeError("Dispatch service not started")
+
         # Find all matching dispatches based on the type and collect them
         dispatches = [
             dispatch for dispatch in self._dispatches.values() if dispatch.type == type
