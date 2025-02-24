@@ -212,7 +212,8 @@ class DispatchScheduler(BackgroundService):
             )
 
         for dispatch in dispatches:
-            await self._send_running_state_change(dispatch)
+            if dispatch.started:
+                await self._send_running_state_change(dispatch)
 
         return receiver
 
