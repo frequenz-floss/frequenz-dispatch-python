@@ -5,7 +5,6 @@
 
 import asyncio
 import heapq
-import logging
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta, timezone
 from typing import AsyncIterator, Callable, Iterator, cast
@@ -70,7 +69,6 @@ class MockActor(Actor):
     ) -> None:
         """Initialize the actor."""
         super().__init__(name="MockActor")
-        logging.info("MockActor created")
         self.initial_dispatch = initial_dispatch
         self.receiver = receiver
 
@@ -153,14 +151,11 @@ async def test_simple_start_stop(
     fake_time.shift(timedelta(seconds=1))
     await asyncio.sleep(1)
     await asyncio.sleep(1)
-    logging.info("Sent dispatch")
 
     event = test_env.actor(1).initial_dispatch
     assert event.options == {"test": True}
     assert event.components == dispatch.target
     assert event.dry_run is False
-
-    logging.info("Received dispatch")
 
     assert test_env.actor(1).is_running is True
 
