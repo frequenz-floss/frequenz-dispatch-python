@@ -8,7 +8,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from asyncio import Event
-from typing import Awaitable, Callable
+from typing import Awaitable, Callable, Self
 
 from frequenz.channels import Receiver
 from frequenz.client.dispatch import Client
@@ -221,6 +221,10 @@ class Dispatcher(BackgroundService):
         for instance in self._actor_dispatchers.values():
             instance.cancel()
 
+    async def wait_for_initialization(self) -> None:
+        """Wait until the background service is initialized."""
+        await self._bg_service.wait_for_initialization()
+
     def is_managed(self, dispatch_type: str) -> bool:
         """Check if the dispatcher is managing actors for a given dispatch type.
 
@@ -271,7 +275,8 @@ class Dispatcher(BackgroundService):
         dispatcher = ActorDispatcher(
             actor_factory=actor_factory,
             running_status_receiver=await self.new_running_state_event_receiver(
-                dispatch_type, merge_strategy=merge_strategy
+                dispatch_type,
+                merge_strategy=merge_strategy,
             ),
             dispatch_identity=(
                 id_identity if merge_strategy is None else merge_strategy.identity
@@ -298,6 +303,19 @@ class Dispatcher(BackgroundService):
     def client(self) -> Client:
         """Return the client."""
         return self._client
+
+    @override
+    async def __aenter__(self) -> Self:
+        """Enter an async context.
+
+        Start this background service.
+
+        Returns:
+            This background service.
+        """
+        await super().__aenter__()
+        await self.wait_for_initialization()
+        return self
 
     def new_lifecycle_events_receiver(
         self, dispatch_type: str
@@ -368,5 +386,6 @@ class Dispatcher(BackgroundService):
             A new receiver for dispatches whose running status changed.
         """
         return await self._bg_service.new_running_state_event_receiver(
-            dispatch_type, merge_strategy=merge_strategy
+            dispatch_type,
+            merge_strategy=merge_strategy,
         )

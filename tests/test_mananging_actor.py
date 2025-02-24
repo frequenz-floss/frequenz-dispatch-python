@@ -311,7 +311,9 @@ async def test_manage_abstraction(
         # pylint: disable=protected-access
         assert "MANAGE_TEST" in dispatcher._actor_dispatchers
         actor_manager = dispatcher._actor_dispatchers["MANAGE_TEST"]
+        # pylint: disable=comparison-with-callable
         assert actor_manager._actor_factory == MockActor.create
+        # pylint: enable=comparison-with-callable
 
         dispatch = Dispatch(
             replace(

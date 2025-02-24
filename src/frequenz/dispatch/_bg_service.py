@@ -129,6 +129,13 @@ class DispatchScheduler(BackgroundService):
         always at index 0.
         """
 
+        self._initial_fetch_event = asyncio.Event()
+        """The initial fetch event."""
+
+    async def wait_for_initialization(self) -> None:
+        """Wait for the initial fetch to complete."""
+        await self._initial_fetch_event.wait()
+
     # pylint: disable=redefined-builtin
     def new_lifecycle_events_receiver(self, type: str) -> Receiver[DispatchEvent]:
         """Create a new receiver for lifecycle events.
@@ -144,7 +151,10 @@ class DispatchScheduler(BackgroundService):
         )
 
     async def new_running_state_event_receiver(
-        self, type: str, *, merge_strategy: MergeStrategy | None = None
+        self,
+        type: str,
+        *,
+        merge_strategy: MergeStrategy | None = None,
     ) -> Receiver[Dispatch]:
         """Create a new receiver for running state events of the specified type.
 
@@ -171,6 +181,7 @@ class DispatchScheduler(BackgroundService):
         Args:
             type: The type of events to receive.
             merge_strategy: The merge strategy to use.
+
         Returns:
             A new receiver for running state status.
         """
@@ -272,6 +283,8 @@ class DispatchScheduler(BackgroundService):
         This is used for the initial fetch and for re-fetching all dispatches
         if the connection was lost.
         """
+        self._initial_fetch_event.clear()
+
         old_dispatches = self._dispatches
         self._dispatches = {}
 
@@ -310,6 +323,8 @@ class DispatchScheduler(BackgroundService):
             # which is used in above in _running_state_change
             dispatch._set_deleted()  # pylint: disable=protected-access
             await self._lifecycle_events_tx.send(Deleted(dispatch=dispatch))
+
+        self._initial_fetch_event.set()
 
     async def _update_dispatch_schedule_and_notify(
         self, dispatch: Dispatch | None, old_dispatch: Dispatch | None

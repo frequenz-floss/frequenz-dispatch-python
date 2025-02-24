@@ -26,3 +26,5 @@ This release introduces a more flexible and powerful mechanism for managing disp
     * `Dispatcher.start_managing(dispatch_type, actor_factory, merge_strategy)` to manage your actor for the given type and merge strategy. All you need provide is an actor factory.
     * `Dispatcher.stop_managing(dispatch_type)` to stop dispatching for the given type.
     * `Dispatcher.is_managed(dispatch_type)` to check if dispatching is active for the given type.
+* A new method `Dispatcher.wait_for_initialization()` has been added to wait for all actors to be initialized.
+* When using `async with Dispatcher(..) as dispatcher`, the dispatcher will first wait for the dispatch service to be initialized before entering the block.
