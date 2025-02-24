@@ -473,12 +473,13 @@ async def test_dispatch_new_but_finished(
         new_dispatch,
         active=True,
         duration=timedelta(seconds=10),
-        start_time=_now() + timedelta(seconds=5),
+        start_time=_now() + timedelta(seconds=500),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
     )
 
     new_dispatch = await _test_new_dispatch_created(test_env, new_dispatch)
+    assert new_dispatch.started is False
 
     # Advance time to when the new dispatch should still not start
     fake_time.shift(timedelta(seconds=100))

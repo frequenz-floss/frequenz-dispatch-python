@@ -287,7 +287,10 @@ async def test_manage_abstraction(
         sender = channel.new_sender()
 
         async def new_mock_receiver(
-            _: Dispatcher, dispatch_type: str, *, merge_strategy: MergeStrategy | None
+            _: Dispatcher,
+            dispatch_type: str,
+            *,
+            merge_strategy: MergeStrategy | None,
         ) -> Receiver[Dispatch]:
             assert dispatch_type == "MANAGE_TEST"
             assert merge_strategy is strategy
