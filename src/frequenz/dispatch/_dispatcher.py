@@ -27,7 +27,10 @@ class Dispatcher(BackgroundService):
     """A highlevel interface for the dispatch API.
 
     This class provides a highlevel interface to the dispatch API.
-    It provides two receiver functions:
+    It provides receivers for various events and management of actors based on
+    dispatches.
+
+    The receivers shortly explained:
 
     * [Lifecycle events receiver][frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver]:
         Receives an event whenever a dispatch is created, updated or deleted.
@@ -41,6 +44,35 @@ class Dispatcher(BackgroundService):
         Any change that could potentially require the consumer to start, stop or
         reconfigure itself will cause a message to be sent.
 
+    Example: Managing an actor
+        ```python
+        import os
+        from frequenz.dispatch import Dispatcher, MergeByType
+        from unittest.mock import MagicMock
+
+        async def create_actor(dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]) -> Actor:
+            return MagicMock(dispatch=dispatch, receiver=receiver)
+
+        async def run():
+            url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
+            key  = os.getenv("DISPATCH_API_KEY", "some-key")
+
+            microgrid_id = 1
+
+            async with Dispatcher(
+                microgrid_id=microgrid_id,
+                server_url=url,
+                key=key
+            ) as dispatcher:
+                dispatcher.start_managing(
+                    dispatch_type="DISPATCH_TYPE",
+                    actor_factory=create_actor,
+                    merge_strategy=MergeByType(),
+                )
+
+                await dispatcher
+        ```
+
     Example: Processing running state change dispatches
         ```python
         import os
@@ -53,38 +85,36 @@ class Dispatcher(BackgroundService):
 
             microgrid_id = 1
 
-            dispatcher = Dispatcher(
+            async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
                 key=key
-            )
-            await dispatcher.start()
+            ) as dispatcher:
+                actor = MagicMock() # replace with your actor
 
-            actor = MagicMock() # replace with your actor
+                rs_receiver = dispatcher.new_running_state_event_receiver("DISPATCH_TYPE")
 
-            changed_running_status = dispatcher.new_running_state_event_receiver("DISPATCH_TYPE")
-
-            async for dispatch in changed_running_status:
-                if dispatch.started:
-                    print(f"Executing dispatch {dispatch.id}, due on {dispatch.start_time}")
-                    if actor.is_running:
-                        actor.reconfigure(
-                            components=dispatch.target,
-                            run_parameters=dispatch.payload, # custom actor parameters
-                            dry_run=dispatch.dry_run,
-                            until=dispatch.until,
-                        )  # this will reconfigure the actor
+                async for dispatch in rs_receiver:
+                    if dispatch.started:
+                        print(f"Executing dispatch {dispatch.id}, due on {dispatch.start_time}")
+                        if actor.is_running:
+                            actor.reconfigure(
+                                components=dispatch.target,
+                                run_parameters=dispatch.payload, # custom actor parameters
+                                dry_run=dispatch.dry_run,
+                                until=dispatch.until,
+                            )  # this will reconfigure the actor
+                        else:
+                            # this will start a new actor with the given components
+                            # and run it for the duration of the dispatch
+                            actor.start(
+                                components=dispatch.target,
+                                run_parameters=dispatch.payload, # custom actor parameters
+                                dry_run=dispatch.dry_run,
+                                until=dispatch.until,
+                            )
                     else:
-                        # this will start a new actor with the given components
-                        # and run it for the duration of the dispatch
-                        actor.start(
-                            components=dispatch.target,
-                            run_parameters=dispatch.payload, # custom actor parameters
-                            dry_run=dispatch.dry_run,
-                            until=dispatch.until,
-                        )
-                else:
-                    actor.stop()  # this will stop the actor
+                        actor.stop()  # this will stop the actor
         ```
 
     Example: Getting notification about dispatch lifecycle events
@@ -100,25 +130,23 @@ class Dispatcher(BackgroundService):
 
             microgrid_id = 1
 
-            dispatcher = Dispatcher(
+            async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                key=key
-            )
-            await dispatcher.start()  # this will start the actor
+                key=key,
+            ) as dispatcher:
+                events_receiver = dispatcher.new_lifecycle_events_receiver("DISPATCH_TYPE")
 
-            events_receiver = dispatcher.new_lifecycle_events_receiver("DISPATCH_TYPE")
-
-            async for event in events_receiver:
-                match event:
-                    case Created(dispatch):
-                        print(f"A dispatch was created: {dispatch}")
-                    case Deleted(dispatch):
-                        print(f"A dispatch was deleted: {dispatch}")
-                    case Updated(dispatch):
-                        print(f"A dispatch was updated: {dispatch}")
-                    case _ as unhandled:
-                        assert_never(unhandled)
+                async for event in events_receiver:
+                    match event:
+                        case Created(dispatch):
+                            print(f"A dispatch was created: {dispatch}")
+                        case Deleted(dispatch):
+                            print(f"A dispatch was deleted: {dispatch}")
+                        case Updated(dispatch):
+                            print(f"A dispatch was updated: {dispatch}")
+                        case _ as unhandled:
+                            assert_never(unhandled)
         ```
 
     Example: Creating a new dispatch and then modifying it.
@@ -138,35 +166,33 @@ class Dispatcher(BackgroundService):
 
             microgrid_id = 1
 
-            dispatcher = Dispatcher(
+            async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                key=key
-            )
-            await dispatcher.start()  # this will start the actor
+                key=key,
+            ) as dispatcher:
+                # Create a new dispatch
+                new_dispatch = await dispatcher.client.create(
+                    microgrid_id=microgrid_id,
+                    type="ECHO_FREQUENCY",  # replace with your own type
+                    start_time=datetime.now(tz=timezone.utc) + timedelta(minutes=10),
+                    duration=timedelta(minutes=5),
+                    target=ComponentCategory.INVERTER,
+                    payload={"font": "Times New Roman"},  # Arbitrary payload data
+                )
 
-            # Create a new dispatch
-            new_dispatch = await dispatcher.client.create(
-                microgrid_id=microgrid_id,
-                type="ECHO_FREQUENCY",  # replace with your own type
-                start_time=datetime.now(tz=timezone.utc) + timedelta(minutes=10),
-                duration=timedelta(minutes=5),
-                target=ComponentCategory.INVERTER,
-                payload={"font": "Times New Roman"},  # Arbitrary payload data
-            )
+                # Modify the dispatch
+                await dispatcher.client.update(
+                    microgrid_id=microgrid_id,
+                    dispatch_id=new_dispatch.id,
+                    new_fields={"duration": timedelta(minutes=10)}
+                )
 
-            # Modify the dispatch
-            await dispatcher.client.update(
-                microgrid_id=microgrid_id,
-                dispatch_id=new_dispatch.id,
-                new_fields={"duration": timedelta(minutes=10)}
-            )
-
-            # Validate the modification
-            modified_dispatch = await dispatcher.client.get(
-                microgrid_id=microgrid_id, dispatch_id=new_dispatch.id
-            )
-            assert modified_dispatch.duration == timedelta(minutes=10)
+                # Validate the modification
+                modified_dispatch = await dispatcher.client.get(
+                    microgrid_id=microgrid_id, dispatch_id=new_dispatch.id
+                )
+                assert modified_dispatch.duration == timedelta(minutes=10)
         ```
     """
 
@@ -247,12 +273,26 @@ class Dispatcher(BackgroundService):
     ) -> None:
         """Manage actors for a given dispatch type.
 
-        Creates and manages an ActorDispatcher for the given type that will
+        Creates and manages an
+        [`ActorDispatcher`][frequenz.dispatch.ActorDispatcher] for the given type that will
         start, stop and reconfigure actors based on received dispatches.
 
         You can await the `Dispatcher` instance to block until all types
         registered with `start_managing()` are stopped using
         `stop_dispatching()`
+
+        "Merging" means that when multiple dispatches are active at the same time,
+        the intervals are merged into one.
+
+        This also decides how instances are mapped from dispatches to actors:
+
+        * [`MergeByType`][frequenz.dispatch.MergeByType] — All dispatches map to
+        one single instance identified by the dispatch type.
+        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — A
+        dispatch maps to an instance identified by the dispatch type and target.
+        So different dispatches with equal type and target will map to the same
+        instance.
+        * `None` — No merging, each dispatch maps to a separate instance.
 
         Args:
             dispatch_type: The type of the dispatch to manage.

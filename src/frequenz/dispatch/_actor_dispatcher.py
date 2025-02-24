@@ -116,21 +116,19 @@ class ActorDispatcher(BackgroundService):
 
         microgrid_id = 1
 
-        dispatcher = Dispatcher(
+        async with Dispatcher(
             microgrid_id=microgrid_id,
             server_url=url,
             key=key
-        )
-        dispatcher.start()
+        ) as dispatcher:
+            status_receiver = dispatcher.new_running_state_event_receiver("EXAMPLE_TYPE")
 
-        status_receiver = dispatcher.new_running_state_event_receiver("EXAMPLE_TYPE")
+            managing_actor = ActorDispatcher(
+                actor_factory=MyActor.new_with_dispatch,
+                running_status_receiver=status_receiver,
+            )
 
-        managing_actor = ActorDispatcher(
-            actor_factory=MyActor.new_with_dispatch,
-            running_status_receiver=status_receiver,
-        )
-
-        await run(managing_actor)
+            await run(managing_actor)
     ```
     """
 

@@ -6,11 +6,50 @@ This release introduces a more flexible and powerful mechanism for managing disp
 
 ## Upgrading
 
+A new simplified way to manage actors has been introduced:
+
+Change your code from:
+```python
+dispatcher = Dispatcher(
+    microgrid_id=microgrid_id,
+    server_url=url,
+    key=key
+)
+dispatcher.start()
+
+status_receiver = dispatcher.new_running_state_event_receiver("EXAMPLE_TYPE")
+
+managing_actor = ActorDispatcher(
+    actor_factory=MyActor.new_with_dispatch,
+    running_status_receiver=status_receiver,
+)
+
+await run(managing_actor)
+```
+
+to
+
+```python
+async with Dispatcher(
+    microgrid_id=microgrid_id,
+    server_url=url,
+    key=key
+) as dispatcher:
+    await dispatcher.start_managing(
+        dispatch_type="EXAMPLE_TYPE",
+        actor_factory=MyActor.new_with_dispatch, # now async factory!
+        merge_strategy=MergeByType,
+    )
+    await dispatcher
+```
+
+Further changes:
+
 * `Dispatcher.start` is no longer `async`. Remove `await` when calling it.
 * Two properties have been replaced by methods that require a type as parameter.
     * `Dispatcher.lifecycle_events` has been replaced by the method `Dispatcher.new_lifecycle_events_receiver(self, dispatch_type: str)`.
     * `Dispatcher.running_status_change` has been replaced by the method `Dispatcher.new_running_state_event_receiver(self, dispatch_type: str, merge_strategy: MergeStrategy)`.
-* The managing actor constructor no longer requires the `dispatch_type` parameter. Instead you're expected to pass the type to the new-receiver function.
+* The managing actor constructor no longer requires the `dispatch_type` parameter. Instead you're expected to pass the type to the new_receiver function.
 * The `DispatchManagingActor` class has been renamed to `DispatchActorsService`.
     * It's interface has been simplified and now only requires an actor factory and a running status receiver.
     * It only starts/stops a single actor at a time now instead of a set of actors.

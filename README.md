@@ -21,8 +21,13 @@ The [`Dispatcher` class](https://frequenz-floss.github.io/frequenz-dispatch-pyth
 
 ```python
 import os
-from frequenz.dispatch import Dispatcher
 from unittest.mock import MagicMock
+from datetime import timedelta
+
+from frequenz.dispatch import Dispatcher, DispatchInfo, MergeByType
+
+async def create_actor(dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]) -> Actor:
+    return MagicMock(dispatch=dispatch, receiver=receiver)
 
 async def run():
     url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
@@ -30,38 +35,19 @@ async def run():
 
     microgrid_id = 1
 
-    dispatcher = Dispatcher(
+    async with Dispatcher(
         microgrid_id=microgrid_id,
         server_url=url,
-        key=key
-    )
-    await dispatcher.start()
+        key=key,
+    ) as dispatcher:
+        await dispatcher.start_managing(
+            dispatch_type="EXAMPLE_TYPE",
+            actor_factory=create_actor,
+            merge_strategy=MergeByType(),
+            retry_interval=timedelta(seconds=10)
+        )
 
-    actor = MagicMock() # replace with your actor
-
-    changed_running_status_rx = dispatcher.new_running_state_event_receiver("MY_TYPE")
-
-    async for dispatch in changed_running_status_rx:
-        if dispatch.started:
-            print(f"Executing dispatch {dispatch.id}, due on {dispatch.start_time}")
-            if actor.is_running:
-                actor.reconfigure(
-                    components=dispatch.target,
-                    run_parameters=dispatch.payload, # custom actor parameters
-                    dry_run=dispatch.dry_run,
-                    until=dispatch.until,
-                )  # this will reconfigure the actor
-            else:
-                # this will start a new actor with the given components
-                # and run it for the duration of the dispatch
-                actor.start(
-                    components=dispatch.target,
-                    run_parameters=dispatch.payload, # custom actor parameters
-                    dry_run=dispatch.dry_run,
-                    until=dispatch.until,
-                )
-        else:
-            actor.stop()  # this will stop the actor
+        await dispatcher
 ```
 
 ## Supported Platforms
