@@ -8,6 +8,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from asyncio import Event
+from datetime import timedelta
 from typing import Awaitable, Callable, Self
 
 from frequenz.channels import Receiver
@@ -270,6 +271,7 @@ class Dispatcher(BackgroundService):
             [DispatchInfo, Receiver[DispatchInfo]], Awaitable[Actor]
         ],
         merge_strategy: MergeStrategy | None = None,
+        retry_interval: timedelta = timedelta(seconds=60),
     ) -> None:
         """Manage actors for a given dispatch type.
 
@@ -298,6 +300,7 @@ class Dispatcher(BackgroundService):
             dispatch_type: The type of the dispatch to manage.
             actor_factory: The factory to create actors.
             merge_strategy: The strategy to merge running intervals.
+            retry_interval: Retry interval for when actor creation fails.
         """
         dispatcher = self._actor_dispatchers.get(dispatch_type)
 
@@ -321,6 +324,7 @@ class Dispatcher(BackgroundService):
             dispatch_identity=(
                 id_identity if merge_strategy is None else merge_strategy.identity
             ),
+            retry_interval=retry_interval,
         )
 
         self._actor_dispatchers[dispatch_type] = dispatcher

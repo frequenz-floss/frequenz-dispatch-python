@@ -84,6 +84,13 @@ class MockActor(Actor):
         actor = cls(initial_dispatch, receiver)
         return actor
 
+    @classmethod
+    async def create_fail(
+        cls, __: DispatchInfo, _: Receiver[DispatchInfo]
+    ) -> "MockActor":
+        """Create a new actor."""
+        raise ValueError("Failed to create actor")
+
 
 @dataclass
 class TestEnv:
@@ -168,6 +175,47 @@ async def test_simple_start_stop(
     # pylint: disable=protected-access
     assert 1 not in test_env.actors_service._actors
     # pylint: enable=protected-access
+
+
+async def test_start_failed(
+    test_env: TestEnv, fake_time: time_machine.Coordinates
+) -> None:
+    """Test auto-retry after 60 seconds."""
+    # pylint: disable=protected-access
+    test_env.actors_service._actor_factory = MockActor.create_fail
+
+    now = _now()
+    duration = timedelta(minutes=10)
+    dispatch = test_env.generator.generate_dispatch()
+    dispatch = replace(
+        dispatch,
+        id=1,
+        active=True,
+        dry_run=False,
+        duration=duration,
+        start_time=now,
+        payload={"test": True},
+        type="UNIT_TEST",
+        recurrence=replace(
+            dispatch.recurrence,
+            frequency=Frequency.UNSPECIFIED,
+        ),
+    )
+
+    # Send status update to start actor, expect no DispatchInfo for the start
+    await test_env.running_status_sender.send(Dispatch(dispatch))
+    fake_time.shift(timedelta(seconds=1))
+
+    # Replace failing mock actor factory with a working one
+    test_env.actors_service._actor_factory = MockActor.create
+
+    # Give retry task time to start
+    await asyncio.sleep(1)
+
+    fake_time.shift(timedelta(seconds=65))
+    await asyncio.sleep(65)
+
+    assert test_env.actor(1).is_running is True
 
 
 def test_heapq_dispatch_compare(test_env: TestEnv) -> None:
