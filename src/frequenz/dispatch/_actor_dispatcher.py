@@ -282,6 +282,8 @@ class ActorDispatcher(BackgroundService):
 
         if actor:
             await actor.stop(msg)
+
+            del self._actors[identity]
         else:
             _logger.warning(
                 "Actor for dispatch type %r is not running", stopping_dispatch.type
