@@ -275,15 +275,10 @@ class ActorDispatcher(BackgroundService):
             stopping_dispatch: The dispatch that is stopping the actor.
             msg: The message to be passed to the actors being stopped.
         """
-        actor: Actor | None = None
         identity = self._dispatch_identity(stopping_dispatch)
 
-        actor = self._actors.get(identity)
-
-        if actor:
+        if actor := self._actors.pop(identity, None):
             await actor.stop(msg)
-
-            del self._actors[identity]
         else:
             _logger.warning(
                 "Actor for dispatch type %r is not running", stopping_dispatch.type
