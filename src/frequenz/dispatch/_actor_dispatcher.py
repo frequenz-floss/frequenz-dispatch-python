@@ -133,8 +133,8 @@ class ActorDispatcher(BackgroundService):
     ```
     """
 
-    class RetryFailedDispatches:
-        """Manages the retry of failed dispatches."""
+    class FailedDispatchesRetrier(BackgroundService):
+        """Manages the retring of failed dispatches."""
 
         def __init__(self, retry_interval: timedelta) -> None:
             """Initialize the retry manager.
@@ -142,10 +142,16 @@ class ActorDispatcher(BackgroundService):
             Args:
                 retry_interval: The interval between retries.
             """
+            super().__init__()
             self._retry_interval = retry_interval
             self._channel = Broadcast[Dispatch](name="retry_channel")
             self._sender = self._channel.new_sender()
-            self._tasks: set[asyncio.Task[None]] = set()
+
+        def start(self) -> None:
+            """Start the background service.
+
+            This is a no-op.
+            """
 
         def new_receiver(self) -> Receiver[Dispatch]:
             """Create a new receiver for dispatches to retry.
@@ -187,7 +193,7 @@ class ActorDispatcher(BackgroundService):
         ],
         running_status_receiver: Receiver[Dispatch],
         dispatch_identity: Callable[[Dispatch], int] | None = None,
-        retry_interval: timedelta | None = timedelta(seconds=60),
+        retry_interval: timedelta = timedelta(seconds=60),
     ) -> None:
         """Initialize the dispatch handler.
 
@@ -197,7 +203,7 @@ class ActorDispatcher(BackgroundService):
             running_status_receiver: The receiver for dispatch running status changes.
             dispatch_identity: A function to identify to which actor a dispatch refers.
                 By default, it uses the dispatch ID.
-            retry_interval: The interval between retries. If `None`, retries are disabled.
+            retry_interval: The interval between retries.
         """
         super().__init__()
         self._dispatch_identity: Callable[[Dispatch], int] = (
@@ -211,11 +217,7 @@ class ActorDispatcher(BackgroundService):
             name="dispatch_updates_channel", resend_latest=True
         )
         self._updates_sender = self._updates_channel.new_sender()
-        self._retrier = (
-            ActorDispatcher.RetryFailedDispatches(retry_interval)
-            if retry_interval
-            else None
-        )
+        self._retrier = ActorDispatcher.FailedDispatchesRetrier(retry_interval)
 
     def start(self) -> None:
         """Start the background service."""
@@ -258,12 +260,7 @@ class ActorDispatcher(BackgroundService):
                     dispatch.type,
                     exc_info=e,
                 )
-                if self._retrier:
-                    self._retrier.retry(dispatch)
-                else:
-                    _logger.error(
-                        "No retry mechanism enabled, dispatch %r failed", dispatch
-                    )
+                self._retrier.retry(dispatch)
             else:
                 # No exception occurred, so we can add the actor to the list
                 self._actors[identity] = actor
@@ -286,10 +283,7 @@ class ActorDispatcher(BackgroundService):
 
     async def _run(self) -> None:
         """Run the background service."""
-        if not self._retrier:
-            async for dispatch in self._dispatch_rx:
-                await self._handle_dispatch(dispatch)
-        else:
+        async with self._retrier:
             retry_recv = self._retrier.new_receiver()
 
             async for selected in select(retry_recv, self._dispatch_rx):
