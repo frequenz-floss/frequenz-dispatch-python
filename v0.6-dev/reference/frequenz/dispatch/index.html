@@ -1322,9 +1322,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#frequenz.dispatch.Dispatcher.stop_dispatching" class="md-nav__link">
+  <a href="#frequenz.dispatch.Dispatcher.stop_managing" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stop_dispatching
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stop_managing
     </span>
   </a>
   
@@ -6149,7 +6149,7 @@ reconfigure itself will cause a message to be sent.</p>
 </span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>
 </span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">        You can await the `Dispatcher` instance to block until all types</span>
 </span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a><span class="sd">        registered with `start_managing()` are stopped using</span>
-</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">        `stop_dispatching()`</span>
+</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">        `stop_managing()`</span>
 </span><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a>
 </span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">        &quot;Merging&quot; means that when multiple dispatches are active at the same time,</span>
 </span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">        the intervals are merged into one.</span>
@@ -6198,7 +6198,7 @@ reconfigure itself will cause a message to be sent.</p>
 </span><span id="__span-0-330"><a id="__codelineno-0-330" name="__codelineno-0-330"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_actor_dispatchers</span><span class="p">[</span><span class="n">dispatch_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">dispatcher</span>
 </span><span id="__span-0-331"><a id="__codelineno-0-331" name="__codelineno-0-331"></a>        <span class="n">dispatcher</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 </span><span id="__span-0-332"><a id="__codelineno-0-332" name="__codelineno-0-332"></a>
-</span><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_dispatching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatch_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_managing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatch_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-334"><a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop managing actors for a given dispatch type.</span>
 </span><span id="__span-0-335"><a id="__codelineno-0-335" name="__codelineno-0-335"></a>
 </span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">        Args:</span>
@@ -7561,7 +7561,7 @@ merge-criteria-matching dispatch remains active.</p>
 start, stop and reconfigure actors based on received dispatches.</p>
 <p>You can await the <code>Dispatcher</code> instance to block until all types
 registered with <code>start_managing()</code> are stopped using
-<code>stop_dispatching()</code></p>
+<code>stop_managing()</code></p>
 <p>"Merging" means that when multiple dispatches are active at the same time,
 the intervals are merged into one.</p>
 <p>This also decides how instances are mapped from dispatches to actors:</p>
@@ -7744,7 +7744,7 @@ instance.</li>
 </span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>
 </span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">    You can await the `Dispatcher` instance to block until all types</span>
 </span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a><span class="sd">    registered with `start_managing()` are stopped using</span>
-</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    `stop_dispatching()`</span>
+</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    `stop_managing()`</span>
 </span><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a>
 </span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">    &quot;Merging&quot; means that when multiple dispatches are active at the same time,</span>
 </span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    the intervals are merged into one.</span>
@@ -7934,16 +7934,16 @@ exception.</p>
 <div class="doc doc-object doc-function">
 
 
-<h6 id="frequenz.dispatch.Dispatcher.stop_dispatching" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">stop_dispatching</span>
+<h6 id="frequenz.dispatch.Dispatcher.stop_managing" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">stop_managing</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
 
-<a href="#frequenz.dispatch.Dispatcher.stop_dispatching" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stop_dispatching</span><span class="p">(</span><span class="n">dispatch_type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<a href="#frequenz.dispatch.Dispatcher.stop_managing" class="headerlink" title="Permanent link">¤</a></h6>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stop_managing</span><span class="p">(</span><span class="n">dispatch_type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -7991,7 +7991,7 @@ exception.</p>
 <span class="normal"><a href="#__codelineno-0-341">341</a></span>
 <span class="normal"><a href="#__codelineno-0-342">342</a></span>
 <span class="normal"><a href="#__codelineno-0-343">343</a></span>
-<span class="normal"><a href="#__codelineno-0-344">344</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_dispatching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatch_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-344">344</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_managing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatch_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-334"><a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Stop managing actors for a given dispatch type.</span>
 </span><span id="__span-0-335"><a id="__codelineno-0-335" name="__codelineno-0-335"></a>
 </span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">    Args:</span>
