@@ -281,7 +281,7 @@ class Dispatcher(BackgroundService):
 
         You can await the `Dispatcher` instance to block until all types
         registered with `start_managing()` are stopped using
-        `stop_dispatching()`
+        `stop_managing()`
 
         "Merging" means that when multiple dispatches are active at the same time,
         the intervals are merged into one.
@@ -330,7 +330,7 @@ class Dispatcher(BackgroundService):
         self._actor_dispatchers[dispatch_type] = dispatcher
         dispatcher.start()
 
-    async def stop_dispatching(self, dispatch_type: str) -> None:
+    async def stop_managing(self, dispatch_type: str) -> None:
         """Stop managing actors for a given dispatch type.
 
         Args:
