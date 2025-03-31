@@ -164,7 +164,11 @@ disable = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "-W=all -Werror -Wdefault::DeprecationWarning -Wdefault::PendingDeprecationWarning -vv"
+# Ideally we should treat warnings as errors, but we have too many warnings
+# coming for external dependencies that are hard to address here, once this is
+# fixed, we can add the following options:
+# -Werror -Wdefault::DeprecationWarning -Wdefault::PendingDeprecationWarning
+addopts = "-W=all -vv"
 testpaths = ["tests", "src"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
