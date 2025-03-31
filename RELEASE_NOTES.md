@@ -6,7 +6,7 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+- Some minimal dependencies were updated, you might need to adjust your project's dependencies too.
 
 ## New Features
 
