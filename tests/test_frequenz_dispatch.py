@@ -55,7 +55,7 @@ def _now() -> datetime:
 
 
 @dataclass(frozen=True)
-class TestEnv:
+class _TestEnv:
     """Test environment for the service."""
 
     service: DispatchScheduler
@@ -71,7 +71,7 @@ class TestEnv:
 
 
 @fixture
-async def test_env() -> AsyncIterator[TestEnv]:
+async def test_env() -> AsyncIterator[_TestEnv]:
     """Return an actor test environment."""
     microgrid_id = randint(1, 100)
     client = FakeClient()
@@ -83,7 +83,7 @@ async def test_env() -> AsyncIterator[TestEnv]:
 
     service.start()
     try:
-        yield TestEnv(
+        yield _TestEnv(
             service=service,
             lifecycle_events=service.new_lifecycle_events_receiver("TEST_TYPE"),
             running_state_change=await service.new_running_state_event_receiver(
@@ -103,7 +103,7 @@ def generator() -> DispatchGenerator:
 
 
 async def test_new_dispatch_created(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
 ) -> None:
     """Test that a new dispatch is created."""
@@ -131,7 +131,7 @@ def update_dispatch(sample: BaseDispatch, dispatch: BaseDispatch) -> BaseDispatc
 
 
 async def _test_new_dispatch_created(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     sample: BaseDispatch,
 ) -> Dispatch:
     """Test that a new dispatch is created.
@@ -159,7 +159,7 @@ async def _test_new_dispatch_created(
 
 
 async def test_existing_dispatch_updated(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -197,7 +197,7 @@ async def test_existing_dispatch_updated(
 
 
 async def test_existing_dispatch_deleted(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -220,7 +220,7 @@ async def test_existing_dispatch_deleted(
 
 
 async def test_dispatch_inf_duration_deleted(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -255,7 +255,7 @@ async def test_dispatch_inf_duration_deleted(
 
 
 async def test_dispatch_inf_duration_updated_stopped_started(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -304,7 +304,7 @@ async def test_dispatch_inf_duration_updated_stopped_started(
 
 
 async def test_dispatch_inf_duration_updated_to_finite_and_stops(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -347,7 +347,7 @@ async def test_dispatch_inf_duration_updated_to_finite_and_stops(
 
 
 async def test_dispatch_schedule(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -385,7 +385,7 @@ async def test_dispatch_schedule(
 
 
 async def test_dispatch_inf_duration_updated_to_finite_and_continues(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -432,7 +432,7 @@ async def test_dispatch_inf_duration_updated_to_finite_and_continues(
 
 
 async def test_dispatch_new_but_finished(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:
@@ -490,7 +490,7 @@ async def test_dispatch_new_but_finished(
 
 
 async def test_notification_on_actor_start(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     generator: DispatchGenerator,
     fake_time: time_machine.Coordinates,
 ) -> None:

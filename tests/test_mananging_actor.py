@@ -93,7 +93,7 @@ class MockActor(Actor):
 
 
 @dataclass
-class TestEnv:
+class _TestEnv:
     """Test environment."""
 
     actors_service: ActorDispatcher
@@ -109,7 +109,7 @@ class TestEnv:
 
 
 @fixture
-async def test_env() -> AsyncIterator[TestEnv]:
+async def test_env() -> AsyncIterator[_TestEnv]:
     """Create a test environment."""
     channel = Broadcast[Dispatch](name="dispatch ready test channel")
 
@@ -122,7 +122,7 @@ async def test_env() -> AsyncIterator[TestEnv]:
     actors_service.start()
     await asyncio.sleep(1)
 
-    yield TestEnv(
+    yield _TestEnv(
         actors_service=actors_service,
         running_status_sender=channel.new_sender(),
     )
@@ -131,7 +131,7 @@ async def test_env() -> AsyncIterator[TestEnv]:
 
 
 async def test_simple_start_stop(
-    test_env: TestEnv,
+    test_env: _TestEnv,
     fake_time: time_machine.Coordinates,
 ) -> None:
     """Test behavior when receiving start/stop messages."""
@@ -178,7 +178,7 @@ async def test_simple_start_stop(
 
 
 async def test_start_failed(
-    test_env: TestEnv, fake_time: time_machine.Coordinates
+    test_env: _TestEnv, fake_time: time_machine.Coordinates
 ) -> None:
     """Test auto-retry after 60 seconds."""
     # pylint: disable=protected-access
@@ -218,7 +218,7 @@ async def test_start_failed(
     assert test_env.actor(1).is_running is True
 
 
-def test_heapq_dispatch_compare(test_env: TestEnv) -> None:
+def test_heapq_dispatch_compare(test_env: _TestEnv) -> None:
     """Test that the heapq compare function works."""
     dispatch1 = test_env.generator.generate_dispatch()
     dispatch2 = test_env.generator.generate_dispatch()
@@ -241,7 +241,7 @@ def test_heapq_dispatch_compare(test_env: TestEnv) -> None:
     )
 
 
-def test_heapq_dispatch_start_stop_compare(test_env: TestEnv) -> None:
+def test_heapq_dispatch_start_stop_compare(test_env: _TestEnv) -> None:
     """Test that the heapq compare function works."""
     dispatch1 = test_env.generator.generate_dispatch()
     dispatch2 = test_env.generator.generate_dispatch()
@@ -267,7 +267,7 @@ def test_heapq_dispatch_start_stop_compare(test_env: TestEnv) -> None:
     assert scheduled_events[1].dispatch_id == dispatch2.id
 
 
-async def test_dry_run(test_env: TestEnv, fake_time: time_machine.Coordinates) -> None:
+async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Coordinates) -> None:
     """Test the dry run mode."""
     dispatch = test_env.generator.generate_dispatch()
     dispatch = replace(
