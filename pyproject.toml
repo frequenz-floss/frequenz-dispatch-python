@@ -4,7 +4,7 @@
 [build-system]
 requires = [
   "setuptools == 75.8.0",
-  "setuptools_scm[toml] == 8.1.0",
+  "setuptools_scm[toml] == 8.2.0",
   "frequenz-repo-config[lib] == 0.13.1",
 ]
 build-backend = "setuptools.build_meta"
@@ -50,7 +50,7 @@ email = "floss@frequenz.com"
 
 [project.optional-dependencies]
 dev-flake8 = [
-  "flake8 == 7.1.1",
+  "flake8 == 7.2.0",
   "flake8-docstrings == 1.7.0",
   "flake8-pyproject == 1.2.3", # For reading the flake8 config from pyproject.toml
   "pydoclint == 0.6.0",
@@ -70,7 +70,7 @@ dev-mkdocs = [
   "frequenz-repo-config[lib] == 0.13.1",
 ]
 dev-mypy = [
-  "mypy == 1.14.1",
+  "mypy == 1.15.0",
   # This dependency introduces breaking changes in patch releases
   "grpc-stubs == 1.53.0.5",
   "types-Markdown == 3.7.0.20241204",
@@ -78,7 +78,7 @@ dev-mypy = [
   "frequenz-dispatch[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
 dev-noxfile = [
-  "uv == 0.5.26",
+  "uv == 0.6.11",
   "nox == 2025.2.9",
   "frequenz-repo-config[lib] == 0.13.1",
 ]
