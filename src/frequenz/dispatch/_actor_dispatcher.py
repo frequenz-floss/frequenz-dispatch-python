@@ -32,6 +32,9 @@ class DispatchInfo:
     options: dict[str, Any]
     """Additional options."""
 
+    _src: Dispatch
+    """The dispatch that triggered this update."""
+
 
 class ActorDispatcher(BackgroundService):
     """Helper class to manage actors based on dispatches.
@@ -229,6 +232,7 @@ class ActorDispatcher(BackgroundService):
             components=dispatch.target,
             dry_run=dispatch.dry_run,
             options=dispatch.payload,
+            _src=dispatch,
         )
 
         identity = self._dispatch_identity(dispatch)

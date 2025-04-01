@@ -10,7 +10,7 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+- `DispatchInfo._src` was added for rare complex scenarios where the source of a dispatch needs to be accessed.
 
 ## Bug Fixes
 
