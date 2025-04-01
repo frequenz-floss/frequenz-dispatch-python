@@ -224,7 +224,7 @@ class ActorDispatcher(BackgroundService):
         self._tasks.add(asyncio.create_task(self._run()))
 
     async def _start_actor(self, dispatch: Dispatch) -> None:
-        """Start all actors."""
+        """Start the actor the given dispatch refers to."""
         dispatch_update = DispatchInfo(
             components=dispatch.target,
             dry_run=dispatch.dry_run,
