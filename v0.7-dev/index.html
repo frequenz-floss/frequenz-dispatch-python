@@ -688,7 +688,12 @@
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">¤</a></h2>
 <p>The <a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher"><code>Dispatcher</code> class</a>, the main entry point for the API, provides two channels:</p>
 <ul>
-<li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events">Lifecycle events</a>: A channel that sends a message whenever a <a class="autorefs autorefs-internal" href="reference/frequenz/dispatch/#frequenz.dispatch.Dispatch">Dispatch</a> is created, updated or deleted.</li>
+<li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events">Lifecycle events</a>: A channel that sends a message whenever a <a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+  " href="reference/frequenz/dispatch/#frequenz.dispatch.Dispatch">Dispatch</a> is created, updated or deleted.</li>
 <li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change">Running status change</a>: Sends a dispatch message whenever a dispatch is ready to be executed according to the schedule or the running status of the dispatch changed in a way that could potentially require the actor to start, stop or reconfigure itself.</li>
 </ul>
 <h3 id="example-using-the-running-status-change-channel">Example using the running status change channel<a class="headerlink" href="#example-using-the-running-status-change-channel" title="Permanent link">¤</a></h3>

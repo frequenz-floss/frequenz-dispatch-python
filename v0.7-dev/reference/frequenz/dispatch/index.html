@@ -1587,14 +1587,35 @@
         <p>A highlevel interface for the dispatch API.</p>
 <p>A small overview of the most important classes in this module:</p>
 <ul>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.Dispatcher">Dispatcher</a>: The entry point for the API.</li>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.Dispatch">Dispatch</a>: A dispatch type with lots of useful extra functionality.</li>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.ActorDispatcher">ActorDispatcher</a>: A service to manage other actors based on
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatcher" href="#frequenz.dispatch.Dispatcher">Dispatcher</a>: The entry point for the API.</li>
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+  " href="#frequenz.dispatch.Dispatch">Dispatch</a>: A dispatch type with lots of useful extra functionality.</li>
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.ActorDispatcher" href="#frequenz.dispatch.ActorDispatcher">ActorDispatcher</a>: A service to manage other actors based on
   incoming dispatches.</li>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.Created">Created</a>,
-  <a class="autorefs autorefs-internal" href="#frequenz.dispatch.Updated">Updated</a>,
-  <a class="autorefs autorefs-internal" href="#frequenz.dispatch.Deleted">Deleted</a>: Dispatch event types.</li>
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.Created
+
+
+  
+      dataclass
+  " href="#frequenz.dispatch.Created">Created</a>,
+  <a class="autorefs autorefs-internal" title="frequenz.dispatch.Updated
+
+
+  
+      dataclass
+  " href="#frequenz.dispatch.Updated">Updated</a>,
+  <a class="autorefs autorefs-internal" title="frequenz.dispatch.Deleted
+
+
+  
+      dataclass
+  " href="#frequenz.dispatch.Deleted">Deleted</a>: Dispatch event types.</li>
 </ul>
+
 
 
 
@@ -1624,7 +1645,22 @@
   </span>
 
 <a href="#frequenz.dispatch.DispatchEvent" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">DispatchEvent</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._event.Created" href="#frequenz.dispatch.Created">Created</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._event.Updated" href="#frequenz.dispatch.Updated">Updated</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._event.Deleted" href="#frequenz.dispatch.Deleted">Deleted</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">DispatchEvent</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Created
+
+
+  
+      dataclass
+   (frequenz.dispatch._event.Created)" href="#frequenz.dispatch.Created">Created</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Updated
+
+
+  
+      dataclass
+   (frequenz.dispatch._event.Updated)" href="#frequenz.dispatch.Updated">Updated</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Deleted
+
+
+  
+      dataclass
+   (frequenz.dispatch._event.Deleted)" href="#frequenz.dispatch.Deleted">Deleted</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1632,6 +1668,7 @@
         <p>Type that is sent over the channel for dispatch updates.</p>
 <p>This type is used to send dispatches that were created, updated or deleted
 over the channel.</p>
+
     </div>
 
 </div>
@@ -1747,6 +1784,7 @@ over the channel.</p>
 </span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>
 </span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>        <span class="k">await</span> <span class="n">run</span><span class="p">(</span><span class="n">managing_actor</span><span class="p">)</span>
 </span></code></pre></div>
+
 
 
 
@@ -2349,6 +2387,7 @@ over the channel.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -2396,6 +2435,7 @@ over the channel.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -2450,6 +2490,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -2472,6 +2513,7 @@ unless the class explicitly documents it is safe to do so.</p>
 
 
         <p>Manages the retring of failed dispatches.</p>
+
 
 
 
@@ -2640,6 +2682,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -2687,6 +2730,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -2741,6 +2785,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -2790,6 +2835,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -2902,6 +2948,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-211">211</a></span>
@@ -2981,6 +3028,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-261">261</a></span>
@@ -3021,6 +3069,7 @@ unless the class explicitly documents it is safe to do so.</p>
 
         <p>Destroy this instance.</p>
 <p>Cancel all running tasks spawned by this background service.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -3083,6 +3132,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
@@ -3150,6 +3200,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-278">278</a></span>
@@ -3209,6 +3260,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -3278,6 +3330,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-164">164</a></span>
@@ -3309,7 +3362,12 @@ unless the class explicitly documents it is safe to do so.</p>
 
 
 <a href="#frequenz.dispatch.ActorDispatcher.FailedDispatchesRetrier.new_receiver" class="headerlink" title="Permanent link">¤</a></h8>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">new_receiver</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">]</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">new_receiver</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">]</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3328,7 +3386,12 @@ unless the class explicitly documents it is safe to do so.</p>
           <tr class="doc-section-item">
             <td>
                 <span class="doc-returns-annotation">
-                    <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
+                    <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
                 </span>
             </td>
             <td class="doc-returns-details">
@@ -3339,6 +3402,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
@@ -3369,7 +3433,12 @@ unless the class explicitly documents it is safe to do so.</p>
 
 
 <a href="#frequenz.dispatch.ActorDispatcher.FailedDispatchesRetrier.retry" class="headerlink" title="Permanent link">¤</a></h8>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">retry</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">retry</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3396,13 +3465,19 @@ unless the class explicitly documents it is safe to do so.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></code>
+                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></code>
                   </span>
               </p>
             </td>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
@@ -3444,6 +3519,7 @@ unless the class explicitly documents it is safe to do so.</p>
 
         <p>Start the background service.</p>
 <p>This is a no-op.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
@@ -3539,6 +3615,7 @@ exception.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -3640,6 +3717,7 @@ the exception group).</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -3765,6 +3843,7 @@ the exception group).</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-200">200</a></span>
@@ -3876,6 +3955,7 @@ the exception group).</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-211">211</a></span>
@@ -3955,6 +4035,7 @@ the exception group).</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-261">261</a></span>
@@ -3996,6 +4077,7 @@ the exception group).</p>
         <p>Destroy this instance.</p>
 <p>Cancel all running tasks spawned by this background service.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-271">271</a></span>
@@ -4025,12 +4107,32 @@ the exception group).</p>
 <a href="#frequenz.dispatch.ActorDispatcher.__init__" class="headerlink" title="Permanent link">¤</a></h6>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="fm">__init__</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">actor_factory</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a></span><span class="p">[</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">]],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">]],</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="n"><a class="autorefs autorefs-external" title="typing.Awaitable" href="https://docs.python.org/3/library/typing.html#typing.Awaitable">Awaitable</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a></span><span class="p">],</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="p">],</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">running_status_receiver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">running_status_receiver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">dispatch_identity</span><span class="p">:</span> <span class="p">(</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a></span><span class="p">[[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a></span><span class="p">[[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">retry_interval</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="datetime.timedelta" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-external" title="datetime.timedelta" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a></span><span class="p">(</span><span class="n"><span title="datetime.timedelta(seconds)">seconds</span></span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
@@ -4061,7 +4163,17 @@ information.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a>[[<a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>, <a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>]], <a class="autorefs autorefs-external" title="typing.Awaitable" href="https://docs.python.org/3/library/typing.html#typing.Awaitable">Awaitable</a>[<a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a>]]</code>
+                      <code><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a>[[<a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>, <a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>]], <a class="autorefs autorefs-external" title="typing.Awaitable" href="https://docs.python.org/3/library/typing.html#typing.Awaitable">Awaitable</a>[<a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a>]]</code>
                   </span>
               </p>
             </td>
@@ -4077,7 +4189,12 @@ information.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
+                      <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
                   </span>
               </p>
             </td>
@@ -4094,7 +4211,12 @@ By default, it uses the dispatch ID.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a>[[<a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a>], <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>] | None</code>
+                      <code><a class="autorefs autorefs-external" title="collections.abc.Callable" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable">Callable</a>[[<a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a>], <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>] | None</code>
                   </span>
                   <span class="doc-param-default">
                     <b>DEFAULT:</b>
@@ -4125,6 +4247,7 @@ By default, it uses the dispatch ID.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
@@ -4236,6 +4359,7 @@ By default, it uses the dispatch ID.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-278">278</a></span>
@@ -4295,6 +4419,7 @@ By default, it uses the dispatch ID.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -4364,6 +4489,7 @@ By default, it uses the dispatch ID.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-164">164</a></span>
@@ -4401,6 +4527,7 @@ By default, it uses the dispatch ID.</p>
     <div class="doc doc-contents ">
 
         <p>Start the background service.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
@@ -4492,6 +4619,7 @@ exception.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -4593,6 +4721,7 @@ the exception group).</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -4698,6 +4827,7 @@ the exception group).</p>
 
 
 
+
               <details class="quote">
                 <summary>Source code in <code>frequenz/dispatch/_event.py</code></summary>
                 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-11">11</a></span>
@@ -4737,12 +4867,18 @@ the exception group).</p>
   </span>
 
 <a href="#frequenz.dispatch.Created.dispatch" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>The dispatch that was created.</p>
+
     </div>
 
 </div>
@@ -4776,6 +4912,7 @@ the exception group).</p>
 
 
         <p>A dispatch deleted event.</p>
+
 
 
 
@@ -4821,12 +4958,18 @@ the exception group).</p>
   </span>
 
 <a href="#frequenz.dispatch.Deleted.dispatch" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>The dispatch that was deleted.</p>
+
     </div>
 
 </div>
@@ -4862,6 +5005,7 @@ the exception group).</p>
 
 
         <p>Dispatch type with extra functionality.</p>
+
 
 
 
@@ -5019,6 +5163,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>Indicates whether the dispatch is active and eligible for processing.</p>
+
     </div>
 
 </div>
@@ -5042,6 +5187,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>The creation time of the dispatch in UTC. Set when a dispatch is created.</p>
+
     </div>
 
 </div>
@@ -5066,6 +5212,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>Whether the dispatch is deleted.</p>
+
     </div>
 
 </div>
@@ -5090,6 +5237,7 @@ the exception group).</p>
 
         <p>Indicates if the dispatch is a dry run.</p>
 <p>Executed for logging and monitoring without affecting actual component states.</p>
+
     </div>
 
 </div>
@@ -5113,6 +5261,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>The duration of the dispatch, represented as a timedelta.</p>
+
     </div>
 
 </div>
@@ -5136,6 +5285,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>The unique identifier for the dispatch.</p>
+
     </div>
 
 </div>
@@ -5183,6 +5333,7 @@ the exception group).</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -5207,6 +5358,7 @@ the exception group).</p>
 
         <p>The dispatch payload containing arbitrary data.</p>
 <p>It is structured as needed for the dispatch operation.</p>
+
     </div>
 
 </div>
@@ -5231,6 +5383,7 @@ the exception group).</p>
 
         <p>The recurrence rule for the dispatch.</p>
 <p>Defining any repeating patterns or schedules.</p>
+
     </div>
 
 </div>
@@ -5254,6 +5407,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>The start time of the dispatch in UTC.</p>
+
     </div>
 
 </div>
@@ -5301,6 +5455,7 @@ the exception group).</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -5324,6 +5479,7 @@ the exception group).</p>
     <div class="doc doc-contents ">
 
         <p>The target components of the dispatch.</p>
+
     </div>
 
 </div>
@@ -5348,6 +5504,7 @@ the exception group).</p>
 
         <p>User-defined information about the type of dispatch.</p>
 <p>This is understood and processed by downstream applications.</p>
+
     </div>
 
 </div>
@@ -5397,6 +5554,7 @@ If the dispatch is not running, None is returned.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -5420,6 +5578,7 @@ If the dispatch is not running, None is returned.</p>
     <div class="doc doc-contents ">
 
         <p>The last update time of the dispatch in UTC. Set when a dispatch is modified.</p>
+
     </div>
 
 </div>
@@ -5488,6 +5647,7 @@ If the dispatch is not running, None is returned.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatch.py</code></summary>
@@ -5594,6 +5754,7 @@ If the dispatch is not running, None is returned.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/client/dispatch/types.py</code></summary>
@@ -5752,6 +5913,7 @@ If the dispatch is not running, None is returned.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatch.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-53">53</a></span>
@@ -5864,6 +6026,7 @@ If the dispatch is not running, None is returned.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/client/dispatch/types.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-214">214</a></span>
@@ -5968,6 +6131,7 @@ If the dispatch is not running, None is returned.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/client/dispatch/types.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-306">306</a></span>
@@ -6068,6 +6232,7 @@ If the dispatch is not running, None is returned.</p>
 
 
 
+
               <details class="quote">
                 <summary>Source code in <code>frequenz/dispatch/_actor_dispatcher.py</code></summary>
                 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-22">22</a></span>
@@ -6125,6 +6290,7 @@ If the dispatch is not running, None is returned.</p>
     <div class="doc doc-contents ">
 
         <p>Components to be used.</p>
+
     </div>
 
 </div>
@@ -6148,6 +6314,7 @@ If the dispatch is not running, None is returned.</p>
     <div class="doc doc-contents ">
 
         <p>Whether this is a dry run.</p>
+
     </div>
 
 </div>
@@ -6171,6 +6338,7 @@ If the dispatch is not running, None is returned.</p>
     <div class="doc doc-contents ">
 
         <p>Additional options.</p>
+
     </div>
 
 </div>
@@ -6207,10 +6375,15 @@ It provides receivers for various events and management of actors based on
 dispatches.</p>
 <p>The receivers shortly explained:</p>
 <ul>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver">Lifecycle events receiver</a>:
+<li><a class="autorefs autorefs-internal" title="new_lifecycle_events_receiver" href="#frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver">Lifecycle events receiver</a>:
     Receives an event whenever a dispatch is created, updated or deleted.</li>
 <li>
-<p><a class="autorefs autorefs-internal" href="#frequenz.dispatch.Dispatcher.new_running_state_event_receiver">Running status change
+<p><a class="autorefs autorefs-internal" title="new_running_state_event_receiver
+
+
+  
+      async
+  " href="#frequenz.dispatch.Dispatcher.new_running_state_event_receiver">Running status change
     receiver</a>:
     Receives an event whenever the running status of a dispatch changes.
     The running status of a dispatch can change due to a variety of reasons,
@@ -6375,6 +6548,7 @@ reconfigure itself will cause a message to be sent.</p>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="k">assert</span> <span class="n">modified_dispatch</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
+
 
 
 
@@ -7231,6 +7405,7 @@ reconfigure itself will cause a message to be sent.</p>
     <div class="doc doc-contents ">
 
         <p>Return the client.</p>
+
     </div>
 
 </div>
@@ -7254,6 +7429,7 @@ reconfigure itself will cause a message to be sent.</p>
     <div class="doc doc-contents ">
 
         <p>Whether the local dispatch service is running.</p>
+
     </div>
 
 </div>
@@ -7301,6 +7477,7 @@ reconfigure itself will cause a message to be sent.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -7355,6 +7532,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
     </div>
 
 </div>
@@ -7404,6 +7582,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
@@ -7520,6 +7699,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-211">211</a></span>
@@ -7599,6 +7779,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-261">261</a></span>
@@ -7639,6 +7820,7 @@ unless the class explicitly documents it is safe to do so.</p>
 
         <p>Destroy this instance.</p>
 <p>Cancel all running tasks spawned by this background service.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
@@ -7734,6 +7916,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-200">200</a></span>
@@ -7828,6 +8011,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-278">278</a></span>
@@ -7888,6 +8072,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-286">286</a></span>
@@ -7923,6 +8108,7 @@ unless the class explicitly documents it is safe to do so.</p>
     <div class="doc doc-contents ">
 
         <p>Stop the local dispatch service.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
@@ -8012,6 +8198,7 @@ unless the class explicitly documents it is safe to do so.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-255">255</a></span>
@@ -8049,7 +8236,12 @@ unless the class explicitly documents it is safe to do so.</p>
 <a href="#frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver" class="headerlink" title="Permanent link">¤</a></h6>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">new_lifecycle_events_receiver</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">dispatch_type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._event.DispatchEvent" href="#frequenz.dispatch.DispatchEvent">DispatchEvent</a></span><span class="p">]</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchEvent
+
+
+  
+      module-attribute
+   (frequenz.dispatch._event.DispatchEvent)" href="#frequenz.dispatch.DispatchEvent">DispatchEvent</a></span><span class="p">]</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8096,7 +8288,12 @@ unless the class explicitly documents it is safe to do so.</p>
           <tr class="doc-section-item">
             <td>
                 <span class="doc-returns-annotation">
-                    <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch._event.DispatchEvent" href="#frequenz.dispatch.DispatchEvent">DispatchEvent</a>]</code>
+                    <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchEvent
+
+
+  
+      module-attribute
+   (frequenz.dispatch._event.DispatchEvent)" href="#frequenz.dispatch.DispatchEvent">DispatchEvent</a>]</code>
                 </span>
             </td>
             <td class="doc-returns-details">
@@ -8107,6 +8304,7 @@ unless the class explicitly documents it is safe to do so.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
@@ -8154,8 +8352,13 @@ unless the class explicitly documents it is safe to do so.</p>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">new_running_state_event_receiver</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">dispatch_type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">merge_strategy</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._bg_service.MergeStrategy" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">]</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">merge_strategy</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeStrategy (frequenz.dispatch._bg_service.MergeStrategy)" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">]</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8186,12 +8389,12 @@ sent.</p>
 <li>The dispatch was deleted</li>
 </ul>
 </details>        <p><code>merge_strategy</code> is an instance of a class derived from
-<a class="autorefs autorefs-internal" href="#frequenz.dispatch.MergeStrategy"><code>MergeStrategy</code></a> Available strategies
+<a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeStrategy" href="#frequenz.dispatch.MergeStrategy"><code>MergeStrategy</code></a> Available strategies
 are:</p>
 <ul>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.MergeByType"><code>MergeByType</code></a> — merges all dispatches
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeByType" href="#frequenz.dispatch.MergeByType"><code>MergeByType</code></a> — merges all dispatches
   of the same type</li>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.MergeByTypeTarget"><code>MergeByTypeTarget</code></a> — merges all
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeByTypeTarget" href="#frequenz.dispatch.MergeByTypeTarget"><code>MergeByTypeTarget</code></a> — merges all
   dispatches of the same type and target</li>
 <li><code>None</code> — no merging, just send all events (default)</li>
 </ul>
@@ -8236,7 +8439,7 @@ merge-criteria-matching dispatch remains active.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch._bg_service.MergeStrategy" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a> | None</code>
+                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeStrategy (frequenz.dispatch._bg_service.MergeStrategy)" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a> | None</code>
                   </span>
                   <span class="doc-param-default">
                     <b>DEFAULT:</b>
@@ -8260,7 +8463,12 @@ merge-criteria-matching dispatch remains active.</p>
           <tr class="doc-section-item">
             <td>
                 <span class="doc-returns-annotation">
-                    <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
+                    <code><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
                 </span>
             </td>
             <td class="doc-returns-details">
@@ -8271,6 +8479,7 @@ merge-criteria-matching dispatch remains active.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
@@ -8412,6 +8621,7 @@ merge-criteria-matching dispatch remains active.</p>
 
         <p>Start the local dispatch service.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-225">225</a></span>
@@ -8443,10 +8653,20 @@ merge-criteria-matching dispatch remains active.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">dispatch_type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">actor_factory</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Callable" href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a></span><span class="p">[</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">]],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">]],</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="n"><a class="autorefs autorefs-external" title="typing.Awaitable" href="https://docs.python.org/3/library/typing.html#typing.Awaitable">Awaitable</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a></span><span class="p">],</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="p">],</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">merge_strategy</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._bg_service.MergeStrategy" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">merge_strategy</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeStrategy (frequenz.dispatch._bg_service.MergeStrategy)" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">retry_interval</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="datetime.timedelta" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-external" title="datetime.timedelta" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a></span><span class="p">(</span><span class="n"><span title="datetime.timedelta(seconds)">seconds</span></span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
@@ -8455,7 +8675,7 @@ merge-criteria-matching dispatch remains active.</p>
 
         <p>Manage actors for a given dispatch type.</p>
 <p>Creates and manages an
-<a class="autorefs autorefs-internal" href="#frequenz.dispatch.ActorDispatcher"><code>ActorDispatcher</code></a> for the given type that will
+<a class="autorefs autorefs-internal" title="frequenz.dispatch.ActorDispatcher" href="#frequenz.dispatch.ActorDispatcher"><code>ActorDispatcher</code></a> for the given type that will
 start, stop and reconfigure actors based on received dispatches.</p>
 <p>You can await the <code>Dispatcher</code> instance to block until all types
 registered with <code>start_managing()</code> are stopped using
@@ -8464,9 +8684,9 @@ registered with <code>start_managing()</code> are stopped using
 the intervals are merged into one.</p>
 <p>This also decides how instances are mapped from dispatches to actors:</p>
 <ul>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.MergeByType"><code>MergeByType</code></a> — All dispatches map to
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeByType" href="#frequenz.dispatch.MergeByType"><code>MergeByType</code></a> — All dispatches map to
 one single instance identified by the dispatch type.</li>
-<li><a class="autorefs autorefs-internal" href="#frequenz.dispatch.MergeByTypeTarget"><code>MergeByTypeTarget</code></a> — A
+<li><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeByTypeTarget" href="#frequenz.dispatch.MergeByTypeTarget"><code>MergeByTypeTarget</code></a> — A
 dispatch maps to an instance identified by the dispatch type and target.
 So different dispatches with equal type and target will map to the same
 instance.</li>
@@ -8509,7 +8729,17 @@ instance.</li>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-external" title="typing.Callable" href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>, <a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch._actor_dispatcher.DispatchInfo" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>]], <a class="autorefs autorefs-external" title="typing.Awaitable" href="https://docs.python.org/3/library/typing.html#typing.Awaitable">Awaitable</a>[<a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a>]]</code>
+                      <code><a class="autorefs autorefs-external" title="typing.Callable" href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>, <a class="autorefs autorefs-external" title="frequenz.channels.Receiver" href="https://frequenz-floss.github.io/frequenz-channels-python/v1.0/reference/frequenz/channels/#frequenz.channels.Receiver">Receiver</a>[<a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
+
+
+  
+      dataclass
+   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a>]], <a class="autorefs autorefs-external" title="typing.Awaitable" href="https://docs.python.org/3/library/typing.html#typing.Awaitable">Awaitable</a>[<a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a>]]</code>
                   </span>
               </p>
             </td>
@@ -8525,7 +8755,7 @@ instance.</li>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch._bg_service.MergeStrategy" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a> | None</code>
+                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeStrategy (frequenz.dispatch._bg_service.MergeStrategy)" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a> | None</code>
                   </span>
                   <span class="doc-param-default">
                     <b>DEFAULT:</b>
@@ -8556,6 +8786,7 @@ instance.</li>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
@@ -8774,6 +9005,7 @@ exception.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/sdk/actor/_background_service.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-175">175</a></span>
@@ -8876,6 +9108,7 @@ exception.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-333">333</a></span>
@@ -8926,6 +9159,7 @@ exception.</p>
 
         <p>Wait until all actor dispatches are stopped.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-236">236</a></span>
@@ -8964,6 +9198,7 @@ exception.</p>
 
         <p>Wait until the background service is initialized.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_dispatcher.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-251">251</a></span>
@@ -8998,10 +9233,11 @@ exception.</p>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="frequenz.dispatch._bg_service.MergeStrategy" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeStrategy (frequenz.dispatch._bg_service.MergeStrategy)" href="#frequenz.dispatch.MergeStrategy">MergeStrategy</a></code></p>
 
 
         <p>Merge running intervals based on the dispatch type.</p>
+
 
 
 
@@ -9103,7 +9339,17 @@ exception.</p>
 
 <a href="#frequenz.dispatch.MergeByType.filter" class="headerlink" title="Permanent link">¤</a></h6>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">filter</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">dispatches</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">dispatches</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span>
 </span></code></pre></div>
 
@@ -9113,6 +9359,7 @@ exception.</p>
 <p>Keeps start events.
 Keeps stop events only if no other dispatches matching the
 strategy's criteria are running.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_merge_strategies.py</code></summary>
@@ -9183,12 +9430,18 @@ strategy's criteria are running.</p>
 
 
 <a href="#frequenz.dispatch.MergeByType.identity" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Identity function for the merge criteria.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_merge_strategies.py</code></summary>
@@ -9226,10 +9479,11 @@ strategy's criteria are running.</p>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="frequenz.dispatch._merge_strategies.MergeByType" href="#frequenz.dispatch.MergeByType">MergeByType</a></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="frequenz.dispatch.MergeByType (frequenz.dispatch._merge_strategies.MergeByType)" href="#frequenz.dispatch.MergeByType">MergeByType</a></code></p>
 
 
         <p>Merge running intervals based on the dispatch type and target.</p>
+
 
 
 
@@ -9275,7 +9529,17 @@ strategy's criteria are running.</p>
 
 <a href="#frequenz.dispatch.MergeByTypeTarget.filter" class="headerlink" title="Permanent link">¤</a></h6>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">filter</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">dispatches</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">dispatches</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span>
 </span></code></pre></div>
 
@@ -9285,6 +9549,7 @@ strategy's criteria are running.</p>
 <p>Keeps start events.
 Keeps stop events only if no other dispatches matching the
 strategy's criteria are running.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_merge_strategies.py</code></summary>
@@ -9355,12 +9620,18 @@ strategy's criteria are running.</p>
 
 
 <a href="#frequenz.dispatch.MergeByTypeTarget.identity" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Identity function for the merge criteria.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_merge_strategies.py</code></summary>
@@ -9402,6 +9673,7 @@ strategy's criteria are running.</p>
 
 
         <p>Base class for strategies to merge running intervals.</p>
+
 
 
 
@@ -9473,7 +9745,17 @@ strategy's criteria are running.</p>
 
 <a href="#frequenz.dispatch.MergeStrategy.filter" class="headerlink" title="Permanent link">¤</a></h6>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">filter</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">dispatches</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nf">dispatches</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">],</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span>
 </span></code></pre></div>
 
@@ -9501,7 +9783,12 @@ strategy's criteria are running.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
+                      <code><a class="autorefs autorefs-external" title="collections.abc.Mapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping">Mapping</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a>, <a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a>]</code>
                   </span>
               </p>
             </td>
@@ -9517,7 +9804,12 @@ strategy's criteria are running.</p>
               <p>
                   <span class="doc-param-annotation">
                     <b>TYPE:</b>
-                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></code>
+                      <code><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></code>
                   </span>
               </p>
             </td>
@@ -9548,6 +9840,7 @@ strategy's criteria are running.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_bg_service.py</code></summary>
@@ -9590,12 +9883,18 @@ strategy's criteria are running.</p>
   </span>
 
 <a href="#frequenz.dispatch.MergeStrategy.identity" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Identity function for the merge criteria.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>frequenz/dispatch/_bg_service.py</code></summary>
@@ -9643,6 +9942,7 @@ strategy's criteria are running.</p>
 
 
 
+
               <details class="quote">
                 <summary>Source code in <code>frequenz/dispatch/_event.py</code></summary>
                 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-19">19</a></span>
@@ -9682,12 +9982,18 @@ strategy's criteria are running.</p>
   </span>
 
 <a href="#frequenz.dispatch.Updated.dispatch" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch._dispatch.Dispatch" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
+
+
+  
+      dataclass
+   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>The dispatch that was updated.</p>
+
     </div>
 
 </div>
