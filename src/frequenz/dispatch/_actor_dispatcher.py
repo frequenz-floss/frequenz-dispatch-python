@@ -32,6 +32,9 @@ class DispatchInfo:
     options: dict[str, Any]
     """Additional options."""
 
+    _src: Dispatch
+    """The dispatch that triggered this update."""
+
 
 class ActorDispatcher(BackgroundService):
     """Helper class to manage actors based on dispatches.
@@ -224,11 +227,12 @@ class ActorDispatcher(BackgroundService):
         self._tasks.add(asyncio.create_task(self._run()))
 
     async def _start_actor(self, dispatch: Dispatch) -> None:
-        """Start all actors."""
+        """Start the actor the given dispatch refers to."""
         dispatch_update = DispatchInfo(
             components=dispatch.target,
             dry_run=dispatch.dry_run,
             options=dispatch.payload,
+            _src=dispatch,
         )
 
         identity = self._dispatch_identity(dispatch)
