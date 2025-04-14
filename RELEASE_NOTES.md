@@ -14,4 +14,4 @@
 
 ## Bug Fixes
 
-<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+* ActorDispatcher: Fix that every instance of the same type receives every dispatch update
