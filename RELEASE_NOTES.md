@@ -14,4 +14,5 @@
 
 ## Bug Fixes
 
-* ActorDispatcher: Fix that every instance of the same type receives every dispatch update
+* ActorDispatcher: Fix that every actor instance wrongly received all updates for their dispatch type. This is only relevant to you if your actor has more than one running instance at any time.
+
