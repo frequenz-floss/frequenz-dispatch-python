@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any, Awaitable
 
-from frequenz.channels import Broadcast, Receiver, select
+from frequenz.channels import Broadcast, Receiver, Sender, select
 from frequenz.client.dispatch.types import TargetComponents
 from frequenz.sdk.actor import Actor, BackgroundService
 
@@ -189,6 +189,19 @@ class ActorDispatcher(BackgroundService):
             _logger.info("Retrying dispatch %s now", dispatch.id)
             await self._sender.send(dispatch)
 
+    @dataclass(frozen=True, kw_only=True)
+    class ActorAndChannel:
+        """Actor and its sender."""
+
+        actor: Actor
+        """The actor."""
+
+        channel: Broadcast[DispatchInfo]
+        """The channel for dispatch updates."""
+
+        sender: Sender[DispatchInfo]
+        """The sender for dispatch updates."""
+
     def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         actor_factory: Callable[
@@ -215,11 +228,8 @@ class ActorDispatcher(BackgroundService):
 
         self._dispatch_rx = running_status_receiver
         self._actor_factory = actor_factory
-        self._actors: dict[int, Actor] = {}
-        self._updates_channel = Broadcast[DispatchInfo](
-            name="dispatch_updates_channel", resend_latest=True
-        )
-        self._updates_sender = self._updates_channel.new_sender()
+        self._actors: dict[int, ActorDispatcher.ActorAndChannel] = {}
+
         self._retrier = ActorDispatcher.FailedDispatchesRetrier(retry_interval)
 
     def start(self) -> None:
@@ -236,24 +246,25 @@ class ActorDispatcher(BackgroundService):
         )
 
         identity = self._dispatch_identity(dispatch)
-        actor: Actor | None = self._actors.get(identity)
+        actor_and_channel = self._actors.get(identity)
 
-        if actor:
-            sent_str = ""
-            if self._updates_sender is not None:
-                sent_str = ", sent a dispatch update instead of creating a new actor"
-                await self._updates_sender.send(dispatch_update)
+        if actor_and_channel:
+            await actor_and_channel.sender.send(dispatch_update)
             _logger.info(
-                "Actor for dispatch type %r is already running%s",
+                "Actor for dispatch type %r is already running, "
+                "sent a dispatch update instead of creating a new actor",
                 dispatch.type,
-                sent_str,
             )
         else:
             try:
                 _logger.info("Starting actor for dispatch type %r", dispatch.type)
+                channel = Broadcast[DispatchInfo](
+                    name=f"dispatch_updates_channel_instance={identity}",
+                    resend_latest=True,
+                )
                 actor = await self._actor_factory(
                     dispatch_update,
-                    self._updates_channel.new_receiver(limit=1, warn_on_overflow=False),
+                    channel.new_receiver(limit=1, warn_on_overflow=False),
                 )
 
                 actor.start()
@@ -267,7 +278,9 @@ class ActorDispatcher(BackgroundService):
                 self._retrier.retry(dispatch)
             else:
                 # No exception occurred, so we can add the actor to the list
-                self._actors[identity] = actor
+                self._actors[identity] = ActorDispatcher.ActorAndChannel(
+                    actor=actor, channel=channel, sender=channel.new_sender()
+                )
 
     async def _stop_actor(self, stopping_dispatch: Dispatch, msg: str) -> None:
         """Stop all actors.
@@ -278,8 +291,9 @@ class ActorDispatcher(BackgroundService):
         """
         identity = self._dispatch_identity(stopping_dispatch)
 
-        if actor := self._actors.pop(identity, None):
-            await actor.stop(msg)
+        if actor_and_channel := self._actors.pop(identity, None):
+            await actor_and_channel.actor.stop(msg)
+            await actor_and_channel.channel.close()
         else:
             _logger.warning(
                 "Actor for dispatch type %r is not running", stopping_dispatch.type

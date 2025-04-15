@@ -15,7 +15,7 @@ import pytest
 import time_machine
 from frequenz.channels import Broadcast, Receiver, Sender
 from frequenz.client.dispatch import recurrence
-from frequenz.client.dispatch.recurrence import Frequency
+from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient
 from frequenz.client.dispatch.test.generator import DispatchGenerator
 from frequenz.sdk.actor import Actor
@@ -104,8 +104,16 @@ class _TestEnv:
         """Return the actor."""
         # pylint: disable=protected-access
         assert identity in self.actors_service._actors
-        return cast(MockActor, self.actors_service._actors[identity])
+        return cast(MockActor, self.actors_service._actors[identity].actor)
         # pylint: enable=protected-access
+
+    def is_running(self, identity: int) -> bool:
+        """Return whether the actor is running."""
+        # pylint: disable-next=protected-access
+        if identity not in self.actors_service._actors:
+            return False
+
+        return self.actor(identity).is_running
 
 
 @fixture
@@ -383,3 +391,102 @@ async def test_manage_abstraction(
 
         # Check if actor instance is created
         assert identity(dispatch) in actor_manager._actors
+
+
+async def test_actor_dispatcher_update_isolation(
+    test_env: _TestEnv,
+    fake_time: time_machine.Coordinates,
+) -> None:
+    """Test that updates for one dispatch don't affect other actors of the same type."""
+    dispatch_type = "ISOLATION_TEST"
+    start_time = _now()
+    duration = timedelta(minutes=5)
+
+    # Create first dispatch
+    dispatch1_spec = replace(
+        test_env.generator.generate_dispatch(),
+        id=101,  # Unique ID
+        type=dispatch_type,
+        active=True,
+        dry_run=False,
+        start_time=start_time + timedelta(seconds=1),  # Stagger start slightly
+        duration=duration,
+        payload={"instance": 1},
+        recurrence=RecurrenceRule(),
+    )
+    dispatch1 = Dispatch(dispatch1_spec)
+
+    # Create second dispatch of the same type, different ID
+    dispatch2_spec = replace(
+        test_env.generator.generate_dispatch(),
+        id=102,  # Unique ID
+        type=dispatch_type,  # Same type
+        active=True,
+        dry_run=False,
+        start_time=start_time + timedelta(seconds=2),  # Stagger start slightly
+        duration=duration,
+        payload={"instance": 2},
+        recurrence=RecurrenceRule(),
+    )
+    dispatch2 = Dispatch(dispatch2_spec)
+
+    # Send dispatch 1 to start actor 1
+    # print(f"Sending dispatch 1: {dispatch1}")
+    await test_env.running_status_sender.send(dispatch1)
+    fake_time.shift(timedelta(seconds=1.1))  # Move time past dispatch1 start
+    await asyncio.sleep(0.1)  # Allow actor to start
+
+    assert test_env.is_running(101), "Actor 1 should be running"
+    actor1 = test_env.actor(101)
+    assert actor1 is not None
+    # pylint: disable-next=protected-access
+    assert actor1.initial_dispatch._src.id == 101
+    assert actor1.initial_dispatch.options == {"instance": 1}
+    assert not test_env.is_running(102), "Actor 2 should not be running yet"
+
+    # Send dispatch 2 to start actor 2
+    # print(f"Sending dispatch 2: {dispatch2}")
+    await test_env.running_status_sender.send(dispatch2)
+    fake_time.shift(timedelta(seconds=1))  # Move time past dispatch2 start
+    await asyncio.sleep(0.1)  # Allow actor to start
+
+    assert test_env.actor(101).is_running, "Actor 1 should still be running"
+    assert test_env.actor(102).is_running, "Actor 2 should now be running"
+    actor2 = test_env.actor(102)
+    assert actor2 is not None
+    # pylint: disable-next=protected-access
+    assert actor2.initial_dispatch._src.id == 102
+    assert actor2.initial_dispatch.options == {"instance": 2}
+
+    # Now, send an update to stop dispatch 1
+    dispatch1_stop = Dispatch(
+        replace(dispatch1_spec, duration=timedelta(seconds=1), active=False)
+    )
+    # print(f"Sending stop for dispatch 1: {dispatch1_stop}")
+    await test_env.running_status_sender.send(dispatch1_stop)
+    await asyncio.sleep(0.1)  # Allow ActorDispatcher to process the stop
+
+    # THE CORE ASSERTION: Actor 1 should stop, Actor 2 should remain running
+    # pylint: disable=protected-access
+    assert (
+        101 not in test_env.actors_service._actors
+    ), "Actor 1 should have been removed"
+    # pylint: enable=protected-access
+    assert (
+        test_env.actor(102).is_running is True
+    ), "Actor 2 should be running after Actor 1 stopped"
+    # Double check actor1 object state if needed (though removal is stronger check)
+    # assert not actor1.is_running
+
+    # Cleanup: Stop Actor 2
+    dispatch2_stop = Dispatch(replace(dispatch2_spec, active=False))
+    # print(f"Sending stop for dispatch 2: {dispatch2_stop}")
+    await test_env.running_status_sender.send(dispatch2_stop)
+    await asyncio.sleep(0.1)  # Allow ActorDispatcher to process the stop
+
+    # pylint: disable=protected-access
+    assert (
+        102 not in test_env.actors_service._actors
+    ), "Actor 2 should have been removed"
+    # pylint: enable=protected-access
+    assert not test_env.is_running(102), "Actor 2 should be stopped"
