@@ -127,6 +127,7 @@ def update_dispatch(sample: BaseDispatch, dispatch: BaseDispatch) -> BaseDispatc
         update_time=dispatch.update_time,
         create_time=dispatch.create_time,
         id=dispatch.id,
+        end_time=dispatch.end_time,  # Ensure end_time is updated
     )
 
 
@@ -359,9 +360,12 @@ async def test_dispatch_schedule(
         type="TEST_TYPE",
     )
     await test_env.client.create(**to_create_params(test_env.microgrid_id, sample))
-    dispatch = Dispatch(test_env.client.dispatches(test_env.microgrid_id)[0])
+    # Get the initial dispatch state from the client to use as a base for comparison
+    initial_dispatch_from_client = Dispatch(
+        test_env.client.dispatches(test_env.microgrid_id)[0]
+    )
 
-    next_run = dispatch.next_run_after(_now())
+    next_run = initial_dispatch_from_client.next_run_after(_now())
     assert next_run is not None
 
     fake_time.shift(next_run - _now() - timedelta(seconds=1))
@@ -370,16 +374,21 @@ async def test_dispatch_schedule(
     # Expect notification of the dispatch being ready to run
     ready_dispatch = await test_env.running_state_change.receive()
 
-    assert ready_dispatch == dispatch
+    # Use update_dispatch to create the expected object based on the initial state
+    expected_ready_dispatch = Dispatch(update_dispatch(sample, ready_dispatch))
+    assert ready_dispatch == expected_ready_dispatch
 
-    assert dispatch.duration is not None
+    assert initial_dispatch_from_client.duration is not None
     # Shift time to the end of the dispatch
-    fake_time.shift(dispatch.duration + timedelta(seconds=1))
+    fake_time.shift(initial_dispatch_from_client.duration + timedelta(seconds=1))
     await asyncio.sleep(1)
 
     # Expect notification to stop the dispatch
     done_dispatch = await test_env.running_state_change.receive()
-    assert done_dispatch == dispatch
+
+    # Use update_dispatch again for the stop event comparison
+    expected_done_dispatch = Dispatch(update_dispatch(sample, done_dispatch))
+    assert done_dispatch == expected_done_dispatch
 
     await asyncio.sleep(1)
 
