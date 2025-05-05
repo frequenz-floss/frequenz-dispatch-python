@@ -220,12 +220,13 @@ class Dispatcher(BackgroundService):
         )
         self._actor_dispatchers: dict[str, ActorDispatcher] = {}
         self._empty_event = Event()
-        self._empty_event.set()
+        self._disconnecting_future: asyncio.Future[None] | None = None
 
     @override
     def start(self) -> None:
         """Start the local dispatch service."""
         self._bg_service.start()
+        self._empty_event.set()
 
     @property
     @override
@@ -235,18 +236,22 @@ class Dispatcher(BackgroundService):
 
     @override
     async def wait(self) -> None:
-        """Wait until all actor dispatches are stopped."""
-        await asyncio.gather(self._bg_service.wait(), self._empty_event.wait())
+        """Wait until all actor dispatches are stopped and client is disconnected."""
+        if self._disconnecting_future is not None:
+            await self._disconnecting_future
 
+        await asyncio.gather(self._bg_service.wait(), self._empty_event.wait())
         self._actor_dispatchers.clear()
 
-    @override
     def cancel(self, msg: str | None = None) -> None:
-        """Stop the local dispatch service."""
+        """Stop the local dispatch service and initiate client disconnection."""
         self._bg_service.cancel(msg)
 
         for instance in self._actor_dispatchers.values():
             instance.cancel()
+
+        # Initiate client disconnection asynchronously
+        self._disconnecting_future = asyncio.ensure_future(self._client.disconnect())
 
     async def wait_for_initialization(self) -> None:
         """Wait until the background service is initialized."""
@@ -358,6 +363,7 @@ class Dispatcher(BackgroundService):
             This background service.
         """
         await super().__aenter__()
+        await self._client.__aenter__()
         await self.wait_for_initialization()
         return self
 
