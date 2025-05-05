@@ -15,3 +15,4 @@
 ## Bug Fixes
 
 * Fixes reconnecting after connection loss for streams
+* Fixed an issue in the `Dispatcher` class where the client connection was not properly disconnected during cleanup, potentially causing unclosed socket errors.
