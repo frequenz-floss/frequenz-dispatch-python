@@ -17,7 +17,7 @@ from heapq import heappop, heappush
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
 from frequenz.channels.timer import SkipMissedAndResync, Timer
-from frequenz.client.dispatch import Client
+from frequenz.client.dispatch import DispatchApiClient
 from frequenz.client.dispatch.types import Event
 from frequenz.sdk.actor import BackgroundService
 
@@ -90,7 +90,7 @@ class DispatchScheduler(BackgroundService):
     def __init__(
         self,
         microgrid_id: int,
-        client: Client,
+        client: DispatchApiClient,
     ) -> None:
         """Initialize the background service.
 

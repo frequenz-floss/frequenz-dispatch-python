@@ -12,7 +12,7 @@ from datetime import timedelta
 from typing import Awaitable, Callable, Self
 
 from frequenz.channels import Receiver
-from frequenz.client.dispatch import Client
+from frequenz.client.dispatch import DispatchApiClient
 from frequenz.sdk.actor import Actor, BackgroundService
 from typing_extensions import override
 
@@ -151,7 +151,8 @@ class Dispatcher(BackgroundService):
         ```
 
     Example: Creating a new dispatch and then modifying it.
-        Note that this uses the lower-level `Client` class to create and update the dispatch.
+        Note that this uses the lower-level `DispatchApiClient` class to create
+        and update the dispatch.
 
         ```python
         import os
@@ -213,7 +214,7 @@ class Dispatcher(BackgroundService):
         """
         super().__init__()
 
-        self._client = Client(server_url=server_url, key=key)
+        self._client = DispatchApiClient(server_url=server_url, key=key)
         self._bg_service = DispatchScheduler(
             microgrid_id,
             self._client,
@@ -349,7 +350,7 @@ class Dispatcher(BackgroundService):
             self._empty_event.set()
 
     @property
-    def client(self) -> Client:
+    def client(self) -> DispatchApiClient:
         """Return the client."""
         return self._client
 
