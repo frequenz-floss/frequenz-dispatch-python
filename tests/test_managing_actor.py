@@ -333,7 +333,7 @@ async def test_manage_abstraction(
     mid = 1
 
     # Patch `Client` class in Dispatcher with MyFakeClient
-    with patch("frequenz.dispatch._dispatcher.Client", MyFakeClient):
+    with patch("frequenz.dispatch._dispatcher.DispatchApiClient", MyFakeClient):
         dispatcher = Dispatcher(
             microgrid_id=mid, server_url="grpc://test-url", key="test-key"
         )
