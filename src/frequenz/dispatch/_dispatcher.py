@@ -55,7 +55,7 @@ class Dispatcher(BackgroundService):
             return MagicMock(dispatch=dispatch, receiver=receiver)
 
         async def run():
-            url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
+            url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
             key  = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
@@ -81,7 +81,7 @@ class Dispatcher(BackgroundService):
         from unittest.mock import MagicMock
 
         async def run():
-            url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
+            url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
             key  = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
@@ -126,7 +126,7 @@ class Dispatcher(BackgroundService):
         from frequenz.dispatch import Created, Deleted, Dispatcher, Updated
 
         async def run():
-            url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
+            url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
             key  = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
@@ -163,7 +163,7 @@ class Dispatcher(BackgroundService):
         from frequenz.dispatch import Dispatcher
 
         async def run():
-            url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
+            url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
             key  = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
