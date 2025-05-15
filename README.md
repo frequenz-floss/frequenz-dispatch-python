@@ -30,7 +30,7 @@ async def create_actor(dispatch: DispatchInfo, receiver: Receiver[DispatchInfo])
     return MagicMock(dispatch=dispatch, receiver=receiver)
 
 async def run():
-    url = os.getenv("DISPATCH_API_URL", "grpc://fz-0004.frequenz.io:50051")
+    url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
     key  = os.getenv("DISPATCH_API_KEY", "some-key")
 
     microgrid_id = 1
