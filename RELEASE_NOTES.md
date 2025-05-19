@@ -10,7 +10,7 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+* This release now supports the sdk up to rc2000.
 
 ## Bug Fixes
 
