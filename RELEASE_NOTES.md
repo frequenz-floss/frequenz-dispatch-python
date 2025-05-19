@@ -1,9 +1,17 @@
 # Dispatch Highlevel Interface Release Notes
 
+## Summary
+
+<!-- Here goes a general summary of what this release is about -->
+
 ## Upgrading
 
-This is a breaking release that requires you to use the new URL for the dispatch service.
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+
+## New Features
+
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
-* Fix that a user might see invalid values for dispatches without `end_time`.
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
