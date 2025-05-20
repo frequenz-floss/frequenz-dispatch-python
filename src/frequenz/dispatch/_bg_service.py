@@ -296,7 +296,7 @@ class DispatchScheduler(BackgroundService):
         self._dispatches = {}
 
         try:
-            _logger.info("Fetching dispatches for microgrid %s", self._microgrid_id)
+            _logger.debug("Fetching dispatches for microgrid %s", self._microgrid_id)
             async for page in self._client.list(microgrid_id=self._microgrid_id):
                 for client_dispatch in page:
                     dispatch = Dispatch(client_dispatch)
@@ -314,7 +314,7 @@ class DispatchScheduler(BackgroundService):
                         )
                         await self._lifecycle_events_tx.send(Updated(dispatch=dispatch))
 
-            _logger.info("Received %s dispatches", len(self._dispatches))
+            _logger.debug("Received %s dispatches", len(self._dispatches))
 
         except grpc.aio.AioRpcError as error:
             _logger.error("Error fetching dispatches: %s", error)
@@ -322,7 +322,7 @@ class DispatchScheduler(BackgroundService):
             return
 
         for dispatch in old_dispatches.values():
-            _logger.info("Deleted dispatch: %s", dispatch)
+            _logger.debug("Deleted dispatch: %s", dispatch)
             await self._lifecycle_events_tx.send(Deleted(dispatch=dispatch))
             await self._update_dispatch_schedule_and_notify(None, dispatch)
 
