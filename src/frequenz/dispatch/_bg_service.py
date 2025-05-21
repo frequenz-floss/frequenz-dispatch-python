@@ -18,7 +18,13 @@ from heapq import heappop, heappush
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
 from frequenz.channels.timer import SkipMissedAndResync, Timer
+from frequenz.client.base.streaming import (
+    StreamFatalError,
+    StreamRetrying,
+    StreamStarted,
+)
 from frequenz.client.dispatch import DispatchApiClient
+from frequenz.client.dispatch.types import DispatchEvent as ApiDispatchEvent
 from frequenz.client.dispatch.types import Event
 from frequenz.sdk.actor import BackgroundService
 
@@ -230,8 +236,21 @@ class DispatchScheduler(BackgroundService):
         ) as next_event_timer:
             # Initial fetch
             await self._fetch(next_event_timer)
-            stream = self._client.stream(microgrid_id=self._microgrid_id)
 
+            # pylint: disable-next=protected-access
+            streamer = self._client._get_stream(microgrid_id=self._microgrid_id)
+            stream = streamer.new_receiver(include_events=True)
+
+            # We track stream start events linked to retries to avoid re-fetching
+            # dispatches that were already retrieved during an initial stream start.
+            # The initial fetch gets all dispatches, and the StreamStarted event
+            # isn't always reliable due to parallel receiver creation and stream
+            # task initiation.
+            # This way we get a deterministic behavior where we only fetch
+            # dispatches once initially and then only when the stream is restarted.
+            is_retry_attempt = False
+
+            # Streaming updates
             async for selected in select(next_event_timer, stream):
                 if selected_from(selected, next_event_timer):
                     if not self._scheduled_events:
@@ -240,36 +259,54 @@ class DispatchScheduler(BackgroundService):
                         heappop(self._scheduled_events).dispatch, next_event_timer
                     )
                 elif selected_from(selected, stream):
-                    _logger.debug("Received dispatch event: %s", selected.message)
-                    dispatch = Dispatch(selected.message.dispatch)
-                    match selected.message.event:
-                        case Event.CREATED:
-                            self._dispatches[dispatch.id] = dispatch
-                            await self._update_dispatch_schedule_and_notify(
-                                dispatch, None, next_event_timer
+                    match selected.message:
+                        case ApiDispatchEvent():
+                            _logger.debug(
+                                "Received dispatch event: %s", selected.message
                             )
-                            await self._lifecycle_events_tx.send(
-                                Created(dispatch=dispatch)
-                            )
-                        case Event.UPDATED:
-                            await self._update_dispatch_schedule_and_notify(
-                                dispatch,
-                                self._dispatches[dispatch.id],
-                                next_event_timer,
-                            )
-                            self._dispatches[dispatch.id] = dispatch
-                            await self._lifecycle_events_tx.send(
-                                Updated(dispatch=dispatch)
-                            )
-                        case Event.DELETED:
-                            self._dispatches.pop(dispatch.id)
-                            await self._update_dispatch_schedule_and_notify(
-                                None, dispatch, next_event_timer
-                            )
+                            dispatch = Dispatch(selected.message.dispatch)
+                            match selected.message.event:
+                                case Event.CREATED:
+                                    self._dispatches[dispatch.id] = dispatch
+                                    await self._update_dispatch_schedule_and_notify(
+                                        dispatch, None, next_event_timer
+                                    )
+                                    await self._lifecycle_events_tx.send(
+                                        Created(dispatch=dispatch)
+                                    )
+                                case Event.UPDATED:
+                                    await self._update_dispatch_schedule_and_notify(
+                                        dispatch,
+                                        self._dispatches[dispatch.id],
+                                        next_event_timer,
+                                    )
+                                    self._dispatches[dispatch.id] = dispatch
+                                    await self._lifecycle_events_tx.send(
+                                        Updated(dispatch=dispatch)
+                                    )
+                                case Event.DELETED:
+                                    self._dispatches.pop(dispatch.id)
+                                    await self._update_dispatch_schedule_and_notify(
+                                        None, dispatch, next_event_timer
+                                    )
 
-                            await self._lifecycle_events_tx.send(
-                                Deleted(dispatch=dispatch)
-                            )
+                                    await self._lifecycle_events_tx.send(
+                                        Deleted(dispatch=dispatch)
+                                    )
+
+                        case StreamRetrying():
+                            is_retry_attempt = True
+
+                        case StreamStarted():
+                            if is_retry_attempt:
+                                _logger.info(
+                                    "Dispatch stream restarted, getting dispatches"
+                                )
+                                await self._fetch(next_event_timer)
+                                is_retry_attempt = False
+
+                        case StreamFatalError():
+                            pass
 
     async def _execute_scheduled_event(self, dispatch: Dispatch, timer: Timer) -> None:
         """Execute a scheduled event.
