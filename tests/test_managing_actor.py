@@ -18,6 +18,7 @@ from frequenz.client.dispatch import recurrence
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient
 from frequenz.client.dispatch.test.generator import DispatchGenerator
+from frequenz.client.microgrid import ComponentId
 from frequenz.sdk.actor import Actor
 from pytest import fixture
 
@@ -152,6 +153,7 @@ async def test_simple_start_stop(
         active=True,
         dry_run=False,
         duration=duration,
+        target=[1, 10, 15],
         start_time=now,
         payload={"test": True},
         type="UNIT_TEST",
@@ -169,7 +171,7 @@ async def test_simple_start_stop(
 
     event = test_env.actor(1).initial_dispatch
     assert event.options == {"test": True}
-    assert event.components == dispatch.target
+    assert event.components == [ComponentId(1), ComponentId(10), ComponentId(15)]
     assert event.dry_run is False
 
     assert test_env.actor(1).is_running is True
