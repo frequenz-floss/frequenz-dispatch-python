@@ -8,15 +8,22 @@ import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Awaitable
+from typing import Any, Awaitable, cast
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
-from frequenz.client.dispatch.types import TargetComponents
+from frequenz.client.common.microgrid.components import ComponentCategory
+from frequenz.client.microgrid import ComponentId
 from frequenz.sdk.actor import Actor, BackgroundService
 
 from ._dispatch import Dispatch
 
 _logger = logging.getLogger(__name__)
+
+TargetComponents = list[ComponentId] | list[ComponentCategory]
+"""One or more target components specifying which components a dispatch targets.
+
+It can be a list of component IDs or a list of categories.
+"""
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -46,7 +53,6 @@ class ActorDispatcher(BackgroundService):
     import asyncio
     from typing import override
     from frequenz.dispatch import Dispatcher, ActorDispatcher, DispatchInfo
-    from frequenz.client.dispatch.types import TargetComponents
     from frequenz.client.common.microgrid.components import ComponentCategory
     from frequenz.channels import Receiver, Broadcast, select, selected_from
     from frequenz.sdk.actor import Actor, run
@@ -236,10 +242,21 @@ class ActorDispatcher(BackgroundService):
         """Start the background service."""
         self._tasks.add(asyncio.create_task(self._run()))
 
+    def _get_target_components_from_dispatch(
+        self, dispatch: Dispatch
+    ) -> TargetComponents:
+        if all(isinstance(comp, int) for comp in dispatch.target):
+            # We've confirmed all elements are integers, so we can cast.
+            int_components = cast(list[int], dispatch.target)
+            return [ComponentId(cid) for cid in int_components]
+        # If not all are ints, then it must be a list of ComponentCategory
+        # based on the definition of ClientTargetComponents.
+        return cast(list[ComponentCategory], dispatch.target)
+
     async def _start_actor(self, dispatch: Dispatch) -> None:
         """Start the actor the given dispatch refers to."""
         dispatch_update = DispatchInfo(
-            components=dispatch.target,
+            components=self._get_target_components_from_dispatch(dispatch),
             dry_run=dispatch.dry_run,
             options=dispatch.payload,
             _src=dispatch,
