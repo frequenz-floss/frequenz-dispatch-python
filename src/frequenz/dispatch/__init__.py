@@ -15,7 +15,7 @@ A small overview of the most important classes in this module:
 
 """
 
-from ._actor_dispatcher import ActorDispatcher, DispatchInfo
+from ._actor_dispatcher import ActorDispatcher, DispatchInfo, TargetComponents
 from ._bg_service import MergeStrategy
 from ._dispatch import Dispatch
 from ._dispatcher import Dispatcher
@@ -34,4 +34,5 @@ __all__ = [
     "MergeStrategy",
     "MergeByType",
     "MergeByTypeTarget",
+    "TargetComponents",
 ]
