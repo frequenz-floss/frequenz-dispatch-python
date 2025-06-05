@@ -569,6 +569,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#frequenz.dispatch.TargetComponents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;TargetComponents
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1701,6 +1710,33 @@
         <p>Type that is sent over the channel for dispatch updates.</p>
 <p>This type is used to send dispatches that were created, updated or deleted
 over the channel.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="frequenz.dispatch.TargetComponents" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">frequenz.dispatch.TargetComponents</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#frequenz.dispatch.TargetComponents" class="headerlink" title="Permanent link">¤</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">TargetComponents</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span><span class="p">[</span><span class="n"><span title="frequenz.client.microgrid.ComponentId">ComponentId</span></span><span class="p">]</span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span><span class="p">[</span><span class="n"><span title="frequenz.client.common.microgrid.components.ComponentCategory">ComponentCategory</span></span><span class="p">]</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>One or more target components specifying which components a dispatch targets.</p>
+<p>It can be a list of component IDs or a list of categories.</p>
 
     </div>
 
@@ -6564,7 +6600,12 @@ If the dispatch is not running, None is returned.</p>
   </span>
 
 <a href="#frequenz.dispatch.DispatchInfo.components" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">components</span><span class="p">:</span> <span class="n"><span title="frequenz.dispatch._actor_dispatcher.TargetComponents">TargetComponents</span></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">components</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.TargetComponents
+
+
+  
+      module-attribute
+   (frequenz.dispatch._actor_dispatcher.TargetComponents)" href="#frequenz.dispatch.TargetComponents">TargetComponents</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
