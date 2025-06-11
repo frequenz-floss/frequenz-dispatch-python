@@ -14,4 +14,4 @@
 
 ## Bug Fixes
 
-<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+* Fixed that dispatches are never retried on failure, but instead an infinite loop of retry logs is triggered.
