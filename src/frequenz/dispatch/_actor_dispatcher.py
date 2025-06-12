@@ -12,6 +12,7 @@ from typing import Any, Awaitable, cast
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
 from frequenz.client.common.microgrid.components import ComponentCategory
+from frequenz.client.dispatch.types import TargetComponents as ClientTargetComponents
 from frequenz.client.microgrid import ComponentId
 from frequenz.sdk.actor import Actor, BackgroundService
 
@@ -242,21 +243,10 @@ class ActorDispatcher(BackgroundService):
         """Start the background service."""
         self._tasks.add(asyncio.create_task(self._run()))
 
-    def _get_target_components_from_dispatch(
-        self, dispatch: Dispatch
-    ) -> TargetComponents:
-        if all(isinstance(comp, int) for comp in dispatch.target):
-            # We've confirmed all elements are integers, so we can cast.
-            int_components = cast(list[int], dispatch.target)
-            return [ComponentId(cid) for cid in int_components]
-        # If not all are ints, then it must be a list of ComponentCategory
-        # based on the definition of ClientTargetComponents.
-        return cast(list[ComponentCategory], dispatch.target)
-
     async def _start_actor(self, dispatch: Dispatch) -> None:
         """Start the actor the given dispatch refers to."""
         dispatch_update = DispatchInfo(
-            components=self._get_target_components_from_dispatch(dispatch),
+            components=_convert_target_components(dispatch.target),
             dry_run=dispatch.dry_run,
             options=dispatch.payload,
             _src=dispatch,
@@ -337,3 +327,13 @@ class ActorDispatcher(BackgroundService):
             await self._start_actor(dispatch)
         else:
             await self._stop_actor(dispatch, "Dispatch stopped")
+
+
+def _convert_target_components(target: ClientTargetComponents) -> TargetComponents:
+    if all(isinstance(comp, int) for comp in target):
+        # We've confirmed all elements are integers, so we can cast.
+        int_components = cast(list[int], target)
+        return [ComponentId(cid) for cid in int_components]
+    # If not all are ints, then it must be a list of ComponentCategory
+    # based on the definition of ClientTargetComponents.
+    return cast(list[ComponentCategory], target)
