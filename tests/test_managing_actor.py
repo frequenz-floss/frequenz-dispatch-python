@@ -327,9 +327,18 @@ async def test_manage_abstraction(
     class MyFakeClient(FakeClient):
         """Fake client for testing."""
 
-        def __init__(self, *, server_url: str, key: str):
+        def __init__(
+            self,
+            *,
+            server_url: str,
+            key: str,
+            call_timeout: timedelta,
+            stream_timeout: timedelta,
+        ) -> None:
             assert server_url
             assert key
+            assert call_timeout
+            assert stream_timeout
             super().__init__()
 
     mid = 1
