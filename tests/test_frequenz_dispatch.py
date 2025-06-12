@@ -461,6 +461,7 @@ async def test_dispatch_new_but_finished(
     test_env.client.set_dispatches(test_env.microgrid_id, [finished_dispatch])
     await test_env.service.stop()
     test_env.service.start()
+
     test_env = replace(
         test_env,
         lifecycle_events=test_env.service.new_lifecycle_events_receiver("TEST_TYPE"),
@@ -470,8 +471,8 @@ async def test_dispatch_new_but_finished(
             )
         ),
     )
-
     fake_time.shift(timedelta(seconds=1))
+
     # Process the lifecycle event caused by the old dispatch at startup
     await test_env.lifecycle_events.receive()
 
