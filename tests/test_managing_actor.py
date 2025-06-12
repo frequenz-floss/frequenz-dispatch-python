@@ -19,6 +19,7 @@ from frequenz.client.dispatch import recurrence
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient
 from frequenz.client.dispatch.test.generator import DispatchGenerator
+from frequenz.client.dispatch.types import TargetIds
 from frequenz.sdk.actor import Actor
 from pytest import fixture
 
@@ -31,6 +32,7 @@ from frequenz.dispatch import (
     MergeByTypeTarget,
     MergeStrategy,
 )
+from frequenz.dispatch._actor_dispatcher import _convert_target_components
 from frequenz.dispatch._bg_service import DispatchScheduler
 
 
@@ -153,7 +155,7 @@ async def test_simple_start_stop(
         active=True,
         dry_run=False,
         duration=duration,
-        target=[1, 10, 15],
+        target=TargetIds(1, 10, 15),
         start_time=now,
         payload={"test": True},
         type="UNIT_TEST",
@@ -301,7 +303,7 @@ async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Coordinates) 
     event = test_env.actor(1).initial_dispatch
 
     assert event.dry_run is dispatch.dry_run
-    assert event.components == dispatch.target
+    assert event.components == _convert_target_components(dispatch.target)
     assert event.options == dispatch.payload
     assert test_env.actor(1).is_running is True
 

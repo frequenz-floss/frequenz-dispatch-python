@@ -17,6 +17,7 @@ from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient, to_create_params
 from frequenz.client.dispatch.test.generator import DispatchGenerator
 from frequenz.client.dispatch.types import Dispatch as BaseDispatch
+from frequenz.client.dispatch.types import TargetIds
 from pytest import fixture
 
 from frequenz.dispatch import (
@@ -156,6 +157,7 @@ async def _test_new_dispatch_created(
             received = Dispatch(update_dispatch(sample, dispatch))
             assert dispatch == received
 
+    await asyncio.sleep(1)
     return dispatch
 
 
@@ -566,7 +568,9 @@ async def test_multiple_dispatches_merge_running_intervals(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=30),
-        target=[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4],
+        target=TargetIds(
+            *[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4]
+        ),
         start_time=_now() + timedelta(seconds=5),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -575,7 +579,7 @@ async def test_multiple_dispatches_merge_running_intervals(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=10),
-        target=[3, 4],
+        target=TargetIds(3, 4),
         start_time=_now() + timedelta(seconds=10),  # starts after dispatch1
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -643,7 +647,9 @@ async def test_multiple_dispatches_sequential_intervals_merge(
         active=True,
         duration=timedelta(seconds=5),
         # If merging by type, we want to test having different targets in dispatch 1 and 2
-        target=[3, 4] if isinstance(merge_strategy, MergeByType) else [1, 2],
+        target=TargetIds(
+            *[3, 4] if isinstance(merge_strategy, MergeByType) else [1, 2]
+        ),
         start_time=_now() + timedelta(seconds=5),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -653,7 +659,7 @@ async def test_multiple_dispatches_sequential_intervals_merge(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=5),
-        target=[1, 2],
+        target=TargetIds(1, 2),
         start_time=dispatch1.start_time + dispatch1.duration,
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -708,7 +714,9 @@ async def test_at_least_one_running_filter(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=10),
-        target=[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4],
+        target=TargetIds(
+            *[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4]
+        ),
         start_time=_now() + timedelta(seconds=5),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -739,7 +747,7 @@ async def test_at_least_one_running_filter(
         generator.generate_dispatch(),
         active=False,
         duration=timedelta(seconds=10),
-        target=[3, 4],
+        target=TargetIds(3, 4),
         start_time=_now() + timedelta(seconds=50),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
