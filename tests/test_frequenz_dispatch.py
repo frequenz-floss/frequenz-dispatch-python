@@ -358,6 +358,7 @@ async def test_dispatch_schedule(
         active=True,
         duration=timedelta(seconds=10),
         type="TEST_TYPE",
+        recurrence=RecurrenceRule(),
     )
     await test_env.client.create(**to_create_params(test_env.microgrid_id, sample))
     # Get the initial dispatch state from the client to use as a base for comparison
