@@ -198,12 +198,15 @@ class Dispatcher(BackgroundService):
         ```
     """
 
+    # pylint: disable-next=too-many-arguments
     def __init__(
         self,
         *,
         microgrid_id: int,
         server_url: str,
         key: str,
+        call_timeout: timedelta = timedelta(seconds=60),
+        stream_timeout: timedelta = timedelta(minutes=5),
     ):
         """Initialize the dispatcher.
 
@@ -211,10 +214,17 @@ class Dispatcher(BackgroundService):
             microgrid_id: The microgrid id.
             server_url: The URL of the dispatch service.
             key: The key to access the service.
+            call_timeout: The timeout for API calls.
+            stream_timeout: The timeout for streaming API calls.
         """
         super().__init__()
 
-        self._client = DispatchApiClient(server_url=server_url, key=key)
+        self._client = DispatchApiClient(
+            server_url=server_url,
+            key=key,
+            call_timeout=call_timeout,
+            stream_timeout=stream_timeout,
+        )
         self._bg_service = DispatchScheduler(
             microgrid_id,
             self._client,

@@ -10,7 +10,9 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+* The dispatcher offers two new parameters to control the client's call and stream timeout:
+  - `call_timeout`: The maximum time to wait for a response from the client.
+  - `stream_timeout`: The maximum time to wait before restarting a stream.
 
 ## Bug Fixes
 
