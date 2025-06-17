@@ -12,8 +12,7 @@ from typing import Any, Awaitable, cast
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
 from frequenz.channels.timer import SkipMissedAndDrift, Timer
-from frequenz.client.common.microgrid.components import ComponentCategory
-from frequenz.client.microgrid import ComponentId
+from frequenz.client.common.microgrid.components import ComponentCategory, ComponentId
 from frequenz.sdk.actor import Actor, BackgroundService
 
 from ._dispatch import Dispatch

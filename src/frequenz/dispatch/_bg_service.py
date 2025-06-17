@@ -10,6 +10,7 @@ import functools
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Mapping
+from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from heapq import heappop, heappush
@@ -113,13 +114,6 @@ class DispatchScheduler(BackgroundService):
         )
 
         self._running_state_status_tx = self._running_state_status_channel.new_sender()
-        self._next_event_timer = Timer(
-            timedelta(seconds=100), SkipMissedAndResync(), auto_start=False
-        )
-        """The timer to schedule the next event.
-
-        Interval is chosen arbitrarily, as it will be reset on the first event.
-        """
 
         self._scheduled_events: list["DispatchScheduler.QueueItem"] = []
         """The scheduled events, sorted by time.
@@ -188,7 +182,7 @@ class DispatchScheduler(BackgroundService):
         Raises:
             RuntimeError: If the dispatch service is not running.
         """
-        if not self._tasks:
+        if not self.is_running:
             raise RuntimeError("Dispatch service not started")
 
         # Find all matching dispatches based on the type and collect them
@@ -230,44 +224,59 @@ class DispatchScheduler(BackgroundService):
             self._microgrid_id,
         )
 
-        # Initial fetch
-        await self._fetch()
-
-        stream = self._client.stream(microgrid_id=self._microgrid_id)
-
         # Streaming updates
-        async for selected in select(self._next_event_timer, stream):
-            if selected_from(selected, self._next_event_timer):
-                if not self._scheduled_events:
-                    continue
-                await self._execute_scheduled_event(
-                    heappop(self._scheduled_events).dispatch
-                )
-            elif selected_from(selected, stream):
-                _logger.debug("Received dispatch event: %s", selected.message)
-                dispatch = Dispatch(selected.message.dispatch)
-                match selected.message.event:
-                    case Event.CREATED:
-                        self._dispatches[dispatch.id] = dispatch
-                        await self._update_dispatch_schedule_and_notify(dispatch, None)
-                        await self._lifecycle_events_tx.send(Created(dispatch=dispatch))
-                    case Event.UPDATED:
-                        await self._update_dispatch_schedule_and_notify(
-                            dispatch, self._dispatches[dispatch.id]
-                        )
-                        self._dispatches[dispatch.id] = dispatch
-                        await self._lifecycle_events_tx.send(Updated(dispatch=dispatch))
-                    case Event.DELETED:
-                        self._dispatches.pop(dispatch.id)
-                        await self._update_dispatch_schedule_and_notify(None, dispatch)
+        with closing(
+            Timer(timedelta(seconds=100), SkipMissedAndResync(), auto_start=False)
+        ) as next_event_timer:
+            # Initial fetch
+            await self._fetch(next_event_timer)
+            stream = self._client.stream(microgrid_id=self._microgrid_id)
 
-                        await self._lifecycle_events_tx.send(Deleted(dispatch=dispatch))
+            async for selected in select(next_event_timer, stream):
+                if selected_from(selected, next_event_timer):
+                    if not self._scheduled_events:
+                        continue
+                    await self._execute_scheduled_event(
+                        heappop(self._scheduled_events).dispatch, next_event_timer
+                    )
+                elif selected_from(selected, stream):
+                    _logger.debug("Received dispatch event: %s", selected.message)
+                    dispatch = Dispatch(selected.message.dispatch)
+                    match selected.message.event:
+                        case Event.CREATED:
+                            self._dispatches[dispatch.id] = dispatch
+                            await self._update_dispatch_schedule_and_notify(
+                                dispatch, None, next_event_timer
+                            )
+                            await self._lifecycle_events_tx.send(
+                                Created(dispatch=dispatch)
+                            )
+                        case Event.UPDATED:
+                            await self._update_dispatch_schedule_and_notify(
+                                dispatch,
+                                self._dispatches[dispatch.id],
+                                next_event_timer,
+                            )
+                            self._dispatches[dispatch.id] = dispatch
+                            await self._lifecycle_events_tx.send(
+                                Updated(dispatch=dispatch)
+                            )
+                        case Event.DELETED:
+                            self._dispatches.pop(dispatch.id)
+                            await self._update_dispatch_schedule_and_notify(
+                                None, dispatch, next_event_timer
+                            )
 
-    async def _execute_scheduled_event(self, dispatch: Dispatch) -> None:
+                            await self._lifecycle_events_tx.send(
+                                Deleted(dispatch=dispatch)
+                            )
+
+    async def _execute_scheduled_event(self, dispatch: Dispatch, timer: Timer) -> None:
         """Execute a scheduled event.
 
         Args:
             dispatch: The dispatch to execute.
+            timer: The timer to use for scheduling the next event.
         """
         _logger.debug("Executing scheduled event: %s (%s)", dispatch, dispatch.started)
         await self._send_running_state_change(dispatch)
@@ -282,9 +291,9 @@ class DispatchScheduler(BackgroundService):
         else:
             self._schedule_start(dispatch)
 
-        self._update_timer()
+        self._update_timer(timer)
 
-    async def _fetch(self) -> None:
+    async def _fetch(self, timer: Timer) -> None:
         """Fetch all relevant dispatches using list.
 
         This is used for the initial fetch and for re-fetching all dispatches
@@ -305,12 +314,14 @@ class DispatchScheduler(BackgroundService):
                     old_dispatch = old_dispatches.pop(dispatch.id, None)
                     if not old_dispatch:
                         _logger.debug("New dispatch: %s", dispatch)
-                        await self._update_dispatch_schedule_and_notify(dispatch, None)
+                        await self._update_dispatch_schedule_and_notify(
+                            dispatch, None, timer
+                        )
                         await self._lifecycle_events_tx.send(Created(dispatch=dispatch))
                     elif dispatch.update_time != old_dispatch.update_time:
                         _logger.debug("Updated dispatch: %s", dispatch)
                         await self._update_dispatch_schedule_and_notify(
-                            dispatch, old_dispatch
+                            dispatch, old_dispatch, timer
                         )
                         await self._lifecycle_events_tx.send(Updated(dispatch=dispatch))
 
@@ -324,7 +335,7 @@ class DispatchScheduler(BackgroundService):
         for dispatch in old_dispatches.values():
             _logger.debug("Deleted dispatch: %s", dispatch)
             await self._lifecycle_events_tx.send(Deleted(dispatch=dispatch))
-            await self._update_dispatch_schedule_and_notify(None, dispatch)
+            await self._update_dispatch_schedule_and_notify(None, dispatch, timer)
 
             # Set deleted only here as it influences the result of dispatch.started
             # which is used in above in _running_state_change
@@ -334,7 +345,7 @@ class DispatchScheduler(BackgroundService):
         self._initial_fetch_event.set()
 
     async def _update_dispatch_schedule_and_notify(
-        self, dispatch: Dispatch | None, old_dispatch: Dispatch | None
+        self, dispatch: Dispatch | None, old_dispatch: Dispatch | None, timer: Timer
     ) -> None:
         """Update the schedule for a dispatch.
 
@@ -350,6 +361,7 @@ class DispatchScheduler(BackgroundService):
         Args:
             dispatch: The dispatch to update the schedule for.
             old_dispatch: The old dispatch, if available.
+            timer: The timer to use for scheduling the next event.
         """
         # If dispatch is None, the dispatch was deleted
         # and we need to cancel any existing event for it
@@ -392,13 +404,13 @@ class DispatchScheduler(BackgroundService):
                 self._schedule_start(dispatch)
 
         # We modified the schedule, so we need to reset the timer
-        self._update_timer()
+        self._update_timer(timer)
 
-    def _update_timer(self) -> None:
+    def _update_timer(self, timer: Timer) -> None:
         """Update the timer to the next event."""
         if self._scheduled_events:
             due_at: datetime = self._scheduled_events[0].time
-            self._next_event_timer.reset(interval=due_at - datetime.now(timezone.utc))
+            timer.reset(interval=due_at - datetime.now(timezone.utc))
             _logger.debug("Next event scheduled at %s", self._scheduled_events[0].time)
 
     def _remove_scheduled(self, dispatch: Dispatch) -> bool:

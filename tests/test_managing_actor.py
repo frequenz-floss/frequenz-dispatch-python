@@ -14,11 +14,11 @@ import async_solipsism
 import pytest
 import time_machine
 from frequenz.channels import Broadcast, Receiver, Sender
+from frequenz.client.common.microgrid.components import ComponentId
 from frequenz.client.dispatch import recurrence
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient
 from frequenz.client.dispatch.test.generator import DispatchGenerator
-from frequenz.client.microgrid import ComponentId
 from frequenz.sdk.actor import Actor
 from pytest import fixture
 
