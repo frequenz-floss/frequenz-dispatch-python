@@ -14,12 +14,13 @@ import async_solipsism
 import pytest
 import time_machine
 from frequenz.channels import Broadcast, Receiver, Sender
+from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.common.microgrid.components import ComponentId
 from frequenz.client.dispatch import recurrence
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient
 from frequenz.client.dispatch.test.generator import DispatchGenerator
-from frequenz.client.dispatch.types import TargetIds
+from frequenz.client.dispatch.types import DispatchId, TargetIds
 from frequenz.sdk.actor import Actor
 from pytest import fixture
 
@@ -32,7 +33,10 @@ from frequenz.dispatch import (
     MergeByTypeTarget,
     MergeStrategy,
 )
-from frequenz.dispatch._actor_dispatcher import _convert_target_components
+from frequenz.dispatch._actor_dispatcher import (
+    DispatchActorId,
+    _convert_target_components,
+)
 from frequenz.dispatch._bg_service import DispatchScheduler
 
 
@@ -103,8 +107,11 @@ class _TestEnv:
     running_status_sender: Sender[Dispatch]
     generator: DispatchGenerator = DispatchGenerator()
 
-    def actor(self, identity: int) -> MockActor:
+    def actor(self, identity: DispatchActorId | int) -> MockActor:
         """Return the actor."""
+        if isinstance(identity, int):
+            identity = DispatchActorId(identity)
+
         # pylint: disable=protected-access
         assert identity in self.actors_service._actors
         return cast(MockActor, self.actors_service._actors[identity].actor)
@@ -113,7 +120,7 @@ class _TestEnv:
     def is_running(self, identity: int) -> bool:
         """Return whether the actor is running."""
         # pylint: disable-next=protected-access
-        if identity not in self.actors_service._actors:
+        if DispatchActorId(identity) not in self.actors_service._actors:
             return False
 
         return self.actor(identity).is_running
@@ -127,7 +134,7 @@ async def test_env() -> AsyncIterator[_TestEnv]:
     actors_service = ActorDispatcher(
         actor_factory=MockActor.create,
         running_status_receiver=channel.new_receiver(),
-        dispatch_identity=lambda dispatch: dispatch.id,
+        dispatch_identity=lambda dispatch: DispatchActorId(dispatch.id),
     )
 
     actors_service.start()
@@ -151,7 +158,7 @@ async def test_simple_start_stop(
     dispatch = test_env.generator.generate_dispatch()
     dispatch = replace(
         dispatch,
-        id=1,
+        id=DispatchId(1),
         active=True,
         dry_run=False,
         duration=duration,
@@ -201,7 +208,7 @@ async def test_start_failed(
     dispatch = test_env.generator.generate_dispatch()
     dispatch = replace(
         dispatch,
-        id=1,
+        id=DispatchId(1),
         active=True,
         dry_run=False,
         duration=duration,
@@ -284,7 +291,7 @@ async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Coordinates) 
     dispatch = test_env.generator.generate_dispatch()
     dispatch = replace(
         dispatch,
-        id=1,
+        id=DispatchId(1),
         dry_run=True,
         active=True,
         start_time=_now(),
@@ -322,8 +329,8 @@ async def test_manage_abstraction(
     strategy: MergeStrategy | None,
 ) -> None:
     """Test Dispatcher.start_managing sets up correctly."""
-    identity: Callable[[Dispatch], int] = (
-        strategy.identity if strategy else lambda dispatch: dispatch.id
+    identity: Callable[[Dispatch], DispatchActorId] = (
+        strategy.identity if strategy else lambda dispatch: DispatchActorId(dispatch.id)
     )
 
     class MyFakeClient(FakeClient):
@@ -343,7 +350,7 @@ async def test_manage_abstraction(
             assert stream_timeout
             super().__init__()
 
-    mid = 1
+    mid = MicrogridId(1)
 
     # Patch `Client` class in Dispatcher with MyFakeClient
     with patch("frequenz.dispatch._dispatcher.DispatchApiClient", MyFakeClient):
@@ -418,7 +425,7 @@ async def test_actor_dispatcher_update_isolation(
     # Create first dispatch
     dispatch1_spec = replace(
         test_env.generator.generate_dispatch(),
-        id=101,  # Unique ID
+        id=DispatchId(101),  # Unique ID
         type=dispatch_type,
         active=True,
         dry_run=False,
@@ -432,7 +439,7 @@ async def test_actor_dispatcher_update_isolation(
     # Create second dispatch of the same type, different ID
     dispatch2_spec = replace(
         test_env.generator.generate_dispatch(),
-        id=102,  # Unique ID
+        id=DispatchId(102),  # Unique ID
         type=dispatch_type,  # Same type
         active=True,
         dry_run=False,
@@ -453,7 +460,7 @@ async def test_actor_dispatcher_update_isolation(
     actor1 = test_env.actor(101)
     assert actor1 is not None
     # pylint: disable-next=protected-access
-    assert actor1.initial_dispatch._src.id == 101
+    assert actor1.initial_dispatch._src.id == DispatchId(101)
     assert actor1.initial_dispatch.options == {"instance": 1}
     assert not test_env.is_running(102), "Actor 2 should not be running yet"
 
@@ -468,7 +475,7 @@ async def test_actor_dispatcher_update_isolation(
     actor2 = test_env.actor(102)
     assert actor2 is not None
     # pylint: disable-next=protected-access
-    assert actor2.initial_dispatch._src.id == 102
+    assert actor2.initial_dispatch._src.id == DispatchId(102)
     assert actor2.initial_dispatch.options == {"instance": 2}
 
     # Now, send an update to stop dispatch 1

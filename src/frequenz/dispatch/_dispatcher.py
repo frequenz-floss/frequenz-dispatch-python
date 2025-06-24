@@ -12,11 +12,12 @@ from datetime import timedelta
 from typing import Awaitable, Callable, Self
 
 from frequenz.channels import Receiver
+from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.dispatch import DispatchApiClient
 from frequenz.sdk.actor import Actor, BackgroundService
 from typing_extensions import override
 
-from ._actor_dispatcher import ActorDispatcher, DispatchInfo
+from ._actor_dispatcher import ActorDispatcher, DispatchActorId, DispatchInfo
 from ._bg_service import DispatchScheduler, MergeStrategy
 from ._dispatch import Dispatch
 from ._event import DispatchEvent
@@ -202,7 +203,7 @@ class Dispatcher(BackgroundService):
     def __init__(
         self,
         *,
-        microgrid_id: int,
+        microgrid_id: MicrogridId,
         server_url: str,
         key: str,
         call_timeout: timedelta = timedelta(seconds=60),
@@ -328,8 +329,8 @@ class Dispatcher(BackgroundService):
 
         self._empty_event.clear()
 
-        def id_identity(dispatch: Dispatch) -> int:
-            return dispatch.id
+        def id_identity(dispatch: Dispatch) -> DispatchActorId:
+            return DispatchActorId(dispatch.id)
 
         dispatcher = ActorDispatcher(
             actor_factory=actor_factory,

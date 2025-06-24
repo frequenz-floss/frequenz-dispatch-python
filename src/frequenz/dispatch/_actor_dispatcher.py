@@ -13,7 +13,9 @@ from typing import Any, Awaitable, cast
 from frequenz.channels import Broadcast, Receiver, Sender, select
 from frequenz.channels.timer import SkipMissedAndDrift, Timer
 from frequenz.client.common.microgrid.components import ComponentCategory, ComponentId
+from frequenz.client.dispatch.types import DispatchId
 from frequenz.client.dispatch.types import TargetComponents as ClientTargetComponents
+from frequenz.core.id import BaseId
 from frequenz.sdk.actor import Actor, BackgroundService
 
 from ._dispatch import Dispatch
@@ -25,6 +27,18 @@ TargetComponents = list[ComponentId] | list[ComponentCategory]
 
 It can be a list of component IDs or a list of categories.
 """
+
+
+class DispatchActorId(BaseId, str_prefix="DA"):
+    """ID for a dispatch actor."""
+
+    def __init__(self, dispatch_id: DispatchId | int) -> None:
+        """Initialize the DispatchActorId.
+
+        Args:
+            dispatch_id: The ID of the dispatch this actor is associated with.
+        """
+        super().__init__(int(dispatch_id))
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -162,7 +176,7 @@ class ActorDispatcher(BackgroundService):
             [DispatchInfo, Receiver[DispatchInfo]], Awaitable[Actor]
         ],
         running_status_receiver: Receiver[Dispatch],
-        dispatch_identity: Callable[[Dispatch], int] | None = None,
+        dispatch_identity: Callable[[Dispatch], DispatchActorId] | None = None,
         retry_interval: timedelta = timedelta(seconds=60),
     ) -> None:
         """Initialize the dispatch handler.
@@ -176,15 +190,15 @@ class ActorDispatcher(BackgroundService):
             retry_interval: How long to wait until trying to start failed actors again.
         """
         super().__init__()
-        self._dispatch_identity: Callable[[Dispatch], int] = (
-            dispatch_identity if dispatch_identity else lambda d: d.id
+        self._dispatch_identity: Callable[[Dispatch], DispatchActorId] = (
+            dispatch_identity if dispatch_identity else lambda d: DispatchActorId(d.id)
         )
 
         self._dispatch_rx = running_status_receiver
         self._retry_timer_rx = Timer(retry_interval, SkipMissedAndDrift())
         self._actor_factory = actor_factory
-        self._actors: dict[int, ActorDispatcher.ActorAndChannel] = {}
-        self._failed_dispatches: dict[int, Dispatch] = {}
+        self._actors: dict[DispatchActorId, ActorDispatcher.ActorAndChannel] = {}
+        self._failed_dispatches: dict[DispatchActorId, Dispatch] = {}
         """Failed dispatches that will be retried later."""
 
     def start(self) -> None:

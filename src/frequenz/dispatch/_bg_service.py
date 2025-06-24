@@ -23,11 +23,13 @@ from frequenz.client.base.streaming import (
     StreamRetrying,
     StreamStarted,
 )
+from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.dispatch import DispatchApiClient
 from frequenz.client.dispatch.types import DispatchEvent as ApiDispatchEvent
-from frequenz.client.dispatch.types import Event
+from frequenz.client.dispatch.types import DispatchId, Event
 from frequenz.sdk.actor import BackgroundService
 
+from ._actor_dispatcher import DispatchActorId
 from ._dispatch import Dispatch
 from ._event import Created, Deleted, DispatchEvent, Updated
 
@@ -39,11 +41,13 @@ class MergeStrategy(ABC):
     """Base class for strategies to merge running intervals."""
 
     @abstractmethod
-    def identity(self, dispatch: Dispatch) -> int:
+    def identity(self, dispatch: Dispatch) -> DispatchActorId:
         """Identity function for the merge criteria."""
 
     @abstractmethod
-    def filter(self, dispatches: Mapping[int, Dispatch], dispatch: Dispatch) -> bool:
+    def filter(
+        self, dispatches: Mapping[DispatchId, Dispatch], dispatch: Dispatch
+    ) -> bool:
         """Filter dispatches based on the strategy.
 
         Args:
@@ -81,7 +85,7 @@ class DispatchScheduler(BackgroundService):
         to consider the start event when deciding whether to execute the
         stop event.
         """
-        dispatch_id: int
+        dispatch_id: DispatchId
         dispatch: Dispatch = field(compare=False)
 
         def __init__(
@@ -96,7 +100,7 @@ class DispatchScheduler(BackgroundService):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        microgrid_id: int,
+        microgrid_id: MicrogridId,
         client: DispatchApiClient,
     ) -> None:
         """Initialize the background service.
@@ -108,7 +112,7 @@ class DispatchScheduler(BackgroundService):
         super().__init__(name="dispatch")
 
         self._client = client
-        self._dispatches: dict[int, Dispatch] = {}
+        self._dispatches: dict[DispatchId, Dispatch] = {}
         self._microgrid_id = microgrid_id
 
         self._lifecycle_events_channel = Broadcast[DispatchEvent](
