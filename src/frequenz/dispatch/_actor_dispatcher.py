@@ -8,25 +8,17 @@ import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Awaitable, cast
+from typing import Any, Awaitable
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
 from frequenz.channels.timer import SkipMissedAndDrift, Timer
-from frequenz.client.common.microgrid.components import ComponentCategory, ComponentId
-from frequenz.client.dispatch.types import DispatchId
-from frequenz.client.dispatch.types import TargetComponents as ClientTargetComponents
+from frequenz.client.dispatch.types import DispatchId, TargetComponents
 from frequenz.core.id import BaseId
 from frequenz.sdk.actor import Actor, BackgroundService
 
 from ._dispatch import Dispatch
 
 _logger = logging.getLogger(__name__)
-
-TargetComponents = list[ComponentId] | list[ComponentCategory]
-"""One or more target components specifying which components a dispatch targets.
-
-It can be a list of component IDs or a list of categories.
-"""
 
 
 class DispatchActorId(BaseId, str_prefix="DA"):
@@ -208,7 +200,7 @@ class ActorDispatcher(BackgroundService):
     async def _start_actor(self, dispatch: Dispatch) -> None:
         """Start the actor the given dispatch refers to."""
         dispatch_update = DispatchInfo(
-            components=_convert_target_components(dispatch.target),
+            components=dispatch.target,
             dry_run=dispatch.dry_run,
             options=dispatch.payload,
             _src=dispatch,
@@ -305,13 +297,3 @@ class ActorDispatcher(BackgroundService):
             await self._start_actor(dispatch)
         else:
             await self._stop_actor(dispatch, "Dispatch stopped")
-
-
-def _convert_target_components(target: ClientTargetComponents) -> TargetComponents:
-    if all(isinstance(comp, int) for comp in target):
-        # We've confirmed all elements are integers, so we can cast.
-        int_components = cast(list[int], target)
-        return [ComponentId(cid) for cid in int_components]
-    # If not all are ints, then it must be a list of ComponentCategory
-    # based on the definition of ClientTargetComponents.
-    return cast(list[ComponentCategory], target)

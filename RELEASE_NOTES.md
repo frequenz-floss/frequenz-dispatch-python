@@ -6,7 +6,7 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+The `frequenz.disptach.TargetComponents` tye was removed, use `frequenz.client.dispatch.TargetComponents` instead.
 
 ## New Features
 
