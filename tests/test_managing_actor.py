@@ -33,10 +33,7 @@ from frequenz.dispatch import (
     MergeByTypeTarget,
     MergeStrategy,
 )
-from frequenz.dispatch._actor_dispatcher import (
-    DispatchActorId,
-    _convert_target_components,
-)
+from frequenz.dispatch._actor_dispatcher import DispatchActorId
 from frequenz.dispatch._bg_service import DispatchScheduler
 
 
@@ -180,7 +177,9 @@ async def test_simple_start_stop(
 
     event = test_env.actor(1).initial_dispatch
     assert event.options == {"test": True}
-    assert event.components == [ComponentId(1), ComponentId(10), ComponentId(15)]
+    assert event.components == TargetIds(
+        ComponentId(1), ComponentId(10), ComponentId(15)
+    )
     assert event.dry_run is False
 
     assert test_env.actor(1).is_running is True
@@ -310,7 +309,7 @@ async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Coordinates) 
     event = test_env.actor(1).initial_dispatch
 
     assert event.dry_run is dispatch.dry_run
-    assert event.components == _convert_target_components(dispatch.target)
+    assert event.components == dispatch.target
     assert event.options == dispatch.payload
     assert test_env.actor(1).is_running is True
 
