@@ -5,23 +5,34 @@
 
 import logging
 from collections.abc import Mapping
+from sys import maxsize
+from typing import Any
 
+from frequenz.client.dispatch.types import DispatchId
 from typing_extensions import override
 
+from ._actor_dispatcher import DispatchActorId
 from ._bg_service import MergeStrategy
 from ._dispatch import Dispatch
+
+
+def _hash_positive(args: Any) -> int:
+    """Make a positive hash."""
+    return hash(args) + maxsize + 1
 
 
 class MergeByType(MergeStrategy):
     """Merge running intervals based on the dispatch type."""
 
     @override
-    def identity(self, dispatch: Dispatch) -> int:
+    def identity(self, dispatch: Dispatch) -> DispatchActorId:
         """Identity function for the merge criteria."""
-        return hash(dispatch.type)
+        return DispatchActorId(_hash_positive(dispatch.type))
 
     @override
-    def filter(self, dispatches: Mapping[int, Dispatch], dispatch: Dispatch) -> bool:
+    def filter(
+        self, dispatches: Mapping[DispatchId, Dispatch], dispatch: Dispatch
+    ) -> bool:
         """Filter dispatches based on the merge strategy.
 
         Keeps start events.
@@ -53,6 +64,6 @@ class MergeByTypeTarget(MergeByType):
     """Merge running intervals based on the dispatch type and target."""
 
     @override
-    def identity(self, dispatch: Dispatch) -> int:
+    def identity(self, dispatch: Dispatch) -> DispatchActorId:
         """Identity function for the merge criteria."""
-        return hash((dispatch.type, tuple(dispatch.target)))
+        return DispatchActorId(_hash_positive((dispatch.type, tuple(dispatch.target))))

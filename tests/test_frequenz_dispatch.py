@@ -13,10 +13,12 @@ import async_solipsism
 import pytest
 import time_machine
 from frequenz.channels import Receiver
+from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient, to_create_params
 from frequenz.client.dispatch.test.generator import DispatchGenerator
 from frequenz.client.dispatch.types import Dispatch as BaseDispatch
+from frequenz.client.dispatch.types import TargetIds
 from pytest import fixture
 
 from frequenz.dispatch import (
@@ -66,14 +68,14 @@ class _TestEnv:
     """The receiver for ready dispatches."""
     client: FakeClient
     """The fake client for the actor."""
-    microgrid_id: int
+    microgrid_id: MicrogridId
     """The microgrid id."""
 
 
 @fixture
 async def test_env() -> AsyncIterator[_TestEnv]:
     """Return an actor test environment."""
-    microgrid_id = randint(1, 100)
+    microgrid_id = MicrogridId(randint(1, 100))
     client = FakeClient()
 
     service = DispatchScheduler(
@@ -156,6 +158,7 @@ async def _test_new_dispatch_created(
             received = Dispatch(update_dispatch(sample, dispatch))
             assert dispatch == received
 
+    await asyncio.sleep(1)
     return dispatch
 
 
@@ -473,10 +476,9 @@ async def test_dispatch_new_but_finished(
     )
     fake_time.shift(timedelta(seconds=1))
 
+    await asyncio.sleep(1)
     # Process the lifecycle event caused by the old dispatch at startup
     await test_env.lifecycle_events.receive()
-
-    await asyncio.sleep(1)
 
     # Create another dispatch the normal way
     new_dispatch = generator.generate_dispatch()
@@ -549,7 +551,7 @@ async def test_multiple_dispatches_merge_running_intervals(
     merge_strategy: MergeStrategy,
 ) -> None:
     """Test that multiple dispatches are merged into a single running interval."""
-    microgrid_id = randint(1, 100)
+    microgrid_id = MicrogridId(randint(1, 100))
     client = FakeClient()
     service = DispatchScheduler(
         microgrid_id=microgrid_id,
@@ -566,7 +568,9 @@ async def test_multiple_dispatches_merge_running_intervals(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=30),
-        target=[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4],
+        target=TargetIds(
+            *[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4]
+        ),
         start_time=_now() + timedelta(seconds=5),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -575,7 +579,7 @@ async def test_multiple_dispatches_merge_running_intervals(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=10),
-        target=[3, 4],
+        target=TargetIds(3, 4),
         start_time=_now() + timedelta(seconds=10),  # starts after dispatch1
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -629,7 +633,7 @@ async def test_multiple_dispatches_sequential_intervals_merge(
     Even if dispatches don't overlap but are consecutive,
     merge_running_intervals=TPYE should treat them as continuous if any event tries to stop.
     """
-    microgrid_id = randint(1, 100)
+    microgrid_id = MicrogridId(randint(1, 100))
     client = FakeClient()
     service = DispatchScheduler(microgrid_id=microgrid_id, client=client)
     service.start()
@@ -643,7 +647,9 @@ async def test_multiple_dispatches_sequential_intervals_merge(
         active=True,
         duration=timedelta(seconds=5),
         # If merging by type, we want to test having different targets in dispatch 1 and 2
-        target=[3, 4] if isinstance(merge_strategy, MergeByType) else [1, 2],
+        target=TargetIds(
+            *[3, 4] if isinstance(merge_strategy, MergeByType) else [1, 2]
+        ),
         start_time=_now() + timedelta(seconds=5),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -653,7 +659,7 @@ async def test_multiple_dispatches_sequential_intervals_merge(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=5),
-        target=[1, 2],
+        target=TargetIds(1, 2),
         start_time=dispatch1.start_time + dispatch1.duration,
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -693,7 +699,7 @@ async def test_at_least_one_running_filter(
     merge_strategy: MergeStrategy,
 ) -> None:
     """Test scenarios directly tied to the _at_least_one_running logic."""
-    microgrid_id = randint(1, 100)
+    microgrid_id = MicrogridId(randint(1, 100))
     client = FakeClient()
     service = DispatchScheduler(microgrid_id=microgrid_id, client=client)
     service.start()
@@ -708,7 +714,9 @@ async def test_at_least_one_running_filter(
         generator.generate_dispatch(),
         active=True,
         duration=timedelta(seconds=10),
-        target=[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4],
+        target=TargetIds(
+            *[1, 2] if isinstance(merge_strategy, MergeByType) else [3, 4]
+        ),
         start_time=_now() + timedelta(seconds=5),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
@@ -739,7 +747,7 @@ async def test_at_least_one_running_filter(
         generator.generate_dispatch(),
         active=False,
         duration=timedelta(seconds=10),
-        target=[3, 4],
+        target=TargetIds(3, 4),
         start_time=_now() + timedelta(seconds=50),
         recurrence=RecurrenceRule(),
         type="TEST_TYPE",
