@@ -113,6 +113,7 @@ class DispatchScheduler(BackgroundService):
 
         self._client = client
         self._dispatches: dict[DispatchId, Dispatch] = {}
+        self._deleted_dispatches: dict[DispatchId, datetime] = {}
         self._microgrid_id = microgrid_id
 
         self._lifecycle_events_channel = Broadcast[DispatchEvent](
@@ -263,6 +264,17 @@ class DispatchScheduler(BackgroundService):
                         heappop(self._scheduled_events).dispatch, next_event_timer
                     )
                 elif selected_from(selected, stream):
+
+                    def is_more_relevant(
+                        dispatch: Dispatch,
+                    ) -> bool:
+                        existing_dispatch = self._dispatches.get(dispatch.id)
+
+                        return (
+                            not existing_dispatch
+                            or dispatch.update_time > existing_dispatch.update_time
+                        )
+
                     match selected.message:
                         case ApiDispatchEvent():
                             _logger.debug(
@@ -289,7 +301,16 @@ class DispatchScheduler(BackgroundService):
                                         Updated(dispatch=dispatch)
                                     )
                                 case Event.DELETED:
-                                    self._dispatches.pop(dispatch.id)
+                                    # The dispatch might already be deleted,
+                                    # depending on the exact timing of fetch()
+                                    # so we don't rely on it existing.
+                                    if is_more_relevant(dispatch):
+                                        self._dispatches.pop(dispatch.id, None)
+
+                                    self._deleted_dispatches[dispatch.id] = (
+                                        datetime.now(timezone.utc)
+                                    )
+
                                     await self._update_dispatch_schedule_and_notify(
                                         None, dispatch, next_event_timer
                                     )
@@ -349,6 +370,12 @@ class DispatchScheduler(BackgroundService):
             _logger.debug("Fetching dispatches for microgrid %s", self._microgrid_id)
             async for page in self._client.list(microgrid_id=self._microgrid_id):
                 for client_dispatch in page:
+                    deleted_timestamp = self._deleted_dispatches.get(client_dispatch.id)
+                    if (
+                        deleted_timestamp
+                        and client_dispatch.update_time < deleted_timestamp
+                    ):
+                        continue
                     dispatch = Dispatch(client_dispatch)
 
                     self._dispatches[dispatch.id] = dispatch
