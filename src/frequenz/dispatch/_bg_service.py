@@ -283,19 +283,26 @@ class DispatchScheduler(BackgroundService):
                             dispatch = Dispatch(selected.message.dispatch)
                             match selected.message.event:
                                 case Event.CREATED:
-                                    self._dispatches[dispatch.id] = dispatch
-                                    await self._update_dispatch_schedule_and_notify(
-                                        dispatch, None, next_event_timer
-                                    )
+                                    # Check if the dispatch already exists and
+                                    # was updated. The CREATE event is late in
+                                    # this case
+                                    if is_more_relevant(dispatch):
+                                        self._dispatches[dispatch.id] = dispatch
+                                        await self._update_dispatch_schedule_and_notify(
+                                            dispatch, None, next_event_timer
+                                        )
                                     await self._lifecycle_events_tx.send(
                                         Created(dispatch=dispatch)
                                     )
                                 case Event.UPDATED:
-                                    await self._update_dispatch_schedule_and_notify(
-                                        dispatch,
-                                        self._dispatches[dispatch.id],
-                                        next_event_timer,
-                                    )
+                                    # We might receive update before we fetched
+                                    # the entry, so don't rely on it existing
+                                    if is_more_relevant(dispatch):
+                                        await self._update_dispatch_schedule_and_notify(
+                                            dispatch,
+                                            self._dispatches.get(dispatch.id),
+                                            next_event_timer,
+                                        )
                                     self._dispatches[dispatch.id] = dispatch
                                     await self._lifecycle_events_tx.send(
                                         Updated(dispatch=dispatch)
