@@ -359,7 +359,7 @@ class DispatchScheduler(BackgroundService):
                             dispatch, None, timer
                         )
                         await self._lifecycle_events_tx.send(Created(dispatch=dispatch))
-                    elif dispatch.update_time != old_dispatch.update_time:
+                    elif dispatch.update_time > old_dispatch.update_time:
                         _logger.debug("Updated dispatch: %s", dispatch)
                         await self._update_dispatch_schedule_and_notify(
                             dispatch, old_dispatch, timer
