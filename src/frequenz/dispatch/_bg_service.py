@@ -264,29 +264,24 @@ class DispatchScheduler(BackgroundService):
                         heappop(self._scheduled_events).dispatch, next_event_timer
                     )
                 elif selected_from(selected, stream):
-
-                    def is_more_relevant(
-                        dispatch: Dispatch,
-                    ) -> bool:
-                        existing_dispatch = self._dispatches.get(dispatch.id)
-
-                        return (
-                            not existing_dispatch
-                            or dispatch.update_time > existing_dispatch.update_time
-                        )
-
                     match selected.message:
                         case ApiDispatchEvent():
                             _logger.debug(
                                 "Received dispatch event: %s", selected.message
                             )
                             dispatch = Dispatch(selected.message.dispatch)
+                            _existing_dispatch = self._dispatches.get(dispatch.id)
+                            is_new_or_newer = (
+                                _existing_dispatch is None
+                                or dispatch.update_time > _existing_dispatch.update_time
+                            )
+
                             match selected.message.event:
                                 case Event.CREATED:
                                     # Check if the dispatch already exists and
                                     # was updated. The CREATE event is late in
                                     # this case
-                                    if is_more_relevant(dispatch):
+                                    if is_new_or_newer:
                                         self._dispatches[dispatch.id] = dispatch
                                         await self._update_dispatch_schedule_and_notify(
                                             dispatch, None, next_event_timer
@@ -297,7 +292,7 @@ class DispatchScheduler(BackgroundService):
                                 case Event.UPDATED:
                                     # We might receive update before we fetched
                                     # the entry, so don't rely on it existing
-                                    if is_more_relevant(dispatch):
+                                    if is_new_or_newer:
                                         await self._update_dispatch_schedule_and_notify(
                                             dispatch,
                                             self._dispatches.get(dispatch.id),
@@ -311,7 +306,7 @@ class DispatchScheduler(BackgroundService):
                                     # The dispatch might already be deleted,
                                     # depending on the exact timing of fetch()
                                     # so we don't rely on it existing.
-                                    if is_more_relevant(dispatch):
+                                    if is_new_or_newer:
                                         self._dispatches.pop(dispatch.id, None)
 
                                     self._deleted_dispatches[dispatch.id] = (
