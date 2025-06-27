@@ -6,7 +6,7 @@
 
 ## Upgrading
 
-The `frequenz.disptach.TargetComponents` tye was removed, use `frequenz.client.dispatch.TargetComponents` instead.
+The `frequenz.dispatch.TargetComponents` type was removed, use `frequenz.client.dispatch.TargetComponents` instead.
 
 ## New Features
 
