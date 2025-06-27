@@ -269,11 +269,12 @@ class DispatchScheduler(BackgroundService):
                             _logger.debug(
                                 "Received dispatch event: %s", selected.message
                             )
-                            dispatch = Dispatch(selected.message.dispatch)
-                            _existing_dispatch = self._dispatches.get(dispatch.id)
+                            new_dispatch = Dispatch(selected.message.dispatch)
+                            _existing_dispatch = self._dispatches.get(new_dispatch.id)
                             is_new_or_newer = (
                                 _existing_dispatch is None
-                                or dispatch.update_time > _existing_dispatch.update_time
+                                or new_dispatch.update_time
+                                > _existing_dispatch.update_time
                             )
 
                             match selected.message.event:
@@ -282,43 +283,43 @@ class DispatchScheduler(BackgroundService):
                                     # was updated. The CREATE event is late in
                                     # this case
                                     if is_new_or_newer:
-                                        self._dispatches[dispatch.id] = dispatch
+                                        self._dispatches[new_dispatch.id] = new_dispatch
                                         await self._update_dispatch_schedule_and_notify(
-                                            dispatch, None, next_event_timer
+                                            new_dispatch, None, next_event_timer
                                         )
                                     await self._lifecycle_events_tx.send(
-                                        Created(dispatch=dispatch)
+                                        Created(dispatch=new_dispatch)
                                     )
                                 case Event.UPDATED:
                                     # We might receive update before we fetched
                                     # the entry, so don't rely on it existing
                                     if is_new_or_newer:
                                         await self._update_dispatch_schedule_and_notify(
-                                            dispatch,
-                                            self._dispatches.get(dispatch.id),
+                                            new_dispatch,
+                                            self._dispatches.get(new_dispatch.id),
                                             next_event_timer,
                                         )
-                                    self._dispatches[dispatch.id] = dispatch
+                                    self._dispatches[new_dispatch.id] = new_dispatch
                                     await self._lifecycle_events_tx.send(
-                                        Updated(dispatch=dispatch)
+                                        Updated(dispatch=new_dispatch)
                                     )
                                 case Event.DELETED:
                                     # The dispatch might already be deleted,
                                     # depending on the exact timing of fetch()
                                     # so we don't rely on it existing.
                                     if is_new_or_newer:
-                                        self._dispatches.pop(dispatch.id, None)
+                                        self._dispatches.pop(new_dispatch.id, None)
 
-                                    self._deleted_dispatches[dispatch.id] = (
+                                    self._deleted_dispatches[new_dispatch.id] = (
                                         datetime.now(timezone.utc)
                                     )
 
                                     await self._update_dispatch_schedule_and_notify(
-                                        None, dispatch, next_event_timer
+                                        None, new_dispatch, next_event_timer
                                     )
 
                                     await self._lifecycle_events_tx.send(
-                                        Deleted(dispatch=dispatch)
+                                        Deleted(dispatch=new_dispatch)
                                     )
 
                         case StreamRetrying():
