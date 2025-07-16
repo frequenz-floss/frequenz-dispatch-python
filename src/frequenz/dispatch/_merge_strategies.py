@@ -15,6 +15,8 @@ from ._actor_dispatcher import DispatchActorId
 from ._bg_service import MergeStrategy
 from ._dispatch import Dispatch
 
+_logger = logging.getLogger(__name__)
+
 
 def _hash_positive(args: Any) -> int:
     """Make a positive hash."""
@@ -40,7 +42,7 @@ class MergeByType(MergeStrategy):
         strategy's criteria are running.
         """
         if dispatch.started:
-            logging.debug("Keeping start event %s", dispatch.id)
+            _logger.debug("Keeping start event %s", dispatch.id)
             return True
 
         other_dispatches_running = any(
@@ -52,7 +54,7 @@ class MergeByType(MergeStrategy):
             )
         )
 
-        logging.debug(
+        _logger.debug(
             "stop event %s because other_dispatches_running=%s",
             dispatch.id,
             other_dispatches_running,
