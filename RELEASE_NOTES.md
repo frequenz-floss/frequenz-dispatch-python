@@ -6,15 +6,12 @@
 
 ## Upgrading
 
-The `frequenz.dispatch.TargetComponents` type was removed, use `frequenz.client.dispatch.TargetComponents` instead.
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 ## New Features
 
-* The dispatcher offers two new parameters to control the client's call and stream timeout:
-  - `call_timeout`: The maximum time to wait for a response from the client.
-  - `stream_timeout`: The maximum time to wait before restarting a stream.
-* While the dispatch stream restarts we refresh our dispatch cache as well, to ensure we didn't miss any updates.
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
-* Fixed that dispatches are never retried on failure, but instead an infinite loop of retry logs is triggered.
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
