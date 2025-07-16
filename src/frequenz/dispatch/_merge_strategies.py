@@ -48,20 +48,37 @@ class MergeByType(MergeStrategy):
             _logger.debug("Keeping start event %s", dispatch.id)
             return True
 
-        other_dispatches_running = any(
-            existing_dispatch.started_at(now)
+        running_dispatch_list = [
+            existing_dispatch
             for existing_dispatch in dispatches.values()
             if (
                 self.identity(existing_dispatch) == self.identity(dispatch)
                 and existing_dispatch.id != dispatch.id
             )
+        ]
+
+        other_dispatches_running = any(
+            running_dispatch.started_at(now)
+            for running_dispatch in running_dispatch_list
         )
 
         _logger.debug(
-            "stop event %s because other_dispatches_running=%s",
+            "%s stop event %s because other_dispatches_running=%s",
+            "Ignoring" if other_dispatches_running else "Allowing",
             dispatch.id,
             other_dispatches_running,
         )
+
+        if other_dispatches_running:
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug(
+                    "Active other dispatches: %s",
+                    list(
+                        running_dispatch.id
+                        for running_dispatch in running_dispatch_list
+                    ),
+                )
+
         return not other_dispatches_running
 
 
