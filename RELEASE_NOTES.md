@@ -15,3 +15,4 @@
 ## Bug Fixes
 
 * The merge by type class now uses the correct logger path.
+* The merge by type was made more robust under heavy load, making sure to use the same `now` for all dispatches that are checked.

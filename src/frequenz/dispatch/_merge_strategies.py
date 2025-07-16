@@ -5,6 +5,7 @@
 
 import logging
 from collections.abc import Mapping
+from datetime import datetime, timezone
 from sys import maxsize
 from typing import Any
 
@@ -41,12 +42,14 @@ class MergeByType(MergeStrategy):
         Keeps stop events only if no other dispatches matching the
         strategy's criteria are running.
         """
-        if dispatch.started:
+        now = datetime.now(tz=timezone.utc)
+
+        if dispatch.started_at(now):
             _logger.debug("Keeping start event %s", dispatch.id)
             return True
 
         other_dispatches_running = any(
-            existing_dispatch.started
+            existing_dispatch.started_at(now)
             for existing_dispatch in dispatches.values()
             if (
                 self.identity(existing_dispatch) == self.identity(dispatch)
