@@ -366,8 +366,7 @@ class DispatchScheduler(BackgroundService):
         """
         self._initial_fetch_event.clear()
 
-        old_dispatches = self._dispatches
-        self._dispatches = {}
+        new_dispatches = {}
 
         try:
             _logger.debug("Fetching dispatches for microgrid %s", self._microgrid_id)
@@ -381,9 +380,9 @@ class DispatchScheduler(BackgroundService):
                         continue
                     dispatch = Dispatch(client_dispatch)
 
-                    self._dispatches[dispatch.id] = dispatch
-                    old_dispatch = old_dispatches.pop(dispatch.id, None)
-                    if not old_dispatch:
+                    new_dispatches[dispatch.id] = dispatch
+                    old_dispatch = self._dispatches.get(dispatch.id, None)
+                    if old_dispatch is None:
                         _logger.debug("New dispatch: %s", dispatch)
                         await self._update_dispatch_schedule_and_notify(
                             dispatch, None, timer
@@ -396,23 +395,40 @@ class DispatchScheduler(BackgroundService):
                         )
                         await self._lifecycle_events_tx.send(Updated(dispatch=dispatch))
 
-            _logger.debug("Received %s dispatches", len(self._dispatches))
+            _logger.debug("Received %s dispatches", len(new_dispatches))
 
         except grpc.aio.AioRpcError as error:
             _logger.error("Error fetching dispatches: %s", error)
-            self._dispatches = old_dispatches
             return
 
-        for dispatch in old_dispatches.values():
+        # We make a copy because we mutate self._dispatches.keys() inside the loop
+        for dispatch_id in frozenset(self._dispatches.keys() - new_dispatches.keys()):
+            # Use try/except as the `self._dispatches` cache can be mutated by
+            # stream delete events while we're iterating
+            try:
+                dispatch = self._dispatches.pop(dispatch_id)
+            except KeyError as error:
+                _logger.warning(
+                    "Inconsistency in cache detected. "
+                    + "Tried to delete non-existing dispatch %s (%s)",
+                    dispatch_id,
+                    error,
+                )
+                continue
+
             _logger.debug("Deleted dispatch: %s", dispatch)
-            await self._lifecycle_events_tx.send(Deleted(dispatch=dispatch))
             await self._update_dispatch_schedule_and_notify(None, dispatch, timer)
 
-            # Set deleted only here as it influences the result of dispatch.started
-            # which is used in above in _running_state_change
+            # Set deleted only here as it influences the result of
+            # dispatch.started, which is used in
+            # _update_dispatch_schedule_and_notify above.
             dispatch._set_deleted()  # pylint: disable=protected-access
             await self._lifecycle_events_tx.send(Deleted(dispatch=dispatch))
 
+        # Update the dispatch list with the dispatches
+        self._dispatches.update(new_dispatches)
+
+        # Set event to indicate fetch ran at least once
         self._initial_fetch_event.set()
 
     async def _update_dispatch_schedule_and_notify(
