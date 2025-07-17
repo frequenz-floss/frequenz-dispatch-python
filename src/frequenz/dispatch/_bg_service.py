@@ -337,7 +337,7 @@ class DispatchScheduler(BackgroundService):
                             pass
 
     async def _execute_scheduled_event(self, dispatch: Dispatch, timer: Timer) -> None:
-        """Execute a scheduled event.
+        """Execute a scheduled event and schedules the next one if any.
 
         Args:
             dispatch: The dispatch to execute.
