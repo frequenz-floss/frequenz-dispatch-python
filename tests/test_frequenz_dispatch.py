@@ -13,12 +13,13 @@ import async_solipsism
 import pytest
 import time_machine
 from frequenz.channels import Receiver
+from frequenz.channels.timer import SkipMissedAndResync, Timer
 from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient, to_create_params
 from frequenz.client.dispatch.test.generator import DispatchGenerator
 from frequenz.client.dispatch.types import Dispatch as BaseDispatch
-from frequenz.client.dispatch.types import TargetIds
+from frequenz.client.dispatch.types import DispatchId, TargetIds
 from pytest import fixture
 
 from frequenz.dispatch import (
@@ -690,6 +691,86 @@ async def test_multiple_dispatches_sequential_intervals_merge(
     fake_time.move_to(dispatch2.start_time + dispatch2.duration + timedelta(seconds=1))
     stopped = await receiver.receive()
     assert not stopped.started
+
+
+async def test_sequential_overlapping_dispatches_between_fetch(
+    fake_time: time_machine.Coordinates,
+    generator: DispatchGenerator,
+) -> None:
+    """Test that sequential overlapping dispatches are handled correctly."""
+    microgrid_id = MicrogridId(randint(1, 100))
+    client = FakeClient()
+    service = DispatchScheduler(microgrid_id=microgrid_id, client=client)
+    service.start()
+
+    receiver = await service.new_running_state_event_receiver(
+        "TEST_TYPE", merge_strategy=MergeByType()
+    )
+
+    # Create two overlapping dispatches
+    dispatch1 = replace(
+        generator.generate_dispatch(),
+        active=True,
+        duration=timedelta(seconds=10),
+        target=TargetIds(1, 2),
+        start_time=_now() + timedelta(seconds=5),
+        recurrence=RecurrenceRule(),
+        type="TEST_TYPE",
+    )
+    dispatch2 = replace(
+        generator.generate_dispatch(),
+        active=True,
+        duration=timedelta(seconds=10),
+        target=TargetIds(3, 4),
+        start_time=_now() + timedelta(seconds=8),  # overlaps with dispatch1
+        recurrence=RecurrenceRule(),
+        type="TEST_TYPE",
+    )
+    await client.create(**to_create_params(microgrid_id, dispatch1))
+
+    timer = Timer(timedelta(seconds=100), SkipMissedAndResync(), auto_start=False)
+    await service._fetch(timer)  # pylint: disable=protected-access
+
+    await client.create(**to_create_params(microgrid_id, dispatch2))
+
+    # Move time forward to start first
+    fake_time.shift(timedelta(seconds=6))
+    await asyncio.sleep(1)
+    import logging
+
+    logging.debug("We see: %s", service._dispatches)
+
+    started1 = await receiver.receive()
+    assert started1.id == DispatchId(1)
+
+    # Move time to second dispatch
+    fake_time.shift(timedelta(seconds=6))
+    await asyncio.sleep(1)
+
+    started2 = await receiver.receive()
+    assert started2.id == DispatchId(2)
+    assert started2.started
+    assert started1.started
+
+    # Now we move to when the first one ended
+    fake_time.shift(timedelta(seconds=5))
+    await asyncio.sleep(1)
+
+    with pytest.raises(asyncio.TimeoutError):
+        logging.debug("Wait for now starts %s", _now())
+        started3 = await receiver.receive()
+        assert started3.id != started2.id, "Received unexpected event"
+
+    assert not started1.started
+    assert started2.started
+    await asyncio.sleep(1)
+
+    # Next we move to when all dispatches should have stopped
+    fake_time.shift(timedelta(seconds=4))
+    started4 = await receiver.receive()
+
+    # We only expect a message for dispatch2, dispatch1 should never send a stop
+    assert started4.id == DispatchId(2)
 
 
 @pytest.mark.parametrize("merge_strategy", [MergeByType(), MergeByTypeTarget()])
