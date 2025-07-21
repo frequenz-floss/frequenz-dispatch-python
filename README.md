@@ -6,10 +6,50 @@
 
 ## Introduction
 
-A highlevel interface for the dispatch API.
+The `frequenz-dispatch` library provides a high-level Python interface for 
+interacting with the Frequenz Dispatch API. This library enables you to 
+manage and monitor dispatch operations in microgrids, including lifecycle 
+events and running status changes of dispatch operations.
 
-See [the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch)
-for more information.
+The main entry point is the [`Dispatcher`][dispatcher-class] class, which 
+provides channels for receiving dispatch lifecycle events and running status 
+updates, allowing you to build reactive applications that respond to dispatch 
+state changes.
+
+## Supported Platforms
+
+The following platforms are officially supported (tested):
+
+- **Python:** 3.11
+- **Operating System:** Ubuntu Linux 20.04
+- **Architectures:** amd64, arm64
+
+## Installation
+
+### Using pip
+
+You can install the package from PyPI:
+
+```bash
+python3 -m pip install frequenz-dispatch
+```
+
+### Using pyproject.toml
+
+Add the dependency to your `pyproject.toml` file:
+
+```toml
+[project]
+dependencies = [
+    "frequenz-dispatch >= 0.10.1, < 0.11",
+]
+```
+
+> [!NOTE]
+> We recommend pinning the dependency to the latest version for programs,
+> like `"frequenz-dispatch == 0.10.1"`, and specifying a version range
+> spanning one major version for libraries, like
+> `"frequenz-dispatch >= 0.10.1, < 0.11"`. We follow [semver](https://semver.org/).
 
 ## Quick Start
 
@@ -18,7 +58,6 @@ with the dispatch API. Here's a minimal example to get you started:
 
 ```python
 import os
-from datetime import timedelta
 from frequenz.dispatch import Dispatcher
 
 async def main():
@@ -37,10 +76,6 @@ async def main():
         print("Dispatcher ready!")
 ```
 
-For complete examples and advanced usage, see the [Usage](#usage) section below.
-
-## Usage
-
 The [`Dispatcher` class][dispatcher-class], the main entry point for the API,
 provides two channels:
 
@@ -50,10 +85,6 @@ provides two channels:
   whenever a dispatch is ready to be executed according to the schedule or the
   running status of the dispatch changed in a way that could potentially
   require the actor to start, stop or reconfigure itself.
-
-[dispatcher-class]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher
-[lifecycle-events]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events
-[running-status-change]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change
 
 ### Example using the running status change channel
 
@@ -92,40 +123,14 @@ async def run():
         await dispatcher
 ```
 
-## Supported Platforms
+[dispatcher-class]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher
+[lifecycle-events]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events
+[running-status-change]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change
 
-The following platforms are officially supported (tested):
+## Documentation
 
-- **Python:** 3.11
-- **Operating System:** Ubuntu Linux 20.04
-- **Architectures:** amd64, arm64
-
-## Installation
-
-### Using pip
-
-You can install the package from PyPI:
-
-```bash
-python3 -m pip install frequenz-dispatch
-```
-
-### Using pyproject.toml
-
-Add the dependency to your `pyproject.toml` file:
-
-```toml
-[project]
-dependencies = [
-    "frequenz-dispatch >= 0.10.1, < 0.11",
-]
-```
-
-> [!NOTE]
-> We recommend pinning the dependency to the latest version for programs,
-> like `"frequenz-dispatch == 0.10.1"`, and specifying a version range
-> spanning one major version for libraries, like
-> `"frequenz-dispatch >= 0.10.1, < 0.11"`. We follow [semver](https://semver.org/).
+For complete API documentation, examples, and advanced usage patterns, see 
+[the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch).
 
 ## Contributing
 
