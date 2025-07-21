@@ -8,14 +8,52 @@
 
 A highlevel interface for the dispatch API.
 
-See [the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch) for more information.
+See [the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch)
+for more information.
+
+## Quick Start
+
+The `frequenz-dispatch` library provides a high-level interface to interact
+with the dispatch API. Here's a minimal example to get you started:
+
+```python
+import os
+from datetime import timedelta
+from frequenz.dispatch import Dispatcher
+
+async def main():
+    # Configure connection to dispatch API
+    url = os.getenv("DISPATCH_API_URL", "grpc://your-dispatch-url.com")
+    key = os.getenv("DISPATCH_API_KEY", "your-api-key")
+    microgrid_id = 1
+    
+    # Create and use the dispatcher
+    async with Dispatcher(
+        microgrid_id=microgrid_id,
+        server_url=url,
+        key=key,
+    ) as dispatcher:
+        # Your dispatch logic here
+        print("Dispatcher ready!")
+```
+
+For complete examples and advanced usage, see the [Usage](#usage) section below.
 
 ## Usage
 
-The [`Dispatcher` class](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher), the main entry point for the API, provides two channels:
+The [`Dispatcher` class][dispatcher-class], the main entry point for the API,
+provides two channels:
 
-* [Lifecycle events](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events): A channel that sends a message whenever a [Dispatch][frequenz.dispatch.Dispatch] is created, updated or deleted.
-* [Running status change](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change): Sends a dispatch message whenever a dispatch is ready to be executed according to the schedule or the running status of the dispatch changed in a way that could potentially require the actor to start, stop or reconfigure itself.
+* [Lifecycle events][lifecycle-events]: A channel that sends a message whenever
+  a [Dispatch][frequenz.dispatch.Dispatch] is created, updated or deleted.
+* [Running status change][running-status-change]: Sends a dispatch message
+  whenever a dispatch is ready to be executed according to the schedule or the
+  running status of the dispatch changed in a way that could potentially
+  require the actor to start, stop or reconfigure itself.
+
+[dispatcher-class]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher
+[lifecycle-events]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events
+[running-status-change]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change
 
 ### Example using the running status change channel
 
@@ -26,11 +64,15 @@ from datetime import timedelta
 
 from frequenz.dispatch import Dispatcher, DispatchInfo, MergeByType
 
-async def create_actor(dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]) -> Actor:
+async def create_actor(
+    dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]
+) -> Actor:
     return MagicMock(dispatch=dispatch, receiver=receiver)
 
 async def run():
-    url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
+    url = os.getenv(
+        "DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com"
+    )
     key  = os.getenv("DISPATCH_API_KEY", "some-key")
 
     microgrid_id = 1
@@ -57,6 +99,33 @@ The following platforms are officially supported (tested):
 - **Python:** 3.11
 - **Operating System:** Ubuntu Linux 20.04
 - **Architectures:** amd64, arm64
+
+## Installation
+
+### Using pip
+
+You can install the package from PyPI:
+
+```bash
+python3 -m pip install frequenz-dispatch
+```
+
+### Using pyproject.toml
+
+Add the dependency to your `pyproject.toml` file:
+
+```toml
+[project]
+dependencies = [
+    "frequenz-dispatch >= 0.10.1, < 0.11",
+]
+```
+
+> [!NOTE]
+> We recommend pinning the dependency to the latest version for programs,
+> like `"frequenz-dispatch == 0.10.1"`, and specifying a version range
+> spanning one major version for libraries, like
+> `"frequenz-dispatch >= 0.10.1, < 0.11"`. We follow [semver](https://semver.org/).
 
 ## Contributing
 
