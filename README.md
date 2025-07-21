@@ -75,8 +75,7 @@ async def main():
         print("Dispatcher ready!")
 ```
 
-The [`Dispatcher` class][dispatcher-class], the main entry point for the API,
-provides two channels:
+The [`Dispatcher` class][dispatcher-class] provides two channels:
 
 * [Lifecycle events][lifecycle-events]: A channel that sends a message whenever
   a [Dispatch][frequenz.dispatch.Dispatch] is created, updated or deleted.
@@ -85,7 +84,7 @@ provides two channels:
   running status of the dispatch changed in a way that could potentially
   require the actor to start, stop or reconfigure itself.
 
-### Example using the running status change channel
+### Example managing actors with dispatch events
 
 ```python
 import os
