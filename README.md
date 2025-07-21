@@ -104,7 +104,7 @@ async def run():
     url = os.getenv(
         "DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com"
     )
-    key  = os.getenv("DISPATCH_API_KEY", "some-key")
+    key = os.getenv("DISPATCH_API_KEY", "some-key")
 
     microgrid_id = 1
 
