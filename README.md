@@ -123,14 +123,14 @@ async def run():
         await dispatcher
 ```
 
-[dispatcher-class]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher
-[lifecycle-events]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events
-[running-status-change]: https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change
+[dispatcher-class]: https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher
+[lifecycle-events]: https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events
+[running-status-change]: https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change
 
 ## Documentation
 
 For complete API documentation, examples, and advanced usage patterns, see 
-[the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch).
+[the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch).
 
 ## Contributing
 
