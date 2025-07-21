@@ -21,7 +21,7 @@ state changes.
 The following platforms are officially supported (tested):
 
 - **Python:** 3.11
-- **Operating System:** Ubuntu Linux 20.04
+- **Operating System:** Ubuntu Linux 24.04
 - **Architectures:** amd64, arm64
 
 ## Installation
@@ -53,8 +53,7 @@ dependencies = [
 
 ## Quick Start
 
-The `frequenz-dispatch` library provides a high-level interface to interact
-with the dispatch API. Here's a minimal example to get you started:
+Here's a minimal example to get you started:
 
 ```python
 import os
