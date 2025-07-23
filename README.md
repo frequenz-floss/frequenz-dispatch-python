@@ -127,7 +127,7 @@ async def run():
 
 ## Documentation
 
-For complete API documentation, examples, and advanced usage patterns, see 
+For complete API documentation, examples, and advanced usage patterns, see
 [the documentation](https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch).
 
 ## Contributing
