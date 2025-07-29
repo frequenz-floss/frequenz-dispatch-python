@@ -253,11 +253,13 @@ class ActorDispatcher(BackgroundService):
         identity = self._dispatch_identity(stopping_dispatch)
 
         if actor_and_channel := self._actors.pop(identity, None):
+            _logger.info("Stopping actor for dispatch type %r", stopping_dispatch.type)
             await actor_and_channel.actor.stop(msg)
             await actor_and_channel.channel.close()
         else:
             _logger.warning(
-                "Actor for dispatch type %r is not running", stopping_dispatch.type
+                "Actor for dispatch type %r is not running, ignoring stop request",
+                stopping_dispatch.type,
             )
 
     async def _run(self) -> None:

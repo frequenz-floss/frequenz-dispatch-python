@@ -40,7 +40,7 @@ dependencies = [
   # plugins.mkdocstrings.handlers.python.import)
   "frequenz-sdk >= 1.0.0-rc2100, < 1.0.0-rc2200",
   "frequenz-channels >= 1.6.1, < 2.0.0",
-  "frequenz-client-dispatch >= 0.11.0, < 0.12.0",
+  "frequenz-client-dispatch >= 0.11.1, < 0.12.0",
   "frequenz-client-common >= 0.3.2, < 0.4.0",
   "frequenz-client-base >= 0.11.0, < 0.12.0",
 ]

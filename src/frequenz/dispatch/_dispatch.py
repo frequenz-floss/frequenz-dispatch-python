@@ -43,10 +43,29 @@ class Dispatch(BaseDispatch):
         Returns:
             True if the dispatch is started, False otherwise.
         """
+        now = datetime.now(tz=timezone.utc)
+        return self.started_at(now)
+
+    def started_at(self, now: datetime) -> bool:
+        """Check if the dispatch has started.
+
+        A dispatch is considered started if the current time is after the start
+        time but before the end time.
+
+        Recurring dispatches are considered started if the current time is after
+        the start time of the last occurrence but before the end time of the
+        last occurrence.
+
+        Args:
+            now: time to use as now
+
+        Returns:
+            True if the dispatch is started
+        """
         if self.deleted:
             return False
 
-        return super().started
+        return super().started_at(now)
 
     # noqa is needed because of a bug in pydoclint that makes it think a `return` without a return
     # value needs documenting
