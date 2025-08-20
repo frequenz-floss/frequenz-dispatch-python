@@ -10,6 +10,7 @@
 
 ## New Features
 
+* `dry_run` status is now considered when merging dispatches. Dispatches with different `dry_run` values will no longer be merged, ensuring that dry-run and operational dispatches are handled by separate actors.
 * Two new parameters were added to the `Dispatcher` constructor:
   * `sign_secret`: A secret key used for signing messages.
   * `auth_key`: An authentication key for the Dispatch API.

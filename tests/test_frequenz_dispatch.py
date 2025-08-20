@@ -781,3 +781,78 @@ async def test_at_least_one_running_filter(
     await asyncio.sleep(1)
     stopped_b = await receiver.receive()
     assert not stopped_b.started
+
+
+@pytest.mark.parametrize(
+    "merge_strategy",
+    [
+        MergeByType(),
+        MergeByTypeTarget(),
+    ],
+)
+async def test_dry_run_dispatches_not_merged(
+    fake_time: time_machine.Coordinates,
+    generator: DispatchGenerator,
+    merge_strategy: MergeStrategy,
+) -> None:
+    """Test that dispatches with different dry_run values are not merged."""
+    microgrid_id = MicrogridId(randint(1, 100))
+    client = FakeClient()
+    service = DispatchScheduler(
+        microgrid_id=microgrid_id,
+        client=client,
+    )
+    service.start()
+
+    receiver = await service.new_running_state_event_receiver(
+        "TEST_TYPE", merge_strategy=merge_strategy
+    )
+
+    # Create two dispatches with same type and target, but different dry_run
+    dispatch1 = replace(
+        generator.generate_dispatch(),
+        active=True,
+        duration=timedelta(seconds=10),
+        target=TargetIds(1, 2),
+        start_time=_now() + timedelta(seconds=5),
+        recurrence=RecurrenceRule(),
+        type="TEST_TYPE",
+        dry_run=False,
+    )
+    dispatch2 = replace(
+        dispatch1,
+        dry_run=True,
+    )
+
+    lifecycle_events = service.new_lifecycle_events_receiver("TEST_TYPE")
+
+    await client.create(**to_create_params(microgrid_id, dispatch1))
+    await client.create(**to_create_params(microgrid_id, dispatch2))
+
+    # Wait for both to be registered
+    await lifecycle_events.receive()
+    await lifecycle_events.receive()
+
+    # Move time forward to start both dispatches
+    fake_time.shift(timedelta(seconds=6))
+    await asyncio.sleep(1)
+
+    started1 = await receiver.receive()
+    started2 = await receiver.receive()
+
+    assert started1.started
+    assert started2.started
+    assert started1.dry_run != started2.dry_run
+
+    # Move time forward to the end of the dispatches
+    fake_time.shift(timedelta(seconds=10))
+    await asyncio.sleep(1)
+
+    stopped1 = await receiver.receive()
+    stopped2 = await receiver.receive()
+
+    assert not stopped1.started
+    assert not stopped2.started
+    assert stopped1.dry_run != stopped2.dry_run
+
+    await service.stop()

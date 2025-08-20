@@ -333,11 +333,11 @@ class Dispatcher(BackgroundService):
         This also decides how instances are mapped from dispatches to actors:
 
         * [`MergeByType`][frequenz.dispatch.MergeByType] — All dispatches map to
-        one single instance identified by the dispatch type.
+        one single instance identified by the dispatch type and dry_run status.
         * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — A
-        dispatch maps to an instance identified by the dispatch type and target.
-        So different dispatches with equal type and target will map to the same
-        instance.
+        dispatch maps to an instance identified by the dispatch type, dry_run status
+        and target. So different dispatches with equal type and target will map to
+        the same instance.
         * `None` — No merging, each dispatch maps to a separate instance.
 
         Args:
