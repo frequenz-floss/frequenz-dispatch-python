@@ -40,8 +40,7 @@ dependencies = [
   # plugins.mkdocstrings.handlers.python.import)
   "frequenz-sdk >= 1.0.0-rc2100, < 1.0.0-rc2200",
   "frequenz-channels >= 1.6.1, < 2.0.0",
-  "frequenz-client-dispatch >= 0.11.1, < 0.12.0",
-  "frequenz-client-common >= 0.3.2, < 0.4.0",
+  "frequenz-client-dispatch >= 0.11.2, < 0.12.0",
   "frequenz-client-base >= 0.11.0, < 0.12.0",
 ]
 dynamic = ["version"]
@@ -54,7 +53,7 @@ email = "floss@frequenz.com"
 dev-flake8 = [
   "flake8 == 7.3.0",
   "flake8-docstrings == 1.7.0",
-  "flake8-pyproject == 1.2.3", # For reading the flake8 config from pyproject.toml
+  "flake8-pyproject == 1.2.3",  # For reading the flake8 config from pyproject.toml
   "pydoclint == 0.6.6",
   "pydocstyle == 6.3.0",
 ]

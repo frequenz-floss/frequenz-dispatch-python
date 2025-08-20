@@ -6,14 +6,14 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+* The `key` parameter in the `Dispatcher` constructor is now deprecated. Use `auth_key` instead. The `sign_secret` parameter is an additional optional parameter for signing.
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+* Two new parameters were added to the `Dispatcher` constructor:
+  * `sign_secret`: A secret key used for signing messages.
+  * `auth_key`: An authentication key for the Dispatch API.
 
 ## Bug Fixes
 
-* The merge by type class now uses the correct logger path.
-* The merge by type was made more robust under heavy load, making sure to use the same `now` for all dispatches that are checked.
-* Fix that the merge filter was using an outdated dispatches dict once fetch() ran.
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
