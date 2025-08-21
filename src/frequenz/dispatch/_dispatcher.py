@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import warnings
 from asyncio import Event
 from datetime import timedelta
 from typing import Awaitable, Callable, Self
@@ -64,7 +65,7 @@ class Dispatcher(BackgroundService):
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                key=key
+                auth_key=key
             ) as dispatcher:
                 dispatcher.start_managing(
                     dispatch_type="DISPATCH_TYPE",
@@ -90,7 +91,7 @@ class Dispatcher(BackgroundService):
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                key=key
+                auth_key=key
             ) as dispatcher:
                 actor = MagicMock() # replace with your actor
 
@@ -135,7 +136,7 @@ class Dispatcher(BackgroundService):
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                key=key,
+                auth_key=key,
             ) as dispatcher:
                 events_receiver = dispatcher.new_lifecycle_events_receiver("DISPATCH_TYPE")
 
@@ -172,7 +173,7 @@ class Dispatcher(BackgroundService):
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                key=key,
+                auth_key=key,
             ) as dispatcher:
                 # Create a new dispatch
                 new_dispatch = await dispatcher.client.create(
@@ -205,7 +206,9 @@ class Dispatcher(BackgroundService):
         *,
         microgrid_id: MicrogridId,
         server_url: str,
-        key: str,
+        key: str | None = None,
+        auth_key: str | None = None,
+        sign_secret: str | None = None,
         call_timeout: timedelta = timedelta(seconds=60),
         stream_timeout: timedelta = timedelta(minutes=5),
     ):
@@ -214,15 +217,39 @@ class Dispatcher(BackgroundService):
         Args:
             microgrid_id: The microgrid id.
             server_url: The URL of the dispatch service.
-            key: The key to access the service.
+            key: The key to access the service, deprecated, use `auth_key` instead.
+            auth_key: The authentication key to access the service.
+            sign_secret: The secret to sign the requests, optional
             call_timeout: The timeout for API calls.
             stream_timeout: The timeout for streaming API calls.
+
+        Raises:
+            ValueError: If both or neither `key` and `auth_key` are provided
         """
         super().__init__()
 
+        if key is not None and auth_key is not None:
+            raise ValueError(
+                "Both 'key' and 'auth_key' are provided, please use only 'auth_key'."
+            )
+
+        if key is None and auth_key is None:
+            raise ValueError(
+                "'auth_key' must be provided to access the dispatch service."
+            )
+
+        if key is not None:
+            auth_key = key
+            warnings.warn(
+                "'key' is deprecated, use 'auth_key' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
         self._client = DispatchApiClient(
             server_url=server_url,
-            key=key,
+            auth_key=auth_key,
+            sign_secret=sign_secret,
             call_timeout=call_timeout,
             stream_timeout=stream_timeout,
         )
@@ -306,11 +333,11 @@ class Dispatcher(BackgroundService):
         This also decides how instances are mapped from dispatches to actors:
 
         * [`MergeByType`][frequenz.dispatch.MergeByType] — All dispatches map to
-        one single instance identified by the dispatch type.
+        one single instance identified by the dispatch type and dry_run status.
         * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — A
-        dispatch maps to an instance identified by the dispatch type and target.
-        So different dispatches with equal type and target will map to the same
-        instance.
+        dispatch maps to an instance identified by the dispatch type, dry_run status
+        and target. So different dispatches with equal type and target will map to
+        the same instance.
         * `None` — No merging, each dispatch maps to a separate instance.
 
         Args:

@@ -30,7 +30,7 @@ class MergeByType(MergeStrategy):
     @override
     def identity(self, dispatch: Dispatch) -> DispatchActorId:
         """Identity function for the merge criteria."""
-        return DispatchActorId(_hash_positive(dispatch.type))
+        return DispatchActorId(_hash_positive((dispatch.type, dispatch.dry_run)))
 
     @override
     def filter(
@@ -88,4 +88,6 @@ class MergeByTypeTarget(MergeByType):
     @override
     def identity(self, dispatch: Dispatch) -> DispatchActorId:
         """Identity function for the merge criteria."""
-        return DispatchActorId(_hash_positive((dispatch.type, tuple(dispatch.target))))
+        return DispatchActorId(
+            _hash_positive((dispatch.type, dispatch.dry_run, tuple(dispatch.target)))
+        )
