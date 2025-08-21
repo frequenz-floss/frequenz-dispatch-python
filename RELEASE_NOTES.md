@@ -15,6 +15,7 @@
 * Two new parameters were added to the `Dispatcher` constructor:
   * `sign_secret`: A secret key used for signing messages.
   * `auth_key`: An authentication key for the Dispatch API.
+* `Dispatcher` now only fetches ongoing dispatches, excluding completed ones, to optimize performance and relevance.
 
 ## Bug Fixes
 
