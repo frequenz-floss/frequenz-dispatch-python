@@ -7,6 +7,7 @@
 ## Upgrading
 
 * The `key` parameter in the `Dispatcher` constructor is now deprecated. Use `auth_key` instead. The `sign_secret` parameter is an additional optional parameter for signing.
+* The `components` property in `DispatchInfo` is now deprecated. Use `target` instead.
 
 ## New Features
 

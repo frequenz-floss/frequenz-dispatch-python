@@ -15,6 +15,7 @@ from frequenz.channels.timer import SkipMissedAndDrift, Timer
 from frequenz.client.dispatch.types import DispatchId, TargetComponents
 from frequenz.core.id import BaseId
 from frequenz.sdk.actor import Actor, BackgroundService
+from typing_extensions import deprecated
 
 from ._dispatch import Dispatch
 
@@ -37,8 +38,18 @@ class DispatchActorId(BaseId, str_prefix="DA"):
 class DispatchInfo:
     """Event emitted when the dispatch changes."""
 
-    components: TargetComponents
-    """Components to be used."""
+    @property
+    @deprecated("'components' is deprecated, use 'target' instead.")
+    def components(self) -> TargetComponents:
+        """Get the target components.
+
+        Deprecation: Deprecated in v0.10.3
+            Use [`target`][frequenz.dispatch.DispatchInfo.target] instead.
+        """
+        return self.target
+
+    target: TargetComponents
+    """Target components to be used."""
 
     dry_run: bool
     """Whether this is a dry run."""
@@ -200,7 +211,7 @@ class ActorDispatcher(BackgroundService):
     async def _start_actor(self, dispatch: Dispatch) -> None:
         """Start the actor the given dispatch refers to."""
         dispatch_update = DispatchInfo(
-            components=dispatch.target,
+            target=dispatch.target,
             dry_run=dispatch.dry_run,
             options=dispatch.payload,
             _src=dispatch,
