@@ -365,12 +365,18 @@ class DispatchScheduler(BackgroundService):
         if the connection was lost.
         """
         self._initial_fetch_event.clear()
+        # We fetch dispatches that would have ended 5 seconds ago to
+        # avoid missing any updates that happened while we were disconnected.
+        past_time_buffer = timedelta(seconds=5)
 
         new_dispatches = {}
 
         try:
             _logger.debug("Fetching dispatches for microgrid %s", self._microgrid_id)
-            async for page in self._client.list(microgrid_id=self._microgrid_id):
+            now = datetime.now(timezone.utc)
+            async for page in self._client.list(
+                microgrid_id=self._microgrid_id, end_from=now - past_time_buffer
+            ):
                 for client_dispatch in page:
                     deleted_timestamp = self._deleted_dispatches.get(client_dispatch.id)
                     if (
@@ -378,6 +384,7 @@ class DispatchScheduler(BackgroundService):
                         and client_dispatch.update_time < deleted_timestamp
                     ):
                         continue
+
                     dispatch = Dispatch(client_dispatch)
 
                     new_dispatches[dispatch.id] = dispatch
