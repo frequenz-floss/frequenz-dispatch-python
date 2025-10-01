@@ -9,6 +9,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any, Awaitable
+from warnings import warn
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
 from frequenz.channels.timer import SkipMissedAndDrift, Timer
@@ -59,6 +60,46 @@ class DispatchInfo:
 
     _src: Dispatch
     """The dispatch that triggered this update."""
+
+    def __init__(
+        self,
+        *,
+        target: TargetComponents | None = None,
+        components: TargetComponents | None = None,
+        dry_run: bool,
+        options: dict[str, Any],
+        _src: Dispatch,
+    ) -> None:
+        """Initialize the DispatchInfo.
+
+        Args:
+            target: Target components to be used.
+            components: Deprecated alias for `target`.
+            dry_run: Whether this is a dry run.
+            options: Additional options.
+            _src: The dispatch that triggered this update.
+
+        Raises:
+            ValueError: If both `target` and `components` are set, or if neither is set.
+        """
+        if target is not None and components is not None:
+            raise ValueError("Only one of 'target' or 'components' can be set.")
+
+        # Use components if target is not provided (backwards compatibility)
+        if target is None:
+            if components is None:
+                raise ValueError("One of 'target' or 'components' must be set.")
+            target = components
+            warn(
+                "'components' is deprecated, use 'target' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+        object.__setattr__(self, "target", target)
+        object.__setattr__(self, "dry_run", dry_run)
+        object.__setattr__(self, "options", options)
+        object.__setattr__(self, "_src", _src)
 
 
 class ActorDispatcher(BackgroundService):
