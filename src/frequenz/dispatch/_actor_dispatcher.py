@@ -181,14 +181,16 @@ class ActorDispatcher(BackgroundService):
 
     async def main():
         url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-        key  = os.getenv("DISPATCH_API_KEY", "some-key")
+        auth_key = os.getenv("DISPATCH_API_AUTH_KEY", "some-key")
+        sign_secret = os.getenv("DISPATCH_API_SIGN_SECRET")
 
         microgrid_id = 1
 
         async with Dispatcher(
             microgrid_id=microgrid_id,
             server_url=url,
-            key=key
+            auth_key=auth_key,
+            sign_secret=sign_secret,
         ) as dispatcher:
             status_receiver = dispatcher.new_running_state_event_receiver("EXAMPLE_TYPE")
 

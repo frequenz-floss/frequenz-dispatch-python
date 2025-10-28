@@ -2,12 +2,13 @@
 
 ## Summary
 
-<!-- Here goes a general summary of what this release is about -->
+This is the first major version release with authentication parameter updates and dependency version expansion.
 
 ## Upgrading
 
-* The `key` parameter in the `Dispatcher` constructor is now deprecated. Use `auth_key` instead. The `sign_secret` parameter is an additional optional parameter for signing.
-* The `components` property in `DispatchInfo` is now deprecated. Use `target` instead.
+* The `key` parameter in the `Dispatcher` constructor is deprecated. Use `auth_key` instead.
+* The `sign_secret` parameter is available and should be used for authentication. It will be soon required.
+* The `components` property in `DispatchInfo` is deprecated. Use `target` instead.
 
 ## New Features
 
