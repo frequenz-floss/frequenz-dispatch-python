@@ -43,7 +43,7 @@ def event_loop_policy() -> async_solipsism.EventLoopPolicy:
 
 
 @fixture
-def fake_time() -> Iterator[time_machine.Coordinates]:
+def fake_time() -> Iterator[time_machine.Traveller]:
     """Replace real time with a time machine that doesn't automatically tick."""
     # destination can be a datetime or a timestamp (int), so are moving to the
     # epoch (in UTC!)
@@ -165,7 +165,7 @@ async def _test_new_dispatch_created(
 async def test_existing_dispatch_updated(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that an existing dispatch is updated."""
     sample = generator.generate_dispatch()
@@ -203,7 +203,7 @@ async def test_existing_dispatch_updated(
 async def test_existing_dispatch_deleted(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that an existing dispatch is deleted."""
     sample = await _test_new_dispatch_created(test_env, generator.generate_dispatch())
@@ -226,7 +226,7 @@ async def test_existing_dispatch_deleted(
 async def test_dispatch_inf_duration_deleted(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that a dispatch with infinite duration can be deleted while running."""
     # Generate a dispatch with infinite duration (duration=None)
@@ -261,7 +261,7 @@ async def test_dispatch_inf_duration_deleted(
 async def test_dispatch_inf_duration_updated_stopped_started(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that a dispatch with infinite duration can be stopped and started by updating it."""
     # Generate a dispatch with infinite duration (duration=None)
@@ -310,7 +310,7 @@ async def test_dispatch_inf_duration_updated_stopped_started(
 async def test_dispatch_inf_duration_updated_to_finite_and_stops(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test updating an inf. duration changing to finite.
 
@@ -353,7 +353,7 @@ async def test_dispatch_inf_duration_updated_to_finite_and_stops(
 async def test_dispatch_schedule(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that a random dispatch is scheduled correctly."""
     sample = replace(
@@ -400,7 +400,7 @@ async def test_dispatch_schedule(
 async def test_dispatch_inf_duration_updated_to_finite_and_continues(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that updating an infinite duration dispatch to a finite duration.
 
@@ -447,7 +447,7 @@ async def test_dispatch_inf_duration_updated_to_finite_and_continues(
 async def test_dispatch_new_but_finished(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that a finished dispatch is not started at startup."""
     # Generate a dispatch that is already finished
@@ -503,7 +503,7 @@ async def test_dispatch_new_but_finished(
 async def test_notification_on_actor_start(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that the actor sends notifications for all running dispatches on start."""
     # Generate a dispatch that is already running
@@ -545,7 +545,7 @@ async def test_notification_on_actor_start(
 async def test_notification_on_actor_start_inf_duration(
     test_env: _TestEnv,
     generator: DispatchGenerator,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that the actor sends notifications for indefinite dispatches on start."""
     # Generate a dispatch that is already running
@@ -586,7 +586,7 @@ async def test_notification_on_actor_start_inf_duration(
 
 @pytest.mark.parametrize("merge_strategy", [MergeByType(), MergeByTypeTarget()])
 async def test_multiple_dispatches_merge_running_intervals(
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
     generator: DispatchGenerator,
     merge_strategy: MergeStrategy,
 ) -> None:
@@ -664,7 +664,7 @@ async def test_multiple_dispatches_merge_running_intervals(
 
 @pytest.mark.parametrize("merge_strategy", [MergeByType(), MergeByTypeTarget()])
 async def test_multiple_dispatches_sequential_intervals_merge(
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
     generator: DispatchGenerator,
     merge_strategy: MergeStrategy,
 ) -> None:
@@ -734,7 +734,7 @@ async def test_multiple_dispatches_sequential_intervals_merge(
 
 @pytest.mark.parametrize("merge_strategy", [MergeByType(), MergeByTypeTarget()])
 async def test_at_least_one_running_filter(
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
     generator: DispatchGenerator,
     merge_strategy: MergeStrategy,
 ) -> None:
@@ -831,7 +831,7 @@ async def test_at_least_one_running_filter(
     ],
 )
 async def test_dry_run_dispatches_not_merged(
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
     generator: DispatchGenerator,
     merge_strategy: MergeStrategy,
 ) -> None:

@@ -52,7 +52,7 @@ def event_loop_policy() -> async_solipsism.EventLoopPolicy:
 
 
 @fixture
-def fake_time() -> Iterator[time_machine.Coordinates]:
+def fake_time() -> Iterator[time_machine.Traveller]:
     """Replace real time with a time machine that doesn't automatically tick."""
     # destination can be a datetime or a timestamp (int), so are moving to the
     # epoch (in UTC!)
@@ -147,7 +147,7 @@ async def test_env() -> AsyncIterator[_TestEnv]:
 
 async def test_simple_start_stop(
     test_env: _TestEnv,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test behavior when receiving start/stop messages."""
     now = _now()
@@ -194,7 +194,7 @@ async def test_simple_start_stop(
 
 
 async def test_start_failed(
-    test_env: _TestEnv, fake_time: time_machine.Coordinates
+    test_env: _TestEnv, fake_time: time_machine.Traveller
 ) -> None:
     """Test auto-retry after 60 seconds."""
     # pylint: disable=protected-access
@@ -283,7 +283,7 @@ def test_heapq_dispatch_start_stop_compare(test_env: _TestEnv) -> None:
     assert scheduled_events[1].dispatch_id == dispatch2.id
 
 
-async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Coordinates) -> None:
+async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Traveller) -> None:
     """Test the dry run mode."""
     dispatch = test_env.generator.generate_dispatch()
     dispatch = replace(
@@ -321,7 +321,7 @@ async def test_dry_run(test_env: _TestEnv, fake_time: time_machine.Coordinates) 
 
 @pytest.mark.parametrize("strategy", [MergeByTypeTarget(), MergeByType(), None])
 async def test_manage_abstraction(
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
     generator: DispatchGenerator,
     strategy: MergeStrategy | None,
 ) -> None:
@@ -417,7 +417,7 @@ async def test_manage_abstraction(
 
 async def test_actor_dispatcher_update_isolation(
     test_env: _TestEnv,
-    fake_time: time_machine.Coordinates,
+    fake_time: time_machine.Traveller,
 ) -> None:
     """Test that updates for one dispatch don't affect other actors of the same type."""
     dispatch_type = "ISOLATION_TEST"
