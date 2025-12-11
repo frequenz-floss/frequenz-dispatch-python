@@ -430,22 +430,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#supported-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage
+        Supported Platforms
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-using-the-running-status-change-channel" class="md-nav__link">
+  <a href="#using-pip" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example using the running status change channel
+        Using pip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-pyprojecttoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using pyproject.toml
       
     </span>
   </a>
@@ -458,10 +480,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-platforms" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Platforms
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-managing-actors-with-dispatch-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example managing actors with dispatch events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
       
     </span>
   </a>
@@ -681,22 +731,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#supported-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage
+        Supported Platforms
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-using-the-running-status-change-channel" class="md-nav__link">
+  <a href="#using-pip" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example using the running status change channel
+        Using pip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-pyprojecttoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using pyproject.toml
       
     </span>
   </a>
@@ -709,10 +781,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-platforms" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Platforms
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-managing-actors-with-dispatch-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example managing actors with dispatch events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
       
     </span>
   </a>
@@ -755,58 +855,124 @@
 <a href="https://pypi.org/project/frequenz-dispatch/"><img alt="PyPI Package" src="https://img.shields.io/pypi/v/frequenz-dispatch" /></a>
 <a href="https://frequenz-floss.github.io/frequenz-dispatch-python/"><img alt="Docs" src="https://img.shields.io/badge/docs-latest-informational" /></a></p>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">¤</a></h2>
-<p>A highlevel interface for the dispatch API.</p>
-<p>See <a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch">the documentation</a> for more information.</p>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">¤</a></h2>
-<p>The <a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher"><code>Dispatcher</code> class</a>, the main entry point for the API, provides two channels:</p>
-<ul>
-<li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.lifecycle_events">Lifecycle events</a>: A channel that sends a message whenever a <a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
-
-
-  
-      dataclass
-  " href="reference/frequenz/dispatch/#frequenz.dispatch.Dispatch">Dispatch</a> is created, updated or deleted.</li>
-<li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/v0.1/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.running_status_change">Running status change</a>: Sends a dispatch message whenever a dispatch is ready to be executed according to the schedule or the running status of the dispatch changed in a way that could potentially require the actor to start, stop or reconfigure itself.</li>
-</ul>
-<h3 id="example-using-the-running-status-change-channel">Example using the running status change channel<a class="headerlink" href="#example-using-the-running-status-change-channel" title="Permanent link">¤</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">frequenz.dispatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dispatcher</span><span class="p">,</span> <span class="n">DispatchInfo</span><span class="p">,</span> <span class="n">MergeByType</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_actor</span><span class="p">(</span><span class="n">dispatch</span><span class="p">:</span> <span class="n">DispatchInfo</span><span class="p">,</span> <span class="n">receiver</span><span class="p">:</span> <span class="n">Receiver</span><span class="p">[</span><span class="n">DispatchInfo</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Actor</span><span class="p">:</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">return</span> <span class="n">MagicMock</span><span class="p">(</span><span class="n">dispatch</span><span class="o">=</span><span class="n">dispatch</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">)</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">():</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;grpc://dispatch.url.goes.here.example.com&quot;</span><span class="p">)</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">auth_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_AUTH_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;some-key&quot;</span><span class="p">)</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">sign_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_SIGN_SECRET&quot;</span><span class="p">)</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">microgrid_id</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">Dispatcher</span><span class="p">(</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="n">microgrid_id</span><span class="o">=</span><span class="n">microgrid_id</span><span class="p">,</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="n">server_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="n">auth_key</span><span class="o">=</span><span class="n">auth_key</span><span class="p">,</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="n">sign_secret</span><span class="o">=</span><span class="n">sign_secret</span><span class="p">,</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">dispatcher</span><span class="p">:</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">start_managing</span><span class="p">(</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>            <span class="n">dispatch_type</span><span class="o">=</span><span class="s2">&quot;EXAMPLE_TYPE&quot;</span><span class="p">,</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="n">actor_factory</span><span class="o">=</span><span class="n">create_actor</span><span class="p">,</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>            <span class="n">merge_strategy</span><span class="o">=</span><span class="n">MergeByType</span><span class="p">(),</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>            <span class="n">retry_interval</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="p">)</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="k">await</span> <span class="n">dispatcher</span>
-</span></code></pre></div>
+<p>The <code>frequenz-dispatch</code> library provides a high-level Python interface for
+interacting with the Frequenz Dispatch API. This library enables you to
+manage and monitor dispatch operations in microgrids, including lifecycle
+events and running status changes of dispatch operations.</p>
+<p>The main entry point is the <a href="https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher"><code>Dispatcher</code></a> class, which
+provides methods for receiving dispatch lifecycle events and running status
+updates, allowing you to build reactive applications that respond to dispatch
+state changes.</p>
 <h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">¤</a></h2>
 <p>The following platforms are officially supported (tested):</p>
 <ul>
-<li><strong>Python:</strong> 3.11</li>
-<li><strong>Operating System:</strong> Ubuntu Linux 20.04</li>
+<li><strong>Python:</strong> 3.11, 3.13</li>
+<li><strong>Operating System:</strong> Ubuntu Linux 24.04</li>
 <li><strong>Architectures:</strong> amd64, arm64</li>
 </ul>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¤</a></h2>
+<h3 id="using-pip">Using pip<a class="headerlink" href="#using-pip" title="Permanent link">¤</a></h3>
+<p>You can install the package from PyPI:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>frequenz-dispatch
+</span></code></pre></div>
+<h3 id="using-pyprojecttoml">Using pyproject.toml<a class="headerlink" href="#using-pyprojecttoml" title="Permanent link">¤</a></h3>
+<p>Add the dependency to your <code>pyproject.toml</code> file:</p>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">[project]</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s2">&quot;frequenz-dispatch &gt;= 1.0.1, &lt; 2&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">]</span>
+</span></code></pre></div>
+<blockquote>
+<p>[!NOTE]
+We recommend pinning the dependency to the latest version for programs,
+like <code>"frequenz-dispatch == 1.0.1"</code>, and specifying a version range
+spanning one major version for libraries, like
+<code>"frequenz-dispatch &gt;= 1.0.1, &lt; 2"</code>. We follow <a href="https://semver.org/">semver</a>.</p>
+</blockquote>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">¤</a></h2>
+<p>Here's a minimal example to get you started with lifecycle events:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">frequenz.dispatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Created</span><span class="p">,</span> <span class="n">Deleted</span><span class="p">,</span> <span class="n">Dispatcher</span><span class="p">,</span> <span class="n">Updated</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;grpc://localhost:50051&quot;</span><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">auth_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_AUTH_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;my-api-key&quot;</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">sign_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_SIGN_SECRET&quot;</span><span class="p">)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">microgrid_id</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">Dispatcher</span><span class="p">(</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="n">microgrid_id</span><span class="o">=</span><span class="n">microgrid_id</span><span class="p">,</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="n">server_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">auth_key</span><span class="o">=</span><span class="n">auth_key</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="n">sign_secret</span><span class="o">=</span><span class="n">sign_secret</span><span class="p">,</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">dispatcher</span><span class="p">:</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="n">events_receiver</span> <span class="o">=</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">new_lifecycle_events_receiver</span><span class="p">(</span><span class="s2">&quot;MY_TYPE&quot;</span><span class="p">)</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events_receiver</span><span class="p">:</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>            <span class="k">match</span> <span class="n">event</span><span class="p">:</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>                <span class="k">case</span> <span class="n">Created</span><span class="p">(</span><span class="n">dispatch</span><span class="p">):</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created: </span><span class="si">{</span><span class="n">dispatch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>                <span class="k">case</span> <span class="n">Updated</span><span class="p">(</span><span class="n">dispatch</span><span class="p">):</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated: </span><span class="si">{</span><span class="n">dispatch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>                <span class="k">case</span> <span class="n">Deleted</span><span class="p">(</span><span class="n">dispatch</span><span class="p">):</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleted: </span><span class="si">{</span><span class="n">dispatch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</span></code></pre></div>
+<p>The <a href="https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher"><code>Dispatcher</code> class</a> provides two receiver methods:</p>
+<ul>
+<li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver"><code>new_lifecycle_events_receiver()</code></a>: Returns a receiver
+  that sends a message whenever a Dispatch is created, updated or deleted.</li>
+<li><a href="https://frequenz-floss.github.io/frequenz-dispatch-python/latest/reference/frequenz/dispatch/#frequenz.dispatch.Dispatcher.new_running_state_event_receiver"><code>new_running_state_event_receiver()</code></a>: Returns a
+  receiver that sends a dispatch message whenever a dispatch is ready to be
+  executed according to the schedule or the running status of the dispatch
+  changed in a way that could potentially require the actor to start, stop or
+  reconfigure itself.</li>
+</ul>
+<h3 id="example-managing-actors-with-dispatch-events">Example managing actors with dispatch events<a class="headerlink" href="#example-managing-actors-with-dispatch-events" title="Permanent link">¤</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">frequenz.channels</span><span class="w"> </span><span class="kn">import</span> <span class="n">Receiver</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">frequenz.sdk.actor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Actor</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">frequenz.dispatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dispatcher</span><span class="p">,</span> <span class="n">DispatchInfo</span><span class="p">,</span> <span class="n">MergeByType</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_actor</span><span class="p">(</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">dispatch</span><span class="p">:</span> <span class="n">DispatchInfo</span><span class="p">,</span> <span class="n">receiver</span><span class="p">:</span> <span class="n">Receiver</span><span class="p">[</span><span class="n">DispatchInfo</span><span class="p">]</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Actor</span><span class="p">:</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="k">return</span> <span class="n">MagicMock</span><span class="p">(</span><span class="n">dispatch</span><span class="o">=</span><span class="n">dispatch</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">)</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="s2">&quot;DISPATCH_API_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;grpc://dispatch.api.example.com:50051&quot;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="p">)</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="n">auth_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_AUTH_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;my-api-key&quot;</span><span class="p">)</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">sign_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DISPATCH_API_SIGN_SECRET&quot;</span><span class="p">)</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="n">microgrid_id</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">Dispatcher</span><span class="p">(</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        <span class="n">microgrid_id</span><span class="o">=</span><span class="n">microgrid_id</span><span class="p">,</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>        <span class="n">server_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        <span class="n">auth_key</span><span class="o">=</span><span class="n">auth_key</span><span class="p">,</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        <span class="n">sign_secret</span><span class="o">=</span><span class="n">sign_secret</span><span class="p">,</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">dispatcher</span><span class="p">:</span>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>        <span class="k">await</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">start_managing</span><span class="p">(</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>            <span class="n">dispatch_type</span><span class="o">=</span><span class="s2">&quot;EXAMPLE_TYPE&quot;</span><span class="p">,</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>            <span class="n">actor_factory</span><span class="o">=</span><span class="n">create_actor</span><span class="p">,</span>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>            <span class="n">merge_strategy</span><span class="o">=</span><span class="n">MergeByType</span><span class="p">(),</span>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>            <span class="n">retry_interval</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>        <span class="p">)</span>
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>        <span class="k">await</span> <span class="n">dispatcher</span>
+</span></code></pre></div>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">¤</a></h2>
+<p>For complete API documentation, examples, and advanced usage patterns, see
+<a href="https://frequenz-floss.github.io/frequenz-dispatch-python/latest/">the documentation</a>.</p>
 <h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">¤</a></h2>
 <p>If you want to know how to build this project and contribute to it, please
 check out the <a href="CONTRIBUTING/">Contributing Guide</a>.</p>
