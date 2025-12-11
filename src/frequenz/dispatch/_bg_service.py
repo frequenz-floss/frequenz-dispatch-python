@@ -228,7 +228,7 @@ class DispatchScheduler(BackgroundService):
         """Start the background service."""
         self._tasks.add(asyncio.create_task(self._run()))
 
-    async def _run(self) -> None:
+    async def _run(self) -> None:  # pylint: disable=too-many-branches
         """Run the background service."""
         _logger.info(
             "Starting dispatching background service for microgrid %s",
