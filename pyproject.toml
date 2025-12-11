@@ -79,7 +79,7 @@ dev-mypy = [
   "frequenz-dispatch[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
 dev-noxfile = [
-  "uv == 0.9.16",
+  "uv == 0.9.17",
   "nox == 2025.11.12",
   "frequenz-repo-config[lib] == 0.13.8",
 ]
