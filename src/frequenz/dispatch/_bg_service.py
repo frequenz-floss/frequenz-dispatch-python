@@ -486,10 +486,18 @@ class DispatchScheduler(BackgroundService):
         # Dispatch was updated
         elif dispatch and old_dispatch:
             # Remove potentially existing scheduled event
-            self._remove_scheduled(old_dispatch)
+            removed = self._remove_scheduled(old_dispatch)
 
             # Check if the change requires an immediate notification
             if self._update_changed_running_state(dispatch, old_dispatch):
+                await self._send_running_state_change(dispatch)
+            elif removed is not None and removed.priority == 1 and not dispatch.started:
+                # priority == 1 means a stop event (see QueueItem.__init__).
+                # If we removed a pending stop event and the dispatch is no
+                # longer started, the update arrived exactly at the stop
+                # boundary. The timer would have delivered the stop event, but
+                # _remove_scheduled consumed it first. Send the notification
+                # here so the actor is not left running past the window end.
                 await self._send_running_state_change(dispatch)
 
             if dispatch.started:
