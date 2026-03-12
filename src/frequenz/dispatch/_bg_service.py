@@ -13,7 +13,7 @@ from collections.abc import Mapping
 from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from heapq import heappop, heappush
+from heapq import heapify, heappop, heappush
 
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
@@ -486,10 +486,18 @@ class DispatchScheduler(BackgroundService):
         # Dispatch was updated
         elif dispatch and old_dispatch:
             # Remove potentially existing scheduled event
-            self._remove_scheduled(old_dispatch)
+            removed = self._remove_scheduled(old_dispatch)
 
             # Check if the change requires an immediate notification
             if self._update_changed_running_state(dispatch, old_dispatch):
+                await self._send_running_state_change(dispatch)
+            elif removed is not None and removed.priority == 1 and not dispatch.started:
+                # priority == 1 means a stop event (see QueueItem.__init__).
+                # If we removed a pending stop event and the dispatch is no
+                # longer started, the update arrived exactly at the stop
+                # boundary. The timer would have delivered the stop event, but
+                # _remove_scheduled consumed it first. Send the notification
+                # here so the actor is not left running past the window end.
                 await self._send_running_state_change(dispatch)
 
             if dispatch.started:
@@ -507,21 +515,26 @@ class DispatchScheduler(BackgroundService):
             timer.reset(interval=due_at - datetime.now(timezone.utc))
             _logger.debug("Next event scheduled at %s", self._scheduled_events[0].time)
 
-    def _remove_scheduled(self, dispatch: Dispatch) -> bool:
+    def _remove_scheduled(self, dispatch: Dispatch) -> "QueueItem | None":
         """Remove a dispatch from the scheduled events.
 
         Args:
             dispatch: The dispatch to remove.
 
         Returns:
-            True if the dispatch was found and removed, False otherwise.
+            The removed queue item, or None if not found.
         """
         for idx, item in enumerate(self._scheduled_events):
             if dispatch.id == item.dispatch.id:
                 self._scheduled_events.pop(idx)
-                return True
+                # heappop() only removes the root (index 0) and does not accept
+                # an index argument, so we use list.pop(idx) instead. After
+                # removing an arbitrary element the heap property is broken and
+                # must be restored explicitly.
+                heapify(self._scheduled_events)
+                return item
 
-        return False
+        return None
 
     def _schedule_start(self, dispatch: Dispatch) -> None:
         """Schedule a dispatch to start.
