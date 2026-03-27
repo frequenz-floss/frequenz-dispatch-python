@@ -80,7 +80,7 @@ dev-mypy = [
 ]
 dev-noxfile = [
   "uv == 0.10.7",
-  "nox == 2025.11.12",
+  "nox == 2026.2.9",
   "frequenz-repo-config[lib] == 0.13.8",
 ]
 dev-pylint = [
