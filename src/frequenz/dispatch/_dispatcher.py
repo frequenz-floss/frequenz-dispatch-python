@@ -325,10 +325,10 @@ class Dispatcher(BackgroundService):
         """Manage actors for a given dispatch type.
 
         Creates and manages an
-        [`ActorDispatcher`][frequenz.dispatch.ActorDispatcher] for the given type that will
+        [`ActorDispatcher`][...ActorDispatcher] for the given type that will
         start, stop and reconfigure actors based on received dispatches.
 
-        You can await the [`Dispatcher`][frequenz.dispatch.Dispatcher] instance to block
+        You can await the [`Dispatcher`][...Dispatcher] instance to block
         until all types registered with [`start_managing`][..start_managing] are stopped
         using [`stop_managing`][..stop_managing].
 
@@ -337,9 +337,9 @@ class Dispatcher(BackgroundService):
 
         This also decides how instances are mapped from dispatches to actors:
 
-        * [`MergeByType`][frequenz.dispatch.MergeByType] — All dispatches map to
+        * [`MergeByType`][...MergeByType] — All dispatches map to
         one single instance identified by the dispatch type and dry_run status.
-        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — A
+        * [`MergeByTypeTarget`][...MergeByTypeTarget] — A
         dispatch maps to an instance identified by the dispatch type, dry_run status
         and target. So different dispatches with equal type and target will map to
         the same instance.
@@ -457,12 +457,12 @@ class Dispatcher(BackgroundService):
          - The dispatch was deleted
 
         `merge_strategy` is an instance of a class derived from
-        [`MergeStrategy`][frequenz.dispatch.MergeStrategy]. Available strategies
+        [`MergeStrategy`][...MergeStrategy]. Available strategies
         are:
 
-        * [`MergeByType`][frequenz.dispatch.MergeByType] — merges all dispatches
+        * [`MergeByType`][...MergeByType] — merges all dispatches
           of the same type.
-        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — merges all
+        * [`MergeByTypeTarget`][...MergeByTypeTarget] — merges all
           dispatches of the same type and target.
         * `None` — no merging, just send all events (default).
 

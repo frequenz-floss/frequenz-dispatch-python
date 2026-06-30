@@ -5,13 +5,13 @@
 
 A small overview of the most important classes in this module:
 
-* [`Dispatcher`][frequenz.dispatch.Dispatcher]: The entry point for the API.
-* [`Dispatch`][frequenz.dispatch.Dispatch]: A dispatch type with lots of useful extra functionality.
-* [`ActorDispatcher`][frequenz.dispatch.ActorDispatcher]: A service to manage other actors based on
+* [`Dispatcher`][.Dispatcher]: The entry point for the API.
+* [`Dispatch`][.Dispatch]: A dispatch type with lots of useful extra functionality.
+* [`ActorDispatcher`][.ActorDispatcher]: A service to manage other actors based on
   incoming dispatches.
-* [`Created`][frequenz.dispatch.Created],
-  [`Updated`][frequenz.dispatch.Updated],
-  [`Deleted`][frequenz.dispatch.Deleted]: Dispatch event types.
+* [`Created`][.Created],
+  [`Updated`][.Updated],
+  [`Deleted`][.Deleted]: Dispatch event types.
 
 """
 

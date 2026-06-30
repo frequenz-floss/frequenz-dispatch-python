@@ -180,22 +180,22 @@ class DispatchScheduler(BackgroundService):
         """Create a new receiver for running state events of the specified type.
 
         `merge_strategy` is an instance of a class derived from
-        [`MergeStrategy`][frequenz.dispatch.MergeStrategy]. Available strategies
+        [`MergeStrategy`][....MergeStrategy]. Available strategies
         are:
 
-        * [`MergeByType`][frequenz.dispatch.MergeByType] — merges all dispatches
+        * [`MergeByType`][....MergeByType] — merges all dispatches
           of the same type.
-        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — merges all
+        * [`MergeByTypeTarget`][....MergeByTypeTarget] — merges all
           dispatches of the same type and target.
         * `None` — no merging, just send all events.
 
         You can make your own identity-based strategy by subclassing
-        [`MergeByType`][frequenz.dispatch.MergeByType] and overriding
-        the [`identity()`][frequenz.dispatch.MergeStrategy.identity] method. If
+        [`MergeByType`][....MergeByType] and overriding
+        the [`identity()`][....MergeStrategy.identity] method. If
         you require a more complex strategy, you can subclass
-        [`MergeStrategy`][frequenz.dispatch.MergeStrategy] directly and implement
-        both the [`identity()`][frequenz.dispatch.MergeStrategy.identity] and
-        [`filter()`][frequenz.dispatch.MergeStrategy.filter] methods.
+        [`MergeStrategy`][....MergeStrategy] directly and implement
+        both the [`identity()`][....MergeStrategy.identity] and
+        [`filter()`][....MergeStrategy.filter] methods.
 
         Running intervals from multiple dispatches will be merged, according to
         the chosen strategy.
