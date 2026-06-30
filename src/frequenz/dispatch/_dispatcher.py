@@ -328,9 +328,9 @@ class Dispatcher(BackgroundService):
         [`ActorDispatcher`][frequenz.dispatch.ActorDispatcher] for the given type that will
         start, stop and reconfigure actors based on received dispatches.
 
-        You can await the [`Dispatcher`][] instance to block until all types
-        registered with [`start_managing`][.start_managing] are stopped using
-        [`stop_managing`][.stop_managing].
+        You can await the [`Dispatcher`][frequenz.dispatch.Dispatcher] instance to block until all types
+        registered with [`start_managing`][..start_managing] are stopped using
+        [`stop_managing`][..stop_managing].
 
         "Merging" means that when multiple dispatches are active at the same time,
         the intervals are merged into one.
@@ -394,7 +394,7 @@ class Dispatcher(BackgroundService):
 
     @property
     def client(self) -> DispatchApiClient:
-        """The underlying [`DispatchApiClient`][frequenz.client.dispatch.DispatchApiClient]."""
+        """The underlying dispatch API client."""
         return self._client
 
     @override

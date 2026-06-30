@@ -45,7 +45,7 @@ class DispatchInfo:
         """The target components (deprecated).
 
         Warning: Deprecated in v0.10.3
-            Use [`target`][.target] instead.
+            Use [`target`][..target] instead.
         """
         return self.target
 
