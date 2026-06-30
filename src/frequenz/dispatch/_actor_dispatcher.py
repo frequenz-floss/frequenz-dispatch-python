@@ -42,7 +42,7 @@ class DispatchInfo:
     @property
     @deprecated("'components' is deprecated, use 'target' instead.")
     def components(self) -> TargetComponents:
-        """The target components (deprecated).
+        """The target components.
 
         Warning: Deprecated in v0.10.3
             Use [`target`][..target] instead.
