@@ -1,7 +1,7 @@
 # License: MIT
 # Copyright © 2024 Frequenz Energy-as-a-Service GmbH
 
-"""A highlevel interface for the dispatch API."""
+"""A high-level interface for the dispatch API."""
 
 from __future__ import annotations
 
@@ -27,18 +27,17 @@ _logger = logging.getLogger(__name__)
 
 
 class Dispatcher(BackgroundService):
-    """A highlevel interface for the dispatch API.
+    """A high-level interface for the dispatch API.
 
-    This class provides a highlevel interface to the dispatch API.
+    This class provides a high-level interface to the dispatch API.
     It provides receivers for various events and management of actors based on
     dispatches.
 
     The receivers shortly explained:
 
-    * [Lifecycle events receiver][frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver]:
+    * [Lifecycle events receiver][.new_lifecycle_events_receiver]:
         Receives an event whenever a dispatch is created, updated or deleted.
-    * [Running status change
-        receiver][frequenz.dispatch.Dispatcher.new_running_state_event_receiver]:
+    * [Running status change receiver][.new_running_state_event_receiver]:
         Receives an event whenever the running status of a dispatch changes.
         The running status of a dispatch can change due to a variety of reasons,
         such as but not limited to the dispatch being started, stopped, modified
@@ -50,7 +49,9 @@ class Dispatcher(BackgroundService):
     Example: Managing an actor
         ```python
         import os
-        from frequenz.dispatch import Dispatcher, MergeByType
+        from frequenz.channels import Receiver
+        from frequenz.dispatch import Dispatcher, MergeByType, DispatchInfo
+        from frequenz.sdk.actor import Actor
         from unittest.mock import MagicMock
 
         async def create_actor(dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]) -> Actor:
@@ -58,7 +59,7 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key  = os.getenv("DISPATCH_API_KEY", "some-key")
+            key = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
 
@@ -67,7 +68,7 @@ class Dispatcher(BackgroundService):
                 server_url=url,
                 auth_key=key
             ) as dispatcher:
-                dispatcher.start_managing(
+                await dispatcher.start_managing(
                     dispatch_type="DISPATCH_TYPE",
                     actor_factory=create_actor,
                     merge_strategy=MergeByType(),
@@ -84,7 +85,7 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key  = os.getenv("DISPATCH_API_KEY", "some-key")
+            key = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
 
@@ -95,7 +96,7 @@ class Dispatcher(BackgroundService):
             ) as dispatcher:
                 actor = MagicMock() # replace with your actor
 
-                rs_receiver = dispatcher.new_running_state_event_receiver("DISPATCH_TYPE")
+                rs_receiver = await dispatcher.new_running_state_event_receiver("DISPATCH_TYPE")
 
                 async for dispatch in rs_receiver:
                     if dispatch.started:
@@ -129,7 +130,7 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key  = os.getenv("DISPATCH_API_KEY", "some-key")
+            key = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
 
@@ -166,7 +167,7 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key  = os.getenv("DISPATCH_API_KEY", "some-key")
+            key = os.getenv("DISPATCH_API_KEY", "some-key")
 
             microgrid_id = 1
 
@@ -215,16 +216,16 @@ class Dispatcher(BackgroundService):
         """Initialize the dispatcher.
 
         Args:
-            microgrid_id: The microgrid id.
+            microgrid_id: The microgrid ID.
             server_url: The URL of the dispatch service.
             key: The key to access the service, deprecated, use `auth_key` instead.
             auth_key: The authentication key to access the service.
-            sign_secret: The secret to sign the requests, optional
+            sign_secret: The optional secret to sign the requests.
             call_timeout: The timeout for API calls.
             stream_timeout: The timeout for streaming API calls.
 
         Raises:
-            ValueError: If both or neither `key` and `auth_key` are provided
+            ValueError: If both or neither `key` and `auth_key` are provided.
         """
         super().__init__()
 
@@ -283,7 +284,11 @@ class Dispatcher(BackgroundService):
         self._actor_dispatchers.clear()
 
     def cancel(self, msg: str | None = None) -> None:
-        """Stop the local dispatch service and initiate client disconnection."""
+        """Stop the local dispatch service and initiate client disconnection.
+
+        Args:
+            msg: An optional message to include in the cancellation.
+        """
         self._bg_service.cancel(msg)
 
         for instance in self._actor_dispatchers.values():
@@ -297,7 +302,7 @@ class Dispatcher(BackgroundService):
         await self._bg_service.wait_for_initialization()
 
     def is_managed(self, dispatch_type: str) -> bool:
-        """Check if the dispatcher is managing actors for a given dispatch type.
+        """Return whether the dispatcher is managing actors for the given dispatch type.
 
         Args:
             dispatch_type: The type of the dispatch to check.
@@ -323,9 +328,9 @@ class Dispatcher(BackgroundService):
         [`ActorDispatcher`][frequenz.dispatch.ActorDispatcher] for the given type that will
         start, stop and reconfigure actors based on received dispatches.
 
-        You can await the `Dispatcher` instance to block until all types
-        registered with `start_managing()` are stopped using
-        `stop_managing()`
+        You can await the [`Dispatcher`][] instance to block until all types
+        registered with [`start_managing`][.start_managing] are stopped using
+        [`stop_managing`][.stop_managing].
 
         "Merging" means that when multiple dispatches are active at the same time,
         the intervals are merged into one.
@@ -344,7 +349,7 @@ class Dispatcher(BackgroundService):
             dispatch_type: The type of the dispatch to manage.
             actor_factory: The factory to create actors.
             merge_strategy: The strategy to merge running intervals.
-            retry_interval: Retry interval for when actor creation fails.
+            retry_interval: The retry interval to use when actor creation fails.
         """
         dispatcher = self._actor_dispatchers.get(dispatch_type)
 
@@ -389,7 +394,7 @@ class Dispatcher(BackgroundService):
 
     @property
     def client(self) -> DispatchApiClient:
-        """Return the client."""
+        """The underlying [`DispatchApiClient`][frequenz.client.dispatch.DispatchApiClient]."""
         return self._client
 
     @override
@@ -409,13 +414,13 @@ class Dispatcher(BackgroundService):
     def new_lifecycle_events_receiver(
         self, dispatch_type: str
     ) -> Receiver[DispatchEvent]:
-        """Return new, updated or deleted dispatches receiver.
+        """Return a receiver for dispatch lifecycle events.
 
         Args:
             dispatch_type: The type of the dispatch to listen for.
 
         Returns:
-            A new receiver for new dispatches.
+            A receiver for dispatch lifecycle events of the given type.
         """
         return self._bg_service.new_lifecycle_events_receiver(dispatch_type)
 
@@ -425,7 +430,7 @@ class Dispatcher(BackgroundService):
         *,
         merge_strategy: MergeStrategy | None = None,
     ) -> Receiver[Dispatch]:
-        """Return running state event receiver.
+        """Return a running state event receiver.
 
         This receiver will receive a message whenever the current running
         status of a dispatch changes.
@@ -452,14 +457,14 @@ class Dispatcher(BackgroundService):
          - The dispatch was deleted
 
         `merge_strategy` is an instance of a class derived from
-        [`MergeStrategy`][frequenz.dispatch.MergeStrategy] Available strategies
+        [`MergeStrategy`][frequenz.dispatch.MergeStrategy]. Available strategies
         are:
 
         * [`MergeByType`][frequenz.dispatch.MergeByType] — merges all dispatches
-          of the same type
+          of the same type.
         * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — merges all
-          dispatches of the same type and target
-        * `None` — no merging, just send all events (default)
+          dispatches of the same type and target.
+        * `None` — no merging, just send all events (default).
 
         Running intervals from multiple dispatches will be merged, according to
         the chosen strategy.
@@ -469,7 +474,7 @@ class Dispatcher(BackgroundService):
 
         Args:
             dispatch_type: The type of the dispatch to listen for.
-            merge_strategy: The type of the strategy to merge running intervals.
+            merge_strategy: The strategy to use for merging running intervals.
 
         Returns:
             A new receiver for dispatches whose running status changed.
