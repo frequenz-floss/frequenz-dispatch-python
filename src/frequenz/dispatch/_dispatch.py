@@ -12,7 +12,7 @@ from frequenz.client.dispatch.types import Dispatch as BaseDispatch
 
 @dataclass(frozen=True)
 class Dispatch(BaseDispatch):
-    """Dispatch type with extra functionality."""
+    """A dispatch type with extra functionality."""
 
     deleted: bool = False
     """Whether the dispatch is deleted."""
@@ -38,16 +38,12 @@ class Dispatch(BaseDispatch):
 
     @property
     def started(self) -> bool:
-        """Check if the dispatch is started.
-
-        Returns:
-            True if the dispatch is started, False otherwise.
-        """
+        """Whether the dispatch is currently started."""
         now = datetime.now(tz=timezone.utc)
         return self.started_at(now)
 
     def started_at(self, now: datetime) -> bool:
-        """Check if the dispatch has started.
+        """Return whether the dispatch has started.
 
         A dispatch is considered started if the current time is after the start
         time but before the end time.
@@ -57,31 +53,24 @@ class Dispatch(BaseDispatch):
         last occurrence.
 
         Args:
-            now: time to use as now
+            now: The time to use as the current time.
 
         Returns:
-            True if the dispatch is started
+            True if the dispatch has started at `now`, False otherwise.
         """
         if self.deleted:
             return False
 
         return super().started_at(now)
 
-    # noqa is needed because of a bug in pydoclint that makes it think a `return` without a return
-    # value needs documenting
-    def missed_runs(self, since: datetime) -> Iterator[datetime]:  # noqa: DOC405
+    def missed_runs(self, since: datetime) -> Iterator[datetime]:
         """Yield all missed runs of a dispatch.
-
-        Yields all missed runs of a dispatch.
 
         Args:
             since: The time to start checking for missed runs.
 
-        Returns:
-            A generator that yields all missed runs of a dispatch.
-
         Yields:
-            datetime: The missed run.
+            The datetime of each missed run.
         """
         now = datetime.now(tz=timezone.utc)
 

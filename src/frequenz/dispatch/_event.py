@@ -33,7 +33,7 @@ class Deleted:
 
 
 DispatchEvent = Created | Updated | Deleted
-"""Type that is sent over the channel for dispatch updates.
+"""The type representing dispatch lifecycle events.
 
 This type is used to send dispatches that were created, updated or deleted
 over the channel.

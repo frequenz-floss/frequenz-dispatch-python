@@ -24,7 +24,7 @@ _logger = logging.getLogger(__name__)
 
 
 class DispatchActorId(BaseId, str_prefix="DA"):
-    """ID for a dispatch actor."""
+    """An ID for a dispatch actor."""
 
     def __init__(self, dispatch_id: DispatchId | int) -> None:
         """Initialize the DispatchActorId.
@@ -37,26 +37,26 @@ class DispatchActorId(BaseId, str_prefix="DA"):
 
 @dataclass(frozen=True, kw_only=True)
 class DispatchInfo:
-    """Event emitted when the dispatch changes."""
+    """An event emitted when the dispatch changes."""
 
     @property
     @deprecated("'components' is deprecated, use 'target' instead.")
     def components(self) -> TargetComponents:
-        """Get the target components.
+        """The target components.
 
-        Deprecation: Deprecated in v0.10.3
-            Use [`target`][frequenz.dispatch.DispatchInfo.target] instead.
+        Warning: Deprecated in v0.10.3
+            Use [`target`][..target] instead.
         """
         return self.target
 
     target: TargetComponents
-    """Target components to be used."""
+    """The target components."""
 
     dry_run: bool
     """Whether this is a dry run."""
 
     options: dict[str, Any]
-    """Additional options."""
+    """The additional options."""
 
     _src: Dispatch
     """The dispatch that triggered this update."""
@@ -70,13 +70,13 @@ class DispatchInfo:
         options: dict[str, Any],
         _src: Dispatch,
     ) -> None:
-        """Initialize the DispatchInfo.
+        """Initialize a new instance.
 
         Args:
-            target: Target components to be used.
+            target: The target components to be used.
             components: Deprecated alias for `target`.
             dry_run: Whether this is a dry run.
-            options: Additional options.
+            options: The additional options.
             _src: The dispatch that triggered this update.
 
         Raises:
@@ -103,109 +103,109 @@ class DispatchInfo:
 
 
 class ActorDispatcher(BackgroundService):
-    """Helper class to manage actors based on dispatches.
+    """A helper class to manage actors based on dispatches.
 
-    Example usage:
+    Example:
+        ```python
+        import os
+        import asyncio
+        from typing import Any, Self
+        from typing import override
+        from frequenz.dispatch import Dispatcher, ActorDispatcher, DispatchInfo
+        from frequenz.client.common.microgrid.components import ComponentCategory
+        from frequenz.channels import Receiver, Broadcast, select, selected_from
+        from frequenz.sdk.actor import Actor, run
 
-    ```python
-    import os
-    import asyncio
-    from typing import override
-    from frequenz.dispatch import Dispatcher, ActorDispatcher, DispatchInfo
-    from frequenz.client.common.microgrid.components import ComponentCategory
-    from frequenz.channels import Receiver, Broadcast, select, selected_from
-    from frequenz.sdk.actor import Actor, run
+        class MyActor(Actor):
+            def __init__(
+                    self,
+                    *,
+                    name: str | None = None,
+            ) -> None:
+                super().__init__(name=name)
+                self._dispatch_updates_receiver: Receiver[DispatchInfo] | None = None
+                self._dry_run: bool = False
+                self._options: dict[str, Any] = {}
 
-    class MyActor(Actor):
-        def __init__(
-                self,
-                *,
-                name: str | None = None,
-        ) -> None:
-            super().__init__(name=name)
-            self._dispatch_updates_receiver: Receiver[DispatchInfo] | None = None
-            self._dry_run: bool = False
-            self._options: dict[str, Any] = {}
+            @classmethod
+            def new_with_dispatch(
+                    cls,
+                    initial_dispatch: DispatchInfo,
+                    dispatch_updates_receiver: Receiver[DispatchInfo],
+                    *,
+                    name: str | None = None,
+            ) -> Self:
+                self = cls(name=name)
+                self._dispatch_updates_receiver = dispatch_updates_receiver
+                self._update_dispatch_information(initial_dispatch)
+                return self
 
-        @classmethod
-        def new_with_dispatch(
-                cls,
-                initial_dispatch: DispatchInfo,
-                dispatch_updates_receiver: Receiver[DispatchInfo],
-                *,
-                name: str | None = None,
-        ) -> "Self":
-            self = cls(name=name)
-            self._dispatch_updates_receiver = dispatch_updates_receiver
-            self._update_dispatch_information(initial_dispatch)
-            return self
+            @override
+            async def _run(self) -> None:
+                other_recv: Receiver[Any] = ...
 
-        @override
-        async def _run(self) -> None:
-            other_recv: Receiver[Any] = ...
-
-            if self._dispatch_updates_receiver is None:
-                async for msg in other_recv:
-                    # do stuff
-                    ...
-            else:
-                await self._run_with_dispatch(other_recv)
-
-        async def _run_with_dispatch(self, other_recv: Receiver[Any]) -> None:
-            async for selected in select(self._dispatch_updates_receiver, other_recv):
-                if selected_from(selected, self._dispatch_updates_receiver):
-                    self._update_dispatch_information(selected.message)
-                elif selected_from(selected, other_recv):
-                    # do stuff
-                    ...
+                if self._dispatch_updates_receiver is None:
+                    async for msg in other_recv:
+                        # do stuff
+                        ...
                 else:
-                    assert False, f"Unexpected selected receiver: {selected}"
+                    await self._run_with_dispatch(other_recv)
 
-        def _update_dispatch_information(self, dispatch_update: DispatchInfo) -> None:
-            print("Received update:", dispatch_update)
-            self._dry_run = dispatch_update.dry_run
-            self._options = dispatch_update.options
-            match dispatch_update.components:
-                case []:
-                    print("Dispatch: Using all components")
-                case list() as ids if isinstance(ids[0], int):
-                    component_ids = ids
-                case [ComponentCategory.BATTERY, *_]:
-                    component_category = ComponentCategory.BATTERY
-                case unsupported:
-                    print(
-                        "Dispatch: Requested an unsupported selector %r, "
-                        "but only component IDs or category BATTERY are supported.",
-                        unsupported,
-                    )
+            async def _run_with_dispatch(self, other_recv: Receiver[Any]) -> None:
+                async for selected in select(self._dispatch_updates_receiver, other_recv):
+                    if selected_from(selected, self._dispatch_updates_receiver):
+                        self._update_dispatch_information(selected.message)
+                    elif selected_from(selected, other_recv):
+                        # do stuff
+                        ...
+                    else:
+                        assert False, f"Unexpected selected receiver: {selected}"
 
-    async def main():
-        url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-        auth_key = os.getenv("DISPATCH_API_AUTH_KEY", "some-key")
-        sign_secret = os.getenv("DISPATCH_API_SIGN_SECRET")
+            def _update_dispatch_information(self, dispatch_update: DispatchInfo) -> None:
+                print("Received update:", dispatch_update)
+                self._dry_run = dispatch_update.dry_run
+                self._options = dispatch_update.options
+                match dispatch_update.target:
+                    case []:
+                        print("Dispatch: Using all components")
+                    case list() as ids if isinstance(ids[0], int):
+                        component_ids = ids
+                    case [ComponentCategory.BATTERY, *_]:
+                        component_category = ComponentCategory.BATTERY
+                    case unsupported:
+                        print(
+                            "Dispatch: Requested an unsupported selector %r, "
+                            "but only component IDs or category BATTERY are supported.",
+                            unsupported,
+                        )
 
-        microgrid_id = 1
+        async def main():
+            url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
+            auth_key = os.getenv("DISPATCH_API_AUTH_KEY", "some-key")
+            sign_secret = os.getenv("DISPATCH_API_SIGN_SECRET")
 
-        async with Dispatcher(
-            microgrid_id=microgrid_id,
-            server_url=url,
-            auth_key=auth_key,
-            sign_secret=sign_secret,
-        ) as dispatcher:
-            status_receiver = dispatcher.new_running_state_event_receiver("EXAMPLE_TYPE")
+            microgrid_id = 1
 
-            managing_actor = ActorDispatcher(
-                actor_factory=MyActor.new_with_dispatch,
-                running_status_receiver=status_receiver,
-            )
+            async with Dispatcher(
+                microgrid_id=microgrid_id,
+                server_url=url,
+                auth_key=auth_key,
+                sign_secret=sign_secret,
+            ) as dispatcher:
+                status_receiver = await dispatcher.new_running_state_event_receiver("EXAMPLE_TYPE")
 
-            await run(managing_actor)
-    ```
+                managing_actor = ActorDispatcher(
+                    actor_factory=MyActor.new_with_dispatch,
+                    running_status_receiver=status_receiver,
+                )
+
+                await run(managing_actor)
+        ```
     """
 
     @dataclass(frozen=True, kw_only=True)
     class ActorAndChannel:
-        """Actor and its sender."""
+        """An actor and its dispatch update sender."""
 
         actor: Actor
         """The actor."""
@@ -252,7 +252,11 @@ class ActorDispatcher(BackgroundService):
         self._tasks.add(asyncio.create_task(self._run()))
 
     async def _start_actor(self, dispatch: Dispatch) -> None:
-        """Start the actor the given dispatch refers to."""
+        """Start the actor the given dispatch refers to.
+
+        Args:
+            dispatch: The dispatch to start the actor for.
+        """
         dispatch_update = DispatchInfo(
             target=dispatch.target,
             dry_run=dispatch.dry_run,
@@ -298,7 +302,7 @@ class ActorDispatcher(BackgroundService):
                 )
 
     async def _stop_actor(self, stopping_dispatch: Dispatch, msg: str) -> None:
-        """Stop all actors.
+        """Stop the actor for the given dispatch.
 
         Args:
             stopping_dispatch: The dispatch that is stopping the actor.

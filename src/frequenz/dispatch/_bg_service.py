@@ -38,11 +38,18 @@ _logger = logging.getLogger(__name__)
 
 
 class MergeStrategy(ABC):
-    """Base class for strategies to merge running intervals."""
+    """A base class for strategies to merge running intervals."""
 
     @abstractmethod
     def identity(self, dispatch: Dispatch) -> DispatchActorId:
-        """Identity function for the merge criteria."""
+        """Return the identity key for the merge criteria.
+
+        Args:
+            dispatch: The dispatch to identify.
+
+        Returns:
+            The actor ID that identifies this dispatch for merging purposes.
+        """
 
     @abstractmethod
     def filter(
@@ -61,7 +68,7 @@ class MergeStrategy(ABC):
 
 # pylint: disable=too-many-instance-attributes
 class DispatchScheduler(BackgroundService):
-    """Dispatch background service.
+    """A dispatch background service.
 
     This service is responsible for managing dispatches and scheduling them
     based on their start and stop times.
@@ -77,6 +84,7 @@ class DispatchScheduler(BackgroundService):
         """
 
         time: datetime
+        """The scheduled time of the event."""
         priority: int
         """Sort priority when the time is the same.
 
@@ -86,12 +94,20 @@ class DispatchScheduler(BackgroundService):
         stop event.
         """
         dispatch_id: DispatchId
+        """The ID of the associated dispatch."""
         dispatch: Dispatch = field(compare=False)
+        """The dispatch associated with this event."""
 
         def __init__(
             self, time: datetime, dispatch: Dispatch, stop_event: bool
         ) -> None:
-            """Initialize the queue item."""
+            """Initialize the queue item.
+
+            Args:
+                time: The scheduled time of the event.
+                dispatch: The dispatch associated with this event.
+                stop_event: Whether this is a stop event rather than a start event.
+            """
             self.time = time
             self.dispatch_id = dispatch.id
             self.priority = int(stop_event)
@@ -129,7 +145,7 @@ class DispatchScheduler(BackgroundService):
         self._scheduled_events: list["DispatchScheduler.QueueItem"] = []
         """The scheduled events, sorted by time.
 
-        Each event is a tuple of the scheduled time and the dispatch.
+        Each item holds the scheduled time, priority, and dispatch.
         heapq is used to keep the list sorted by time, so the next event is
         always at index 0.
         """
@@ -164,18 +180,22 @@ class DispatchScheduler(BackgroundService):
         """Create a new receiver for running state events of the specified type.
 
         `merge_strategy` is an instance of a class derived from
-        [`MergeStrategy`][frequenz.dispatch.MergeStrategy]. Available strategies
+        [`MergeStrategy`][....MergeStrategy]. Available strategies
         are:
 
-        * [`MergeByType`][frequenz.dispatch.MergeByType] — merges all dispatches
-          of the same type
-        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — merges all
-          dispatches of the same type and target
-        * `None` — no merging, just send all events
+        * [`MergeByType`][....MergeByType] — merges all dispatches
+          of the same type.
+        * [`MergeByTypeTarget`][....MergeByTypeTarget] — merges all
+          dispatches of the same type and target.
+        * `None` — no merging, just send all events.
 
-        You can make your own identity-based strategy by subclassing `MergeByType` and overriding
-        the `identity()` method. If you require a more complex strategy, you can subclass
-        `MergeStrategy` directly and implement both the `identity()` and `filter()` methods.
+        You can make your own identity-based strategy by subclassing
+        [`MergeByType`][....MergeByType] and overriding
+        the [`identity()`][....MergeStrategy.identity] method. If
+        you require a more complex strategy, you can subclass
+        [`MergeStrategy`][....MergeStrategy] directly and implement
+        both the [`identity()`][....MergeStrategy.identity] and
+        [`filter()`][....MergeStrategy.filter] methods.
 
         Running intervals from multiple dispatches will be merged, according to
         the chosen strategy.
@@ -337,7 +357,7 @@ class DispatchScheduler(BackgroundService):
                             pass
 
     async def _execute_scheduled_event(self, dispatch: Dispatch, timer: Timer) -> None:
-        """Execute a scheduled event and schedules the next one if any.
+        """Execute a scheduled event and schedule the next one if any.
 
         Args:
             dispatch: The dispatch to execute.
@@ -363,6 +383,9 @@ class DispatchScheduler(BackgroundService):
 
         This is used for the initial fetch and for re-fetching all dispatches
         if the connection was lost.
+
+        Args:
+            timer: The timer to update after fetching dispatches.
         """
         self._initial_fetch_event.clear()
         # We fetch dispatches that would have ended 5 seconds ago to
@@ -579,7 +602,7 @@ class DispatchScheduler(BackgroundService):
     def _update_changed_running_state(
         self, updated_dispatch: Dispatch, previous_dispatch: Dispatch
     ) -> bool:
-        """Check if the running state of a dispatch has changed.
+        """Return whether the running state of a dispatch has changed.
 
         Checks if any of the running state changes to the dispatch
         require a new message to be sent to the actor so that it can potentially
@@ -589,8 +612,8 @@ class DispatchScheduler(BackgroundService):
         in which case we need to send the message now.
 
         Args:
-            updated_dispatch: The new dispatch
-            previous_dispatch: The old dispatch
+            updated_dispatch: The new dispatch.
+            previous_dispatch: The old dispatch.
 
         Returns:
             True if the running state has changed, False otherwise.
