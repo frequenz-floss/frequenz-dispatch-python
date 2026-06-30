@@ -134,7 +134,7 @@ class ActorDispatcher(BackgroundService):
                     dispatch_updates_receiver: Receiver[DispatchInfo],
                     *,
                     name: str | None = None,
-            ) -> "Self":
+            ) -> Self:
                 self = cls(name=name)
                 self._dispatch_updates_receiver = dispatch_updates_receiver
                 self._update_dispatch_information(initial_dispatch)
