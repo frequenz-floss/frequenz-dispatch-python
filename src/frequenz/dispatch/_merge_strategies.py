@@ -25,22 +25,35 @@ def _hash_positive(args: Any) -> int:
 
 
 class MergeByType(MergeStrategy):
-    """Merge running intervals based on the dispatch type."""
+    """A merge strategy that combines running intervals based on dispatch type."""
 
     @override
     def identity(self, dispatch: Dispatch) -> DispatchActorId:
-        """Identity function for the merge criteria."""
+        """Return the actor identity for a dispatch based on its type.
+
+        Args:
+            dispatch: The dispatch to compute the identity for.
+
+        Returns:
+            An identity value grouping dispatches with the same type and dry-run flag.
+        """
         return DispatchActorId(_hash_positive((dispatch.type, dispatch.dry_run)))
 
     @override
     def filter(
         self, dispatches: Mapping[DispatchId, Dispatch], dispatch: Dispatch
     ) -> bool:
-        """Filter dispatches based on the merge strategy.
+        """Return whether the dispatch event should be propagated.
 
-        Keeps start events.
-        Keeps stop events only if no other dispatches matching the
-        strategy's criteria are running.
+        Start events are always propagated. Stop events are only propagated
+        if no other dispatch matching this strategy's criteria is still running.
+
+        Args:
+            dispatches: The currently known dispatches, keyed by their ID.
+            dispatch: The dispatch event to evaluate.
+
+        Returns:
+            `True` if the event should be forwarded to consumers, `False` otherwise.
         """
         now = datetime.now(tz=timezone.utc)
 
@@ -83,11 +96,19 @@ class MergeByType(MergeStrategy):
 
 
 class MergeByTypeTarget(MergeByType):
-    """Merge running intervals based on the dispatch type and target."""
+    """A merge strategy that combines running intervals based on dispatch type and target."""
 
     @override
     def identity(self, dispatch: Dispatch) -> DispatchActorId:
-        """Identity function for the merge criteria."""
+        """Return the actor identity for a dispatch based on its type and target.
+
+        Args:
+            dispatch: The dispatch to compute the identity for.
+
+        Returns:
+            An identity value grouping dispatches with the same type, dry-run flag,
+            and target.
+        """
         return DispatchActorId(
             _hash_positive((dispatch.type, dispatch.dry_run, tuple(dispatch.target)))
         )
