@@ -12,6 +12,10 @@
 
 <!-- Here goes the main new features and examples or instructions on how to use them -->
 
+## Enhancements
+
+- Improved docstring documentation across the project.
+
 ## Bug Fixes
 
 <!-- Here goes notable bug fixes that are worth a special mention or explanation -->
