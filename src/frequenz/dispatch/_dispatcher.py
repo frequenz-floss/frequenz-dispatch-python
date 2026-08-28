@@ -59,14 +59,14 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key = os.getenv("DISPATCH_API_KEY", "some-key")
+            auth_key = os.getenv("FREQUENZ_API_KEY", "some-key")
 
             microgrid_id = 1
 
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                auth_key=key
+                auth_key=auth_key
             ) as dispatcher:
                 await dispatcher.start_managing(
                     dispatch_type="DISPATCH_TYPE",
@@ -85,14 +85,14 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key = os.getenv("DISPATCH_API_KEY", "some-key")
+            auth_key = os.getenv("FREQUENZ_API_KEY", "some-key")
 
             microgrid_id = 1
 
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                auth_key=key
+                auth_key=auth_key
             ) as dispatcher:
                 actor = MagicMock() # replace with your actor
 
@@ -130,14 +130,14 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key = os.getenv("DISPATCH_API_KEY", "some-key")
+            auth_key = os.getenv("FREQUENZ_API_KEY", "some-key")
 
             microgrid_id = 1
 
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                auth_key=key,
+                auth_key=auth_key,
             ) as dispatcher:
                 events_receiver = dispatcher.new_lifecycle_events_receiver("DISPATCH_TYPE")
 
@@ -167,14 +167,14 @@ class Dispatcher(BackgroundService):
 
         async def run():
             url = os.getenv("DISPATCH_API_URL", "grpc://dispatch.url.goes.here.example.com")
-            key = os.getenv("DISPATCH_API_KEY", "some-key")
+            auth_key = os.getenv("FREQUENZ_API_KEY", "some-key")
 
             microgrid_id = 1
 
             async with Dispatcher(
                 microgrid_id=microgrid_id,
                 server_url=url,
-                auth_key=key,
+                auth_key=auth_key,
             ) as dispatcher:
                 # Create a new dispatch
                 new_dispatch = await dispatcher.client.create(
