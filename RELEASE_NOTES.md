@@ -8,6 +8,8 @@
 
 <!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
+- Credential examples now use `FREQUENZ_API_KEY` and `FREQUENZ_API_SECRET`.
+
 ## New Features
 
 <!-- Here goes the main new features and examples or instructions on how to use them -->
