@@ -81,7 +81,7 @@ dev-mypy = [
 ]
 dev-noxfile = [
   "uv == 0.12.7",
-  "nox == 2026.7.11",
+  "nox == 2026.8.17",
   "frequenz-repo-config[lib] == 0.18.0",
 ]
 dev-pylint = [
@@ -95,7 +95,7 @@ dev-pytest = [
   "pytest-mock == 3.15.1",
   "pytest-asyncio == 1.4.0",
   "async-solipsism == 0.9",
-  "time-machine == 3.2.0",
+  "time-machine == 3.5.0",
 ]
 dev = [
   "frequenz-dispatch[dev-mkdocs,dev-flake8,dev-formatting,dev-mkdocs,dev-mypy,dev-noxfile,dev-pylint,dev-pytest]",
