@@ -173,7 +173,7 @@ disable = [
 # coming for external dependencies that are hard to address here, once this is
 # fixed, we can add the following options:
 # -Werror -Wdefault::DeprecationWarning -Wdefault::PendingDeprecationWarning
-addopts = "-W=all -vv"
+addopts = "-W=all"
 testpaths = ["tests", "src"]
 asyncio_debug = true
 asyncio_mode = "auto"
