@@ -63,8 +63,8 @@ from frequenz.dispatch import Created, Deleted, Dispatcher, Updated
 
 async def main() -> None:
     url = os.getenv("DISPATCH_API_URL", "grpc://localhost:50051")
-    auth_key = os.getenv("DISPATCH_API_AUTH_KEY", "my-api-key")
-    sign_secret = os.getenv("DISPATCH_API_SIGN_SECRET")
+    auth_key = os.getenv("FREQUENZ_API_KEY", "my-api-key")
+    sign_secret = os.getenv("FREQUENZ_API_SECRET")
     microgrid_id = 1
 
     async with Dispatcher(
@@ -118,8 +118,8 @@ async def run() -> None:
     url = os.getenv(
         "DISPATCH_API_URL", "grpc://dispatch.api.example.com:50051"
     )
-    auth_key = os.getenv("DISPATCH_API_AUTH_KEY", "my-api-key")
-    sign_secret = os.getenv("DISPATCH_API_SIGN_SECRET")
+    auth_key = os.getenv("FREQUENZ_API_KEY", "my-api-key")
+    sign_secret = os.getenv("FREQUENZ_API_SECRET")
 
     microgrid_id = 1
 
