@@ -19,3 +19,7 @@
 ## Bug Fixes
 
 <!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+
+* Fixed documentation cross-references to dependencies by updating the
+  mkdocstrings inventories to match the minimum dependency versions and
+  adding the missing `frequenz-client-base` inventory.

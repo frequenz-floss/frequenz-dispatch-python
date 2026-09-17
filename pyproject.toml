@@ -37,7 +37,7 @@ dependencies = [
   "typing-extensions >= 4.13.0, < 5.0.0",
   # Make sure to update the version for cross-referencing also in the
   # mkdocs.yml file when changing the version here (look for the config key
-  # plugins.mkdocstrings.handlers.python.import)
+  # plugins.mkdocstrings.handlers.python.inventories)
   "frequenz-sdk >= 1.0.0-rc2100, < 1.0.0-rc2300",
   "frequenz-channels >= 1.6.1, < 2.0.0",
   "frequenz-client-dispatch >= 0.11.3, < 2.0.0",
