@@ -341,6 +341,16 @@ class DispatchScheduler(BackgroundService):
                                     await self._lifecycle_events_tx.send(
                                         Deleted(dispatch=new_dispatch)
                                     )
+                                case Event.UNSPECIFIED:
+                                    # The API should never send this in
+                                    # practice, but the enum allows for it,
+                                    # so log and ignore it rather than crash
+                                    # the whole service on garbage input.
+                                    _logger.warning(
+                                        "Received dispatch event with an "
+                                        "unspecified event type: %s",
+                                        selected.message,
+                                    )
 
                         case StreamRetrying():
                             is_retry_attempt = True
