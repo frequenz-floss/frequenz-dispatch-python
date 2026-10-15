@@ -14,6 +14,7 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from heapq import heapify, heappop, heappush
+from types import MappingProxyType
 
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
@@ -156,6 +157,20 @@ class DispatchScheduler(BackgroundService):
     async def wait_for_initialization(self) -> None:
         """Wait for the initial fetch to complete."""
         await self._initial_fetch_event.wait()
+
+    def dispatches_snapshot(self) -> Mapping[DispatchId, Dispatch]:
+        """Return a read-only, live view of every dispatch currently known.
+
+        Used by `ActorDispatcher`'s opt-in `dispatches_snapshot` parameter,
+        to confirm a unique continuation pair -- see
+        `ActorDispatcher.continuation_predicate`.
+
+        Returns:
+            A live, read-only mapping (a `MappingProxyType` over the same
+                dict this scheduler mutates, so callers see updates but
+                cannot make any themselves).
+        """
+        return MappingProxyType(self._dispatches)
 
     # pylint: disable=redefined-builtin
     def new_lifecycle_events_receiver(self, type: str) -> Receiver[DispatchEvent]:
