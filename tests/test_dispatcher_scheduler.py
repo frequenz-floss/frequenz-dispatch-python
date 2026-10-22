@@ -14,11 +14,13 @@ from random import randint
 import async_solipsism
 import time_machine
 from frequenz.channels import Receiver
+from frequenz.channels.timer import Timer
 from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.dispatch.recurrence import RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient, to_create_params
 from frequenz.client.dispatch.test.generator import DispatchGenerator
 from pytest import fixture
+from pytest_mock import MockerFixture
 
 from frequenz.dispatch import Dispatch, DispatchEvent
 from frequenz.dispatch._bg_service import DispatchScheduler
@@ -48,6 +50,29 @@ def fake_time() -> Iterator[time_machine.Traveller]:
 def _now() -> datetime:
     """Return the current time in UTC."""
     return datetime.now(tz=timezone.utc)
+
+
+def test_update_timer_floors_already_due_interval(
+    generator: DispatchGenerator,
+    microgrid_id: MicrogridId,
+    client: FakeClient,
+    mocker: MockerFixture,
+) -> None:
+    """Keep a same-boundary follow-up timer interval strictly positive."""
+    scheduler = DispatchScheduler(microgrid_id=microgrid_id, client=client)
+    dispatch = Dispatch(generator.generate_dispatch())
+    scheduler._scheduled_events.append(  # pylint: disable=protected-access
+        DispatchScheduler.QueueItem(
+            time=_now() - timedelta(microseconds=1),
+            dispatch=dispatch,
+            stop_event=False,
+        )
+    )
+    timer = mocker.create_autospec(Timer, instance=True)
+
+    scheduler._update_timer(timer)  # pylint: disable=protected-access
+
+    assert timer.reset.call_args.kwargs["interval"] == timedelta(microseconds=1)
 
 
 @fixture

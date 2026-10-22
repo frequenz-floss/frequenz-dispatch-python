@@ -14,6 +14,7 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from heapq import heapify, heappop, heappush
+from types import MappingProxyType
 
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
@@ -156,6 +157,26 @@ class DispatchScheduler(BackgroundService):
     async def wait_for_initialization(self) -> None:
         """Wait for the initial fetch to complete."""
         await self._initial_fetch_event.wait()
+
+    def dispatches_snapshot(self) -> Mapping[DispatchId, Dispatch]:
+        """Return a READ-ONLY, live view of every dispatch currently known.
+
+        This is the authoritative data this scheduler already fetches ahead of
+        execution (initial `list()` plus the live CREATE/UPDATE/DELETE stream)
+        -- intended for `ActorDispatcher`'s opt-in `dispatches_snapshot`
+        parameter, so it can resolve "is there already a known, started,
+        exact-continuation successor for this dispatch" at the moment a stop
+        event is being processed, without this scheduler ever having to decide
+        whether to suppress or forward the stop itself: every stop is always
+        forwarded; `ActorDispatcher` is the only place that decides what to do
+        with it.
+
+        Returns:
+            A live, read-only mapping (a `MappingProxyType` over the same
+                underlying dict this scheduler mutates -- callers see
+                updates, but cannot make any themselves).
+        """
+        return MappingProxyType(self._dispatches)
 
     # pylint: disable=redefined-builtin
     def new_lifecycle_events_receiver(self, type: str) -> Receiver[DispatchEvent]:
@@ -545,7 +566,24 @@ class DispatchScheduler(BackgroundService):
         """Update the timer to the next event."""
         if self._scheduled_events:
             due_at: datetime = self._scheduled_events[0].time
-            timer.reset(interval=due_at - datetime.now(timezone.utc))
+            interval = due_at - datetime.now(timezone.utc)
+            # Two scheduled events landing at (or within microseconds of) the
+            # exact same instant -- e.g. one dispatch's stop and another's
+            # start sharing a boundary -- is a normal, expected shape (see
+            # `QueueItem`'s own docstring on same-time start/stop ordering).
+            # Once the first of the pair is processed, this recomputed
+            # interval for the second can be exactly zero or slightly
+            # negative. `Timer.reset()` accepts that value without complaint,
+            # but a zero interval later crashes the timer's OWN drift
+            # correction with a `ZeroDivisionError` in
+            # `MissedTickPolicy.calculate_next_tick_time` (`drift % interval`).
+            # Floor it to the smallest positive interval `Timer` itself
+            # accepts, instead: the due event is already due, so it fires on
+            # the very next tick either way, but doesn't poison the timer's
+            # internal state.
+            min_interval = timedelta(microseconds=1)
+            interval = max(interval, min_interval)
+            timer.reset(interval=interval)
             _logger.debug("Next event scheduled at %s", self._scheduled_events[0].time)
 
     def _remove_scheduled(self, dispatch: Dispatch) -> "QueueItem | None":

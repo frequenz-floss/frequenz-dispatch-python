@@ -312,7 +312,7 @@ class Dispatcher(BackgroundService):
         """
         return dispatch_type in self._actor_dispatchers
 
-    async def start_managing(
+    async def start_managing(  # pylint: disable=too-many-arguments
         self,
         dispatch_type: str,
         *,
@@ -320,6 +320,7 @@ class Dispatcher(BackgroundService):
             [DispatchInfo, Receiver[DispatchInfo]], Awaitable[Actor]
         ],
         merge_strategy: MergeStrategy | None = None,
+        continuation_predicate: Callable[[Dispatch, Dispatch], bool] | None = None,
         retry_interval: timedelta = timedelta(seconds=60),
     ) -> None:
         """Manage actors for a given dispatch type.
@@ -345,10 +346,34 @@ class Dispatcher(BackgroundService):
         the same instance.
         * `None` — No merging, each dispatch maps to a separate instance.
 
+        `continuation_predicate` is a DIFFERENT, orthogonal opt-in mechanism,
+        not a `merge_strategy`, and may be combined freely with any of the
+        above (or with `None`). It does NOT filter or suppress anything at
+        the scheduler/receiver layer -- every event, including every stop,
+        is always forwarded to the `ActorDispatcher` this method builds.
+        Passing it wires that `ActorDispatcher` with BOTH the predicate and a
+        read-only, live view of this service's own known-dispatches snapshot
+        (`DispatchScheduler.dispatches_snapshot`), so it can require a unique
+        predecessor-successor PAIR in either event order.  One predecessor
+        matching two successors, or one successor matching two predecessors,
+        is always ambiguous and never guessed at.  Stop-side resolution still
+        happens AT THE MOMENT that dispatch's own stop is being processed,
+        without ever needing to delay or withhold that stop while deciding. See
+        `ActorDispatcher`'s `continuation_predicate`/`dispatches_snapshot`
+        parameters for the full contract, including the symmetric
+        start-first-ordering case and the `ContinuationCapable` capability
+        check that governs whether an actor is ever reused this way at all.
+
         Args:
             dispatch_type: The type of the dispatch to manage.
             actor_factory: The factory to create actors.
             merge_strategy: The strategy to merge running intervals.
+            continuation_predicate: An opt-in predicate letting a dispatch's
+                stop or start be resolved as a continuation into/from a
+                unique, compatible, exactly-adjacent dispatch instead of an
+                ordinary stop or an independent new actor (normally
+                `is_exact_continuation`). See `ActorDispatcher`'s own
+                parameter of the same name for the full contract.
             retry_interval: The retry interval to use when actor creation fails.
         """
         dispatcher = self._actor_dispatchers.get(dispatch_type)
@@ -374,6 +399,12 @@ class Dispatcher(BackgroundService):
                 id_identity if merge_strategy is None else merge_strategy.identity
             ),
             retry_interval=retry_interval,
+            continuation_predicate=continuation_predicate,
+            dispatches_snapshot=(
+                self._bg_service.dispatches_snapshot
+                if continuation_predicate is not None
+                else None
+            ),
         )
 
         self._actor_dispatchers[dispatch_type] = dispatcher
