@@ -15,6 +15,7 @@ from typing_extensions import override
 from ._actor_dispatcher import DispatchActorId
 from ._bg_service import MergeStrategy
 from ._dispatch import Dispatch
+from ._merge_helpers import _other_running_dispatches
 
 _logger = logging.getLogger(__name__)
 
@@ -61,19 +62,16 @@ class MergeByType(MergeStrategy):
             _logger.debug("Keeping start event %s", dispatch.id)
             return True
 
-        running_dispatch_list = [
-            existing_dispatch
-            for existing_dispatch in dispatches.values()
-            if (
-                self.identity(existing_dispatch) == self.identity(dispatch)
-                and existing_dispatch.id != dispatch.id
-            )
-        ]
-
-        other_dispatches_running = any(
-            running_dispatch.started_at(now)
-            for running_dispatch in running_dispatch_list
+        # The receiver is filtered by type only; dry-run dispatches have a
+        # different identity and must not suppress each other's stop events.
+        running_dispatch_list = _other_running_dispatches(
+            dispatches,
+            dispatch.id,
+            self.identity(dispatch),
+            self.identity,
+            now=now,
         )
+        other_dispatches_running = bool(running_dispatch_list)
 
         _logger.debug(
             "%s stop event %s because other_dispatches_running=%s",

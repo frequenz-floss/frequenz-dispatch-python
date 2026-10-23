@@ -1,10 +1,17 @@
 # Dispatch Highlevel Interface Release Notes
 
-## Enhancements
+## Summary
 
-- Improved docstring documentation across the project.
+<!-- Here goes a general summary of what this release is about -->
+
+## Upgrading
+
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+
+## New Features
+
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
-* Fixed documentation cross-references to dependencies by updating the mkdocstrings inventories to match the minimum dependency versions and adding the missing `frequenz-client-base` inventory.
-* Declared the missing direct dependencies `frequenz-client-common`, `frequenz-core` and `grpcio`, which were previously only pulled in indirectly through `frequenz-client-dispatch`.
+* Fixed actors being left running when an update changes a dispatch's merge identity.

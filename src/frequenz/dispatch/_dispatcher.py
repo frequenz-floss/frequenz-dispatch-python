@@ -368,13 +368,22 @@ class Dispatcher(BackgroundService):
             actor_factory=actor_factory,
             running_status_receiver=await self.new_running_state_event_receiver(
                 dispatch_type,
-                merge_strategy=merge_strategy,
+                merge_strategy=None,
             ),
             dispatch_identity=(
                 id_identity if merge_strategy is None else merge_strategy.identity
             ),
             retry_interval=retry_interval,
         )
+
+        if merge_strategy is not None:
+            # The filter needs the same complete context used by public receivers.
+            # pylint: disable=protected-access
+            dispatcher._set_merge_context(
+                merge_strategy.filter,
+                self._bg_service._dispatches,
+            )
+            # pylint: enable=protected-access
 
         self._actor_dispatchers[dispatch_type] = dispatcher
         dispatcher.start()

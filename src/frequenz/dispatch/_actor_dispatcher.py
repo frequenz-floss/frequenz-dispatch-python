@@ -5,7 +5,8 @@
 
 import asyncio
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from copy import copy
 from dataclasses import dataclass
 from datetime import timedelta
 from typing import Any, Awaitable
@@ -19,6 +20,7 @@ from frequenz.sdk.actor import Actor, BackgroundService
 from typing_extensions import deprecated
 
 from ._dispatch import Dispatch
+from ._merge_helpers import _other_running_dispatches
 
 _logger = logging.getLogger(__name__)
 
@@ -216,6 +218,27 @@ class ActorDispatcher(BackgroundService):
         sender: Sender[DispatchInfo]
         """The sender for dispatch updates."""
 
+    @dataclass(frozen=True, kw_only=True)
+    class ActorStatus:
+        """The running actor or failed dispatch for one actor identity."""
+
+        actor_and_channel: "ActorDispatcher.ActorAndChannel | None" = None
+        failed_dispatch: Dispatch | None = None
+
+    @dataclass(frozen=True, kw_only=True)
+    class DispatchStatus:
+        """The latest dispatch and identity routed for one dispatch ID."""
+
+        dispatch: Dispatch
+        identity: DispatchActorId
+
+    @dataclass(frozen=True, kw_only=True)
+    class MergeContext:
+        """The merge filter and the dispatches it evaluates."""
+
+        dispatch_filter: Callable[[Mapping[DispatchId, Dispatch], Dispatch], bool]
+        known_dispatches: Mapping[DispatchId, Dispatch]
+
     def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         actor_factory: Callable[
@@ -243,19 +266,31 @@ class ActorDispatcher(BackgroundService):
         self._dispatch_rx = running_status_receiver
         self._retry_timer_rx = Timer(retry_interval, SkipMissedAndDrift())
         self._actor_factory = actor_factory
-        self._actors: dict[DispatchActorId, ActorDispatcher.ActorAndChannel] = {}
-        self._failed_dispatches: dict[DispatchActorId, Dispatch] = {}
-        """Failed dispatches that will be retried later."""
+        self._actors: dict[DispatchActorId, ActorDispatcher.ActorStatus] = {}
+        self._dispatch_status: dict[DispatchId, ActorDispatcher.DispatchStatus] = {}
+        self._merge_context: ActorDispatcher.MergeContext | None = None
 
     def start(self) -> None:
         """Start the background service."""
         self._tasks.add(asyncio.create_task(self._run()))
 
-    async def _start_actor(self, dispatch: Dispatch) -> None:
+    def _set_merge_context(
+        self,
+        dispatch_filter: Callable[[Mapping[DispatchId, Dispatch], Dispatch], bool],
+        known_dispatches: Mapping[DispatchId, Dispatch],
+    ) -> None:
+        """Set the merge filter and its complete dispatch context."""
+        self._merge_context = ActorDispatcher.MergeContext(
+            dispatch_filter=dispatch_filter,
+            known_dispatches=known_dispatches,
+        )
+
+    async def _start_actor(self, dispatch: Dispatch, identity: DispatchActorId) -> None:
         """Start the actor the given dispatch refers to.
 
         Args:
             dispatch: The dispatch to start the actor for.
+            identity: The identity to route the dispatch to.
         """
         dispatch_update = DispatchInfo(
             target=dispatch.target,
@@ -264,8 +299,10 @@ class ActorDispatcher(BackgroundService):
             _src=dispatch,
         )
 
-        identity = self._dispatch_identity(dispatch)
-        actor_and_channel = self._actors.get(identity)
+        actor_status = self._actors.get(identity)
+        actor_and_channel = (
+            actor_status.actor_and_channel if actor_status is not None else None
+        )
 
         if actor_and_channel:
             await actor_and_channel.sender.send(dispatch_update)
@@ -294,23 +331,37 @@ class ActorDispatcher(BackgroundService):
                     dispatch.type,
                     exc_info=e,
                 )
-                self._failed_dispatches[identity] = dispatch
+                self._actors[identity] = ActorDispatcher.ActorStatus(
+                    failed_dispatch=dispatch
+                )
             else:
                 # No exception occurred, so we can add the actor to the list
-                self._actors[identity] = ActorDispatcher.ActorAndChannel(
-                    actor=actor, channel=channel, sender=channel.new_sender()
+                self._actors[identity] = ActorDispatcher.ActorStatus(
+                    actor_and_channel=ActorDispatcher.ActorAndChannel(
+                        actor=actor,
+                        channel=channel,
+                        sender=channel.new_sender(),
+                    )
                 )
 
-    async def _stop_actor(self, stopping_dispatch: Dispatch, msg: str) -> None:
+    async def _stop_actor(
+        self,
+        stopping_dispatch: Dispatch,
+        identity: DispatchActorId,
+        msg: str,
+    ) -> None:
         """Stop the actor for the given dispatch.
 
         Args:
             stopping_dispatch: The dispatch that is stopping the actor.
+            identity: The identity of the actor to stop.
             msg: The message to be passed to the actors being stopped.
         """
-        identity = self._dispatch_identity(stopping_dispatch)
-
-        if actor_and_channel := self._actors.pop(identity, None):
+        actor_status = self._actors.pop(identity, None)
+        actor_and_channel = (
+            actor_status.actor_and_channel if actor_status is not None else None
+        )
+        if actor_and_channel is not None:
             _logger.info("Stopping actor for dispatch type %r", stopping_dispatch.type)
             await actor_and_channel.actor.stop(msg)
             await actor_and_channel.channel.close()
@@ -324,20 +375,48 @@ class ActorDispatcher(BackgroundService):
         """Run the background service."""
         async for selected in select(self._retry_timer_rx, self._dispatch_rx):
             if self._retry_timer_rx.triggered(selected):
-                if not self._failed_dispatches:
+                failed_dispatches = [
+                    actor_status.failed_dispatch
+                    for actor_status in self._actors.values()
+                    if actor_status.failed_dispatch is not None
+                ]
+                if not failed_dispatches:
                     continue
 
                 _logger.info(
                     "Retrying %d failed actor starts",
-                    len(self._failed_dispatches),
+                    len(failed_dispatches),
                 )
-                keys = list(self._failed_dispatches.keys())
-                for identity in keys:
-                    dispatch = self._failed_dispatches[identity]
-
+                for dispatch in failed_dispatches:
                     await self._handle_dispatch(dispatch)
             elif self._dispatch_rx.triggered(selected):
                 await self._handle_dispatch(selected.message)
+
+    def _should_stop_actor(
+        self,
+        dispatch: Dispatch,
+        identity: DispatchActorId,
+        *,
+        check_local_dispatches: bool = False,
+    ) -> bool:
+        """Return whether the actor for an identity should stop."""
+        if self._merge_context is not None:
+            return self._merge_context.dispatch_filter(
+                self._merge_context.known_dispatches, dispatch
+            )
+
+        if not check_local_dispatches:
+            return True
+
+        return not _other_running_dispatches(
+            {
+                dispatch_id: status.dispatch
+                for dispatch_id, status in self._dispatch_status.items()
+            },
+            dispatch.id,
+            identity,
+            self._dispatch_identity,
+        )
 
     async def _handle_dispatch(self, dispatch: Dispatch) -> None:
         """Process a dispatch to start, update, or stop an actor.
@@ -349,11 +428,58 @@ class ActorDispatcher(BackgroundService):
         Args:
             dispatch: The dispatch to handle.
         """
-        identity = self._dispatch_identity(dispatch)
-        if identity in self._failed_dispatches:
-            self._failed_dispatches.pop(identity)
-
         if dispatch.started:
-            await self._start_actor(dispatch)
+            identity = self._dispatch_identity(dispatch)
+            previous_status = self._dispatch_status.get(dispatch.id)
+            previous_identity = (
+                previous_status.identity if previous_status is not None else None
+            )
+
+            if previous_identity is not None and previous_identity != identity:
+                assert previous_status is not None
+                actor_status = self._actors.get(previous_identity)
+                failed_dispatch = (
+                    actor_status.failed_dispatch if actor_status is not None else None
+                )
+                if failed_dispatch is not None and failed_dispatch.id == dispatch.id:
+                    self._actors.pop(previous_identity)
+
+                stopping_dispatch = copy(previous_status.dispatch)
+                # pylint: disable-next=protected-access
+                stopping_dispatch._set_deleted()
+                if self._should_stop_actor(
+                    stopping_dispatch,
+                    previous_identity,
+                    check_local_dispatches=True,
+                ):
+                    await self._stop_actor(
+                        dispatch,
+                        previous_identity,
+                        "Dispatch identity changed",
+                    )
+
+            self._dispatch_status[dispatch.id] = ActorDispatcher.DispatchStatus(
+                dispatch=dispatch,
+                identity=identity,
+            )
+            actor_status = self._actors.get(identity)
+            if actor_status is not None and actor_status.failed_dispatch is not None:
+                self._actors.pop(identity)
+            await self._start_actor(dispatch, identity)
         else:
-            await self._stop_actor(dispatch, "Dispatch stopped")
+            dispatch_status = self._dispatch_status.pop(dispatch.id, None)
+            identity = (
+                dispatch_status.identity
+                if dispatch_status is not None
+                else self._dispatch_identity(dispatch)
+            )
+
+            actor_status = self._actors.get(identity)
+            failed_dispatch = (
+                actor_status.failed_dispatch if actor_status is not None else None
+            )
+            if failed_dispatch is not None and failed_dispatch.id == dispatch.id:
+                self._actors.pop(identity)
+
+            if self._should_stop_actor(dispatch, identity):
+                await self._stop_actor(dispatch, identity, "Dispatch stopped")
