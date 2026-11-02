@@ -45,7 +45,7 @@ class DispatchInfo:
         """The target components.
 
         Warning: Deprecated in v0.10.3
-            Use [`target`][..target] instead.
+            Use [`target`][frequenz.dispatch.DispatchInfo.target] instead.
         """
         return self.target
 
