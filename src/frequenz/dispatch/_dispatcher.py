@@ -35,9 +35,11 @@ class Dispatcher(BackgroundService):
 
     The receivers shortly explained:
 
-    * [Lifecycle events receiver][.new_lifecycle_events_receiver]:
+    * [Lifecycle events
+      receiver][frequenz.dispatch.Dispatcher.new_lifecycle_events_receiver]:
         Receives an event whenever a dispatch is created, updated or deleted.
-    * [Running status change receiver][.new_running_state_event_receiver]:
+    * [Running status change
+      receiver][frequenz.dispatch.Dispatcher.new_running_state_event_receiver]:
         Receives an event whenever the running status of a dispatch changes.
         The running status of a dispatch can change due to a variety of reasons,
         such as but not limited to the dispatch being started, stopped, modified
@@ -324,22 +326,23 @@ class Dispatcher(BackgroundService):
     ) -> None:
         """Manage actors for a given dispatch type.
 
-        Creates and manages an
-        [`ActorDispatcher`][...ActorDispatcher] for the given type that will
-        start, stop and reconfigure actors based on received dispatches.
+        Creates and manages an [`ActorDispatcher`][frequenz.dispatch.ActorDispatcher]
+        for the given type that will start, stop and reconfigure actors based on
+        received dispatches.
 
-        You can await the [`Dispatcher`][...Dispatcher] instance to block
-        until all types registered with [`start_managing`][..start_managing] are stopped
-        using [`stop_managing`][..stop_managing].
+        You can await the [`Dispatcher`][frequenz.dispatch.Dispatcher] instance to block
+        until all types registered with
+        [`start_managing`][frequenz.dispatch.Dispatcher.start_managing] are stopped
+        using [`stop_managing`][frequenz.dispatch.Dispatcher.stop_managing].
 
         "Merging" means that when multiple dispatches are active at the same time,
         the intervals are merged into one.
 
         This also decides how instances are mapped from dispatches to actors:
 
-        * [`MergeByType`][...MergeByType] — All dispatches map to
+        * [`MergeByType`][frequenz.dispatch.MergeByType] — All dispatches map to
         one single instance identified by the dispatch type and dry_run status.
-        * [`MergeByTypeTarget`][...MergeByTypeTarget] — A
+        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — A
         dispatch maps to an instance identified by the dispatch type, dry_run status
         and target. So different dispatches with equal type and target will map to
         the same instance.
@@ -457,12 +460,12 @@ class Dispatcher(BackgroundService):
          - The dispatch was deleted
 
         `merge_strategy` is an instance of a class derived from
-        [`MergeStrategy`][...MergeStrategy]. Available strategies
+        [`MergeStrategy`][frequenz.dispatch.MergeStrategy]. Available strategies
         are:
 
-        * [`MergeByType`][...MergeByType] — merges all dispatches
+        * [`MergeByType`][frequenz.dispatch.MergeByType] — merges all dispatches
           of the same type.
-        * [`MergeByTypeTarget`][...MergeByTypeTarget] — merges all
+        * [`MergeByTypeTarget`][frequenz.dispatch.MergeByTypeTarget] — merges all
           dispatches of the same type and target.
         * `None` — no merging, just send all events (default).
 
