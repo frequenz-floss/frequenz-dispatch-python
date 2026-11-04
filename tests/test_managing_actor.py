@@ -15,12 +15,12 @@ import pytest
 import time_machine
 from frequenz.channels import Broadcast, Receiver, Sender
 from frequenz.client.common.microgrid import MicrogridId
-from frequenz.client.common.microgrid.components import ComponentId
+from frequenz.client.common.microgrid.components import ComponentCategory, ComponentId
 from frequenz.client.dispatch import recurrence
 from frequenz.client.dispatch.recurrence import Frequency, RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient
 from frequenz.client.dispatch.test.generator import DispatchGenerator
-from frequenz.client.dispatch.types import DispatchId, TargetIds
+from frequenz.client.dispatch.types import DispatchId, TargetCategories, TargetIds
 from frequenz.sdk.actor import Actor
 from pytest import fixture
 
@@ -111,7 +111,9 @@ class _TestEnv:
 
         # pylint: disable=protected-access
         assert identity in self.actors_service._actors
-        return cast(MockActor, self.actors_service._actors[identity].actor)
+        actor_and_channel = self.actors_service._actors[identity].actor_and_channel
+        assert actor_and_channel is not None
+        return cast(MockActor, actor_and_channel.actor)
         # pylint: enable=protected-access
 
     def is_running(self, identity: int) -> bool:
@@ -121,6 +123,77 @@ class _TestEnv:
             return False
 
         return self.actor(identity).is_running
+
+
+@dataclass
+class _IdentityTestEnv:
+    """Test environment for merge identity changes."""
+
+    actors_service: ActorDispatcher
+    actors: list[MockActor]
+    generator: DispatchGenerator
+
+    async def handle(self, dispatch: Dispatch) -> None:
+        """Handle a dispatch and let any actor task start."""
+        # pylint: disable-next=protected-access
+        await self.actors_service._handle_dispatch(dispatch)
+        await asyncio.sleep(0)
+
+
+@fixture
+async def identity_test_env(
+    generator: DispatchGenerator,
+) -> AsyncIterator[_IdentityTestEnv]:
+    """Create an actor dispatcher using target-based merge identities."""
+    channel = Broadcast[Dispatch](name="identity change test channel")
+    actors: list[MockActor] = []
+
+    async def actor_factory(
+        initial_dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]
+    ) -> MockActor:
+        actor = MockActor(initial_dispatch, receiver)
+        actors.append(actor)
+        return actor
+
+    actors_service = ActorDispatcher(
+        actor_factory=actor_factory,
+        running_status_receiver=channel.new_receiver(),
+        dispatch_identity=MergeByTypeTarget().identity,
+    )
+
+    yield _IdentityTestEnv(actors_service, actors, generator)
+
+    # pylint: disable=protected-access
+    for actor_status in list(actors_service._actors.values()):
+        actor_and_channel = actor_status.actor_and_channel
+        if actor_and_channel is None:
+            continue
+        await actor_and_channel.actor.stop("Test finished")
+        await actor_and_channel.channel.close()
+    # pylint: enable=protected-access
+
+
+def _identity_test_dispatch(
+    generator: DispatchGenerator,
+    *,
+    dispatch_id: int,
+    target: ComponentCategory,
+    active: bool = True,
+) -> Dispatch:
+    """Create a dispatch for merge identity tests."""
+    return Dispatch(
+        replace(
+            generator.generate_dispatch(),
+            id=DispatchId(dispatch_id),
+            type="IDENTITY_TEST",
+            active=active,
+            dry_run=False,
+            start_time=_now() - timedelta(minutes=1),
+            duration=timedelta(minutes=10),
+            target=TargetCategories(target),
+            recurrence=RecurrenceRule(),
+        )
+    )
 
 
 @fixture
@@ -232,6 +305,226 @@ async def test_start_failed(
     await asyncio.sleep(65)
 
     assert test_env.actor(1).is_running is True
+
+
+async def test_identity_change_stops_old_actor_and_final_stop_stops_new_actor(
+    identity_test_env: _IdentityTestEnv,
+) -> None:
+    """Test changing a merge identity doesn't orphan the old actor."""
+    battery_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.BATTERY,
+    )
+    inverter_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.INVERTER,
+    )
+    inverter_stop = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.INVERTER,
+        active=False,
+    )
+
+    await identity_test_env.handle(battery_dispatch)
+    battery_actor = identity_test_env.actors[-1]
+    await identity_test_env.handle(inverter_dispatch)
+    inverter_actor = identity_test_env.actors[-1]
+
+    assert battery_actor.is_running is False
+    assert inverter_actor.is_running is True
+
+    await identity_test_env.handle(inverter_stop)
+
+    assert inverter_actor.is_running is False
+    # pylint: disable-next=protected-access
+    assert not identity_test_env.actors_service._actors
+
+
+async def test_identity_change_keeps_shared_old_actor_running(
+    identity_test_env: _IdentityTestEnv,
+) -> None:
+    """Test an identity change preserves an actor shared by another dispatch."""
+    strategy = MergeByTypeTarget()
+    known_dispatches: dict[DispatchId, Dispatch] = {}
+    # Use the same filter and dispatch context wired by Dispatcher.start_managing().
+    # pylint: disable-next=protected-access
+    identity_test_env.actors_service._set_merge_context(
+        strategy.filter, known_dispatches
+    )
+
+    first_battery_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.BATTERY,
+    )
+    second_battery_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=2,
+        target=ComponentCategory.BATTERY,
+    )
+    inverter_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.INVERTER,
+    )
+
+    known_dispatches[first_battery_dispatch.id] = first_battery_dispatch
+    await identity_test_env.handle(first_battery_dispatch)
+    battery_actor = identity_test_env.actors[-1]
+    known_dispatches[second_battery_dispatch.id] = second_battery_dispatch
+    await identity_test_env.handle(second_battery_dispatch)
+    known_dispatches[inverter_dispatch.id] = inverter_dispatch
+    await identity_test_env.handle(inverter_dispatch)
+
+    assert battery_actor.is_running is True
+    assert identity_test_env.actors[-1].is_running is True
+    # pylint: disable-next=protected-access
+    assert len(identity_test_env.actors_service._actors) == 2
+
+    second_battery_stop = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=2,
+        target=ComponentCategory.BATTERY,
+        active=False,
+    )
+    known_dispatches[second_battery_stop.id] = second_battery_stop
+    await identity_test_env.handle(second_battery_stop)
+
+    assert battery_actor.is_running is False
+
+
+async def test_filtered_receiver_final_stop_ignores_stale_local_dispatches(
+    identity_test_env: _IdentityTestEnv,
+) -> None:
+    """Test a filtered final stop keeps the receiver's old stop semantics."""
+    first_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.BATTERY,
+    )
+    second_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=2,
+        target=ComponentCategory.BATTERY,
+    )
+    second_stop = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=2,
+        target=ComponentCategory.BATTERY,
+        active=False,
+    )
+
+    await identity_test_env.handle(first_dispatch)
+    actor = identity_test_env.actors[-1]
+    await identity_test_env.handle(second_dispatch)
+
+    # A filtered receiver suppresses the first dispatch's stop event.
+    await identity_test_env.handle(second_stop)
+
+    assert actor.is_running is False
+    # pylint: disable-next=protected-access
+    assert not identity_test_env.actors_service._actors
+
+
+async def test_identity_can_change_back_and_forth(
+    identity_test_env: _IdentityTestEnv,
+) -> None:
+    """Test repeated identity changes stop each superseded actor."""
+    battery_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.BATTERY,
+    )
+    inverter_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.INVERTER,
+    )
+
+    await identity_test_env.handle(battery_dispatch)
+    first_battery_actor = identity_test_env.actors[-1]
+    await identity_test_env.handle(inverter_dispatch)
+    inverter_actor = identity_test_env.actors[-1]
+    await identity_test_env.handle(battery_dispatch)
+    second_battery_actor = identity_test_env.actors[-1]
+
+    assert first_battery_actor.is_running is False
+    assert inverter_actor.is_running is False
+    assert second_battery_actor.is_running is True
+    # pylint: disable-next=protected-access
+    assert len(identity_test_env.actors_service._actors) == 1
+
+
+async def test_identity_change_discards_failed_start_retry(
+    identity_test_env: _IdentityTestEnv,
+) -> None:
+    """Test an identity change removes the old identity's failed start."""
+    # pylint: disable=protected-access
+    working_factory = identity_test_env.actors_service._actor_factory
+    attempts = 0
+
+    async def fail_once(
+        initial_dispatch: DispatchInfo, receiver: Receiver[DispatchInfo]
+    ) -> MockActor:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise ValueError("Failed to create actor")
+        return cast(MockActor, await working_factory(initial_dispatch, receiver))
+
+    identity_test_env.actors_service._actor_factory = fail_once
+
+    battery_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.BATTERY,
+    )
+    inverter_dispatch = _identity_test_dispatch(
+        identity_test_env.generator,
+        dispatch_id=1,
+        target=ComponentCategory.INVERTER,
+    )
+    old_identity = MergeByTypeTarget().identity(battery_dispatch)
+
+    await identity_test_env.handle(battery_dispatch)
+    actor_status = identity_test_env.actors_service._actors[old_identity]
+    assert actor_status.failed_dispatch is not None
+
+    await identity_test_env.handle(inverter_dispatch)
+
+    assert old_identity not in identity_test_env.actors_service._actors
+    assert identity_test_env.actors[-1].is_running is True
+    # pylint: enable=protected-access
+
+
+async def test_default_identity_does_not_change_with_target(
+    test_env: _TestEnv,
+) -> None:
+    """Test the default dispatch-ID identity is unaffected by target updates."""
+    battery_dispatch = _identity_test_dispatch(
+        test_env.generator,
+        dispatch_id=42,
+        target=ComponentCategory.BATTERY,
+    )
+    inverter_dispatch = _identity_test_dispatch(
+        test_env.generator,
+        dispatch_id=42,
+        target=ComponentCategory.INVERTER,
+    )
+
+    await test_env.running_status_sender.send(battery_dispatch)
+    await asyncio.sleep(0.1)
+    actor = test_env.actor(42)
+    await test_env.running_status_sender.send(inverter_dispatch)
+    await asyncio.sleep(0.1)
+
+    assert test_env.actor(42) is actor
+    assert actor.is_running is True
+    # pylint: disable-next=protected-access
+    assert len(test_env.actors_service._actors) == 1
 
 
 def test_heapq_dispatch_compare(test_env: _TestEnv) -> None:
@@ -371,7 +664,7 @@ async def test_manage_abstraction(
             merge_strategy: MergeStrategy | None,
         ) -> Receiver[Dispatch]:
             assert dispatch_type == "MANAGE_TEST"
-            assert merge_strategy is strategy
+            assert merge_strategy is None
             return channel.new_receiver()
 
         with patch(
