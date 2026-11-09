@@ -1,5 +1,11 @@
 # Dispatch Highlevel Interface Release Notes
 
+## Upgrading
+
+- The minimum `frequenz-channels` version will be 1.13.0. Until it is released, the dependency temporarily points at [PR 595](https://github.com/frequenz-floss/frequenz-channels-python/pull/595).
+- The minimum `frequenz-core` version is now 1.6.0, and the minimum `typing-extensions` version is now 4.16.0. These versions are required by `frequenz-channels` 1.13.0 too.
+- The internal timers now use `MonotonicTimer`, and channel shutdown uses `aclose`. These replace APIs that `frequenz-channels` v2 removes. The public dispatch API and behavior are unchanged.
+
 ## Enhancements
 
 - Improved docstring documentation across the project.
