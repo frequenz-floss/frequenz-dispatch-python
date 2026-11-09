@@ -18,7 +18,7 @@ from types import MappingProxyType
 
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
-from frequenz.channels.timer import SkipMissedAndResync, Timer
+from frequenz.channels.timer import MonotonicTimer, SkipMissedAndResync
 from frequenz.client.base.streaming import (
     StreamFatalError,
     StreamRetrying,
@@ -272,7 +272,9 @@ class DispatchScheduler(BackgroundService):
 
         # Streaming updates
         with closing(
-            Timer(timedelta(seconds=100), SkipMissedAndResync(), auto_start=False)
+            MonotonicTimer(
+                timedelta(seconds=100), SkipMissedAndResync(), auto_start=False
+            )
         ) as next_event_timer:
             # Initial fetch
             await self._fetch(next_event_timer)
@@ -381,7 +383,9 @@ class DispatchScheduler(BackgroundService):
                         case StreamFatalError():
                             pass
 
-    async def _execute_scheduled_event(self, dispatch: Dispatch, timer: Timer) -> None:
+    async def _execute_scheduled_event(
+        self, dispatch: Dispatch, timer: MonotonicTimer
+    ) -> None:
         """Execute a scheduled event and schedule the next one if any.
 
         Args:
@@ -403,7 +407,7 @@ class DispatchScheduler(BackgroundService):
 
         self._update_timer(timer)
 
-    async def _fetch(self, timer: Timer) -> None:
+    async def _fetch(self, timer: MonotonicTimer) -> None:
         """Fetch all relevant dispatches using list.
 
         This is used for the initial fetch and for re-fetching all dispatches
@@ -487,7 +491,10 @@ class DispatchScheduler(BackgroundService):
         self._initial_fetch_event.set()
 
     async def _update_dispatch_schedule_and_notify(
-        self, dispatch: Dispatch | None, old_dispatch: Dispatch | None, timer: Timer
+        self,
+        dispatch: Dispatch | None,
+        old_dispatch: Dispatch | None,
+        timer: MonotonicTimer,
     ) -> None:
         """Update the schedule for a dispatch.
 
@@ -556,7 +563,7 @@ class DispatchScheduler(BackgroundService):
         # We modified the schedule, so we need to reset the timer
         self._update_timer(timer)
 
-    def _update_timer(self, timer: Timer) -> None:
+    def _update_timer(self, timer: MonotonicTimer) -> None:
         """Update the timer to the next event."""
         if self._scheduled_events:
             due_at: datetime = self._scheduled_events[0].time
@@ -567,11 +574,11 @@ class DispatchScheduler(BackgroundService):
             # `QueueItem`'s own docstring on same-time start/stop ordering).
             # Once the first of the pair is processed, this recomputed
             # interval for the second can be exactly zero or slightly
-            # negative. `Timer.reset()` accepts that value without complaint,
-            # but a zero interval later crashes the timer's OWN drift
+            # negative. `MonotonicTimer.reset()` accepts that value without
+            # complaint, but a zero interval later crashes the timer's OWN drift
             # correction with a `ZeroDivisionError` in
             # `MissedTickPolicy.calculate_next_tick_time` (`drift % interval`).
-            # Floor it to the smallest positive interval `Timer` itself
+            # Floor it to the smallest positive interval `MonotonicTimer` itself
             # accepts, instead: the due event is already due, so it fires on
             # the very next tick either way, but doesn't poison the timer's
             # internal state.
@@ -582,7 +589,7 @@ class DispatchScheduler(BackgroundService):
         else:
             # With nothing queued, leave the timer running at its last
             # interval, which can be as small as the microsecond floor above.
-            # `Timer` is periodic, so it then keeps firing at that interval
+            # `MonotonicTimer` is periodic, so it then keeps firing at that interval
             # until a new dispatch event is scheduled -- potentially for
             # hours, burning CPU for no reason. Park it at a long interval
             # instead; the next call to `_update_timer()` (from whichever
