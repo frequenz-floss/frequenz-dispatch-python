@@ -12,7 +12,7 @@ from typing import Any, Awaitable
 from warnings import warn
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
-from frequenz.channels.timer import SkipMissedAndDrift, Timer
+from frequenz.channels.timer import MonotonicTimer, SkipMissedAndDrift
 from frequenz.client.dispatch.types import DispatchId, TargetComponents
 from frequenz.core.id import BaseId
 from frequenz.sdk.actor import Actor, BackgroundService
@@ -241,7 +241,7 @@ class ActorDispatcher(BackgroundService):
         )
 
         self._dispatch_rx = running_status_receiver
-        self._retry_timer_rx = Timer(retry_interval, SkipMissedAndDrift())
+        self._retry_timer_rx = MonotonicTimer(retry_interval, SkipMissedAndDrift())
         self._actor_factory = actor_factory
         self._actors: dict[DispatchActorId, ActorDispatcher.ActorAndChannel] = {}
         self._failed_dispatches: dict[DispatchActorId, Dispatch] = {}
@@ -313,7 +313,7 @@ class ActorDispatcher(BackgroundService):
         if actor_and_channel := self._actors.pop(identity, None):
             _logger.info("Stopping actor for dispatch type %r", stopping_dispatch.type)
             await actor_and_channel.actor.stop(msg)
-            await actor_and_channel.channel.close()
+            await actor_and_channel.channel.aclose()
         else:
             _logger.warning(
                 "Actor for dispatch type %r is not running, ignoring stop request",
