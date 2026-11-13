@@ -16,8 +16,9 @@ A small overview of the most important classes in this module:
 
 """
 
-from ._actor_dispatcher import ActorDispatcher, DispatchInfo
+from ._actor_dispatcher import ActorDispatcher, ContinuationCapable, DispatchInfo
 from ._bg_service import MergeStrategy
+from ._continuation import is_exact_continuation
 from ._dispatch import Dispatch
 from ._dispatcher import Dispatcher
 from ._event import Created, Deleted, DispatchEvent, Updated
@@ -31,8 +32,10 @@ __all__ = [
     "Updated",
     "Dispatch",
     "ActorDispatcher",
+    "ContinuationCapable",
     "DispatchInfo",
     "MergeStrategy",
     "MergeByType",
     "MergeByTypeTarget",
+    "is_exact_continuation",
 ]

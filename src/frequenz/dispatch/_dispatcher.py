@@ -314,7 +314,7 @@ class Dispatcher(BackgroundService):
         """
         return dispatch_type in self._actor_dispatchers
 
-    async def start_managing(
+    async def start_managing(  # pylint: disable=too-many-arguments
         self,
         dispatch_type: str,
         *,
@@ -322,6 +322,8 @@ class Dispatcher(BackgroundService):
             [DispatchInfo, Receiver[DispatchInfo]], Awaitable[Actor]
         ],
         merge_strategy: MergeStrategy | None = None,
+        continuation_predicate: Callable[[Dispatch, Dispatch], bool] | None = None,
+        continuation_accept_timeout: timedelta = timedelta(seconds=5),
         retry_interval: timedelta = timedelta(seconds=60),
     ) -> None:
         """Manage actors for a given dispatch type.
@@ -348,10 +350,23 @@ class Dispatcher(BackgroundService):
         the same instance.
         * `None` — No merging, each dispatch maps to a separate instance.
 
+        `continuation_predicate` is a separate, opt-in mechanism, not a
+        `merge_strategy`, and can be combined with any of the above (or with
+        `None`). This is the only way to enable continuation handovers: it
+        wires the `ActorDispatcher` this method builds with both the
+        predicate and the live dispatches snapshot a handover needs. See the
+        module docstring of `frequenz.dispatch._actor_dispatcher` for what a
+        handover is and when it happens.
+
         Args:
             dispatch_type: The type of the dispatch to manage.
             actor_factory: The factory to create actors.
             merge_strategy: The strategy to merge running intervals.
+            continuation_predicate: An opt-in predicate for continuation
+                handovers (normally `is_exact_continuation`). See
+                `ActorDispatcher`'s parameter of the same name.
+            continuation_accept_timeout: How long to wait for a candidate
+                actor to accept a continuation before giving up on it.
             retry_interval: The retry interval to use when actor creation fails.
         """
         dispatcher = self._actor_dispatchers.get(dispatch_type)
@@ -377,6 +392,13 @@ class Dispatcher(BackgroundService):
                 id_identity if merge_strategy is None else merge_strategy.identity
             ),
             retry_interval=retry_interval,
+            continuation_predicate=continuation_predicate,
+            dispatches_snapshot=(
+                self._bg_service.dispatches_snapshot
+                if continuation_predicate is not None
+                else None
+            ),
+            continuation_accept_timeout=continuation_accept_timeout,
         )
 
         if merge_strategy is not None:

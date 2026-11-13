@@ -14,6 +14,7 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from heapq import heapify, heappop, heappush
+from types import MappingProxyType
 
 import grpc.aio
 from frequenz.channels import Broadcast, Receiver, select, selected_from
@@ -156,6 +157,20 @@ class DispatchScheduler(BackgroundService):
     async def wait_for_initialization(self) -> None:
         """Wait for the initial fetch to complete."""
         await self._initial_fetch_event.wait()
+
+    def dispatches_snapshot(self) -> Mapping[DispatchId, Dispatch]:
+        """Return a read-only, live view of every dispatch currently known.
+
+        Used by `ActorDispatcher`'s opt-in `dispatches_snapshot` parameter,
+        to confirm a unique continuation pair -- see
+        `ActorDispatcher.continuation_predicate`.
+
+        Returns:
+            A live, read-only mapping (a `MappingProxyType` over the same
+                dict this scheduler mutates, so callers see updates but
+                cannot make any themselves).
+        """
+        return MappingProxyType(self._dispatches)
 
     # pylint: disable=redefined-builtin
     def new_lifecycle_events_receiver(self, type: str) -> Receiver[DispatchEvent]:
@@ -545,8 +560,39 @@ class DispatchScheduler(BackgroundService):
         """Update the timer to the next event."""
         if self._scheduled_events:
             due_at: datetime = self._scheduled_events[0].time
-            timer.reset(interval=due_at - datetime.now(timezone.utc))
+            interval = due_at - datetime.now(timezone.utc)
+            # Two scheduled events landing at (or within microseconds of) the
+            # exact same instant -- e.g. one dispatch's stop and another's
+            # start sharing a boundary -- is a normal, expected shape (see
+            # `QueueItem`'s own docstring on same-time start/stop ordering).
+            # Once the first of the pair is processed, this recomputed
+            # interval for the second can be exactly zero or slightly
+            # negative. `Timer.reset()` accepts that value without complaint,
+            # but a zero interval later crashes the timer's OWN drift
+            # correction with a `ZeroDivisionError` in
+            # `MissedTickPolicy.calculate_next_tick_time` (`drift % interval`).
+            # Floor it to the smallest positive interval `Timer` itself
+            # accepts, instead: the due event is already due, so it fires on
+            # the very next tick either way, but doesn't poison the timer's
+            # internal state.
+            min_interval = timedelta(microseconds=1)
+            interval = max(interval, min_interval)
+            timer.reset(interval=interval)
             _logger.debug("Next event scheduled at %s", self._scheduled_events[0].time)
+        else:
+            # With nothing queued, leave the timer running at its last
+            # interval, which can be as small as the microsecond floor above.
+            # `Timer` is periodic, so it then keeps firing at that interval
+            # until a new dispatch event is scheduled -- potentially for
+            # hours, burning CPU for no reason. Park it at a long interval
+            # instead; the next call to `_schedule_start`/`_schedule_stop`
+            # resets it to the real due time as soon as something is queued.
+            # Stay strictly below `asyncio.base_events.MAXIMUM_SELECT_TIMEOUT`
+            # (1 day): `asyncio`'s own selector treats a timeout at or above
+            # that as "sleep forever" and some test event loops (e.g.
+            # `async_solipsism`) raise for it.
+            timer.reset(interval=timedelta(hours=1))
+            _logger.debug("No events scheduled, parking the timer")
 
     def _remove_scheduled(self, dispatch: Dispatch) -> "QueueItem | None":
         """Remove a dispatch from the scheduled events.
