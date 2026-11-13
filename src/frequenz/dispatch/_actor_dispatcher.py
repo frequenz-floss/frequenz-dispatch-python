@@ -453,7 +453,7 @@ class ActorDispatcher(BackgroundService):
                     check_local_dispatches=True,
                 ):
                     await self._stop_actor(
-                        dispatch,
+                        stopping_dispatch,
                         previous_identity,
                         "Dispatch identity changed",
                     )
