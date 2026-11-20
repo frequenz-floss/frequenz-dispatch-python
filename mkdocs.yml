@@ -115,7 +115,7 @@ plugins:
           inventories:
             # See https://mkdocstrings.github.io/python/usage/#import for details
             - https://docs.python.org/3/objects.inv
-            - https://frequenz-floss.github.io/frequenz-channels-python/v1.6/objects.inv
+            - https://frequenz-floss.github.io/frequenz-channels-python/v1/objects.inv
             - https://frequenz-floss.github.io/frequenz-client-base-python/v0.11/objects.inv
             - https://frequenz-floss.github.io/frequenz-client-dispatch-python/v0.11/objects.inv
             - https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/objects.inv

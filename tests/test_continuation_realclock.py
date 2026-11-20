@@ -7,7 +7,7 @@ Deliberately NO `time_machine`, NO `async_solipsism`: this uses the DEFAULT
 asyncio event loop and genuine `datetime.now()`, with SHORT real dispatch
 durations (a few seconds), so the whole suite still runs in a few seconds
 while every clock involved -- `asyncio`'s own loop time and
-`DispatchScheduler`'s `Timer` -- is the SAME, single, real clock. This
+`DispatchScheduler`'s `MonotonicTimer` -- is the SAME, single, real clock. This
 exercises the real `Dispatcher.start_managing()`, the real
 `DispatchScheduler`, and the official `FakeClient` test double, end-to-end.
 See `test_continuation_handover.py` for the deterministic, millisecond-fast

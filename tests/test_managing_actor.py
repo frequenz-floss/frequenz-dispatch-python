@@ -169,7 +169,7 @@ async def identity_test_env(
         if actor_and_channel is None:
             continue
         await actor_and_channel.actor.stop("Test finished")
-        await actor_and_channel.channel.close()
+        await actor_and_channel.channel.aclose()
     # pylint: enable=protected-access
 
 
