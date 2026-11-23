@@ -9,7 +9,7 @@
 <!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 * `ActorDispatcher.ActorAndChannel` is no longer frozen and has a new required `current_dispatch` field. Code that builds it directly will break; use `ActorDispatcher` itself instead.
-* The minimum `frequenz-channels` version is now 1.13.0.
+* Dispatch now accepts `frequenz-channels >= 1.13.0, < 3`, including v2.
 * The minimum `frequenz-core` version is now 1.6.0, and the minimum `typing-extensions` version is now 4.16.0. These versions are required by `frequenz-channels` 1.13.0 too.
 * The internal timers now use `MonotonicTimer`, and channel shutdown uses `aclose`. These replace APIs that `frequenz-channels` v2 removes. The public dispatch API and behavior are unchanged.
 
