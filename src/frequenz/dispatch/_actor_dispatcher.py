@@ -19,7 +19,7 @@ from typing import Any, Awaitable, Protocol, runtime_checkable
 from warnings import warn
 
 from frequenz.channels import Broadcast, Receiver, Sender, select
-from frequenz.channels.timer import SkipMissedAndDrift, Timer
+from frequenz.channels.timer import MonotonicTimer, SkipMissedAndDrift
 from frequenz.client.dispatch.types import DispatchId, TargetComponents
 from frequenz.core.id import BaseId
 from frequenz.sdk.actor import Actor, BackgroundService
@@ -480,7 +480,7 @@ class ActorDispatcher(
         self._continuation_accept_timeout = continuation_accept_timeout
 
         self._dispatch_rx = running_status_receiver
-        self._retry_timer_rx = Timer(retry_interval, SkipMissedAndDrift())
+        self._retry_timer_rx = MonotonicTimer(retry_interval, SkipMissedAndDrift())
         self._actor_factory = actor_factory
         self._actors: dict[DispatchActorId, ActorDispatcher.ActorStatus] = {}
         self._dispatch_status: dict[DispatchId, ActorDispatcher.DispatchStatus] = {}
@@ -722,7 +722,7 @@ class ActorDispatcher(
         """
         del self._actors[predecessor_identity]
         await predecessor.actor.stop("continuation outcome unknown")
-        await predecessor.channel.close()
+        await predecessor.channel.aclose()
 
     async def _try_handover(
         self, dispatch: Dispatch
@@ -847,7 +847,7 @@ class ActorDispatcher(
         if actor_and_channel is not None:
             _logger.info("Stopping actor for dispatch type %r", stopping_dispatch.type)
             await actor_and_channel.actor.stop(msg)
-            await actor_and_channel.channel.close()
+            await actor_and_channel.channel.aclose()
         elif identity in self._recently_continued:
             # A continuation handover already moved this identity's actor
             # elsewhere (see `_continue_actor`); its own stop arriving here

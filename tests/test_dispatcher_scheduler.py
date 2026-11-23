@@ -14,7 +14,7 @@ from random import randint
 import async_solipsism
 import time_machine
 from frequenz.channels import Receiver
-from frequenz.channels.timer import Timer
+from frequenz.channels.timer import MonotonicTimer
 from frequenz.client.common.microgrid import MicrogridId
 from frequenz.client.dispatch.recurrence import RecurrenceRule
 from frequenz.client.dispatch.test.client import FakeClient, to_create_params
@@ -68,7 +68,7 @@ def test_update_timer_floors_already_due_interval(
             stop_event=False,
         )
     )
-    timer = mocker.create_autospec(Timer, instance=True)
+    timer = mocker.create_autospec(MonotonicTimer, instance=True)
 
     scheduler._update_timer(timer)  # pylint: disable=protected-access
 
@@ -82,7 +82,7 @@ def test_update_timer_parks_timer_when_queue_is_empty(
 ) -> None:
     """Don't leave a tiny interval behind once no events are queued."""
     scheduler = DispatchScheduler(microgrid_id=microgrid_id, client=client)
-    timer = mocker.create_autospec(Timer, instance=True)
+    timer = mocker.create_autospec(MonotonicTimer, instance=True)
 
     scheduler._update_timer(timer)  # pylint: disable=protected-access
 
