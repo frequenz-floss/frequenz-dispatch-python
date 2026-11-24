@@ -374,7 +374,7 @@ class ActorDispatcher(
     """
 
     @dataclass(kw_only=True)
-    class ActorAndChannel:
+    class _ActorAndChannel:
         """An actor and its dispatch update sender."""
 
         actor: Actor
@@ -397,21 +397,21 @@ class ActorDispatcher(
         """
 
     @dataclass(frozen=True, kw_only=True)
-    class ActorStatus:
+    class _ActorStatus:
         """The running actor or failed dispatch for one actor identity."""
 
-        actor_and_channel: "ActorDispatcher.ActorAndChannel | None" = None
+        actor_and_channel: "ActorDispatcher._ActorAndChannel | None" = None
         failed_dispatch: Dispatch | None = None
 
     @dataclass(frozen=True, kw_only=True)
-    class DispatchStatus:
+    class _DispatchStatus:
         """The latest dispatch and identity routed for one dispatch ID."""
 
         dispatch: Dispatch
         identity: DispatchActorId
 
     @dataclass(frozen=True, kw_only=True)
-    class MergeContext:
+    class _MergeContext:
         """The merge filter and the dispatches it evaluates."""
 
         dispatch_filter: Callable[[Mapping[DispatchId, Dispatch], Dispatch], bool]
@@ -482,8 +482,8 @@ class ActorDispatcher(
         self._dispatch_rx = running_status_receiver
         self._retry_timer_rx = MonotonicTimer(retry_interval, SkipMissedAndDrift())
         self._actor_factory = actor_factory
-        self._actors: dict[DispatchActorId, ActorDispatcher.ActorStatus] = {}
-        self._dispatch_status: dict[DispatchId, ActorDispatcher.DispatchStatus] = {}
+        self._actors: dict[DispatchActorId, ActorDispatcher._ActorStatus] = {}
+        self._dispatch_status: dict[DispatchId, ActorDispatcher._DispatchStatus] = {}
         self._recently_continued: set[DispatchActorId] = set()
         """Identities whose actor was just re-keyed away by a continuation.
 
@@ -492,7 +492,7 @@ class ActorDispatcher(
         instead of WARNING. Each identity is removed from this set the first
         time that happens, so it can't grow without bound.
         """
-        self._merge_context: ActorDispatcher.MergeContext | None = None
+        self._merge_context: ActorDispatcher._MergeContext | None = None
 
     def start(self) -> None:
         """Start the background service."""
@@ -504,14 +504,14 @@ class ActorDispatcher(
         known_dispatches: Mapping[DispatchId, Dispatch],
     ) -> None:
         """Set the merge filter and its complete dispatch context."""
-        self._merge_context = ActorDispatcher.MergeContext(
+        self._merge_context = ActorDispatcher._MergeContext(
             dispatch_filter=dispatch_filter,
             known_dispatches=known_dispatches,
         )
 
     def _find_unique_continuation_candidate(
         self, dispatch: Dispatch
-    ) -> tuple[DispatchActorId, "ActorDispatcher.ActorAndChannel"] | None:
+    ) -> tuple[DispatchActorId, "ActorDispatcher._ActorAndChannel"] | None:
         """Find the single running actor `dispatch` exactly continues, if any.
 
         Args:
@@ -610,7 +610,7 @@ class ActorDispatcher(
     async def _continue_actor(
         self,
         predecessor_identity: DispatchActorId,
-        predecessor: "ActorDispatcher.ActorAndChannel",
+        predecessor: "ActorDispatcher._ActorAndChannel",
         dispatch: Dispatch,
     ) -> "_ContinuationOutcome":
         """Try to route `dispatch` to `predecessor`'s actor as a continuation.
@@ -691,7 +691,7 @@ class ActorDispatcher(
         new_identity = self._dispatch_identity(dispatch)
         del self._actors[predecessor_identity]
         predecessor.current_dispatch = dispatch
-        self._actors[new_identity] = ActorDispatcher.ActorStatus(
+        self._actors[new_identity] = ActorDispatcher._ActorStatus(
             actor_and_channel=predecessor
         )
         self._recently_continued.add(predecessor_identity)
@@ -706,7 +706,7 @@ class ActorDispatcher(
     async def _discard_unresponsive_predecessor(
         self,
         predecessor_identity: DispatchActorId,
-        predecessor: "ActorDispatcher.ActorAndChannel",
+        predecessor: "ActorDispatcher._ActorAndChannel",
     ) -> None:
         """Stop and remove a predecessor whose continuation outcome is unknown.
 
@@ -726,7 +726,7 @@ class ActorDispatcher(
 
     async def _try_handover(
         self, dispatch: Dispatch
-    ) -> tuple[bool, tuple[DispatchActorId, "ActorDispatcher.ActorAndChannel"] | None]:
+    ) -> tuple[bool, tuple[DispatchActorId, "ActorDispatcher._ActorAndChannel"] | None]:
         """Try a continuation handover for `dispatch`.
 
         Args:
@@ -807,13 +807,13 @@ class ActorDispatcher(
                 dispatch.type,
                 exc_info=e,
             )
-            self._actors[identity] = ActorDispatcher.ActorStatus(
+            self._actors[identity] = ActorDispatcher._ActorStatus(
                 failed_dispatch=dispatch
             )
         else:
             # No exception occurred, so we can add the actor to the list
-            self._actors[identity] = ActorDispatcher.ActorStatus(
-                actor_and_channel=ActorDispatcher.ActorAndChannel(
+            self._actors[identity] = ActorDispatcher._ActorStatus(
+                actor_and_channel=ActorDispatcher._ActorAndChannel(
                     actor=actor,
                     channel=channel,
                     sender=channel.new_sender(),
@@ -951,7 +951,7 @@ class ActorDispatcher(
                         "Dispatch identity changed",
                     )
 
-            self._dispatch_status[dispatch.id] = ActorDispatcher.DispatchStatus(
+            self._dispatch_status[dispatch.id] = ActorDispatcher._DispatchStatus(
                 dispatch=dispatch,
                 identity=identity,
             )
