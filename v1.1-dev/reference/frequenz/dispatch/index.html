@@ -696,67 +696,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#frequenz.dispatch.ActorDispatcher-classes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Classes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Classes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ActorAndChannel
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#frequenz.dispatch.ActorDispatcher.ActorStatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ActorStatus
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DispatchStatus
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#frequenz.dispatch.ActorDispatcher.MergeContext" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MergeContext
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#frequenz.dispatch.ActorDispatcher-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3303,7 +3242,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-374"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-374" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-374"></a><span class="sd">    """</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-375"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-375" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-375"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-376"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-376" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-376"></a>    <span class="nd">@dataclass</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-377"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-377" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-377"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">ActorAndChannel</span><span class="p">:</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-377"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-377" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-377"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">_ActorAndChannel</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-378"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-378" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-378"></a><span class="w">        </span><span class="sd">"""An actor and its dispatch update sender."""</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-379"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-379" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-379"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-380"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-380" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-380"></a>        <span class="n">actor</span><span class="p">:</span> <span class="n">Actor</span>
@@ -3326,21 +3265,21 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-397"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-397" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-397"></a><span class="sd">        """</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-398"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-398" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-398"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-399"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-399" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-399"></a>    <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-400"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-400" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-400"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">ActorStatus</span><span class="p">:</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-400"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-400" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-400"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">_ActorStatus</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-401"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-401" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-401"></a><span class="w">        </span><span class="sd">"""The running actor or failed dispatch for one actor identity."""</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-402"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-402" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-402"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-403"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-403" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-403"></a>        <span class="n">actor_and_channel</span><span class="p">:</span> <span class="s2">"ActorDispatcher.ActorAndChannel | None"</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-403"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-403" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-403"></a>        <span class="n">actor_and_channel</span><span class="p">:</span> <span class="s2">"ActorDispatcher._ActorAndChannel | None"</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-404"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-404" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-404"></a>        <span class="n">failed_dispatch</span><span class="p">:</span> <span class="n">Dispatch</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-405"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-405" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-405"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-406"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-406" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-406"></a>    <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-407"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-407" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-407"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">DispatchStatus</span><span class="p">:</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-407"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-407" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-407"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">_DispatchStatus</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-408"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-408" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-408"></a><span class="w">        </span><span class="sd">"""The latest dispatch and identity routed for one dispatch ID."""</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-409"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-409" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-409"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-410"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-410" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-410"></a>        <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-411"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-411" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-411"></a>        <span class="n">identity</span><span class="p">:</span> <span class="n">DispatchActorId</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-412"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-412" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-412"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-413"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-413" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-413"></a>    <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-414"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-414" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-414"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">MergeContext</span><span class="p">:</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-414"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-414" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-414"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">_MergeContext</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-415"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-415" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-415"></a><span class="w">        </span><span class="sd">"""The merge filter and the dispatches it evaluates."""</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-416"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-416" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-416"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-417"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-417" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-417"></a>        <span class="n">dispatch_filter</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">Dispatch</span><span class="p">],</span> <span class="n">Dispatch</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
@@ -3411,8 +3350,8 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-482"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-482" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-482"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_rx</span> <span class="o">=</span> <span class="n">running_status_receiver</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-483"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-483" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-483"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_retry_timer_rx</span> <span class="o">=</span> <span class="n">MonotonicTimer</span><span class="p">(</span><span class="n">retry_interval</span><span class="p">,</span> <span class="n">SkipMissedAndDrift</span><span class="p">())</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-484"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-484" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-484"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_actor_factory</span> <span class="o">=</span> <span class="n">actor_factory</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-485"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-485" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-485"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">ActorStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-486"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-486" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-486"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">DispatchStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-485"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-485" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-485"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_ActorStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-486"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-486" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-486"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_DispatchStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-487"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-487" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-487"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_recently_continued</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-488"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-488" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-488"></a><span class="w">        </span><span class="sd">"""Identities whose actor was just re-keyed away by a continuation.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-489"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-489" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-489"></a>
@@ -3421,7 +3360,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-492"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-492" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-492"></a><span class="sd">        instead of WARNING. Each identity is removed from this set the first</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-493"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-493" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-493"></a><span class="sd">        time that happens, so it can't grow without bound.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-494"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-494" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-494"></a><span class="sd">        """</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-495"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-495" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-495"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_merge_context</span><span class="p">:</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">MergeContext</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-495"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-495" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-495"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_merge_context</span><span class="p">:</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_MergeContext</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-496"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-496" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-496"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-497"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-497" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-497"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-498"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-498" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-498"></a><span class="w">        </span><span class="sd">"""Start the background service."""</span>
@@ -3433,14 +3372,14 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-504"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-504" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-504"></a>        <span class="n">known_dispatches</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">Dispatch</span><span class="p">],</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-505"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-505" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-505"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-506"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-506" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-506"></a><span class="w">        </span><span class="sd">"""Set the merge filter and its complete dispatch context."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-507"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-507" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-507"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_merge_context</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">MergeContext</span><span class="p">(</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-507"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-507" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-507"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_merge_context</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_MergeContext</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-508"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-508" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-508"></a>            <span class="n">dispatch_filter</span><span class="o">=</span><span class="n">dispatch_filter</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-509"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-509" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-509"></a>            <span class="n">known_dispatches</span><span class="o">=</span><span class="n">known_dispatches</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-510"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-510" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-510"></a>        <span class="p">)</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-511"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-511" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-511"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-512"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-512" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-512"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_find_unique_continuation_candidate</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-513"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-513" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-513"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-514"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-514" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-514"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="s2">"ActorDispatcher.ActorAndChannel"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-514"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-514" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-514"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="s2">"ActorDispatcher._ActorAndChannel"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-515"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-515" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-515"></a><span class="w">        </span><span class="sd">"""Find the single running actor `dispatch` exactly continues, if any.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-516"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-516" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-516"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-517"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-517" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-517"></a><span class="sd">        Args:</span>
@@ -3539,7 +3478,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-610"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-610" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-610"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_continue_actor</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-611"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-611" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-611"></a>        <span class="bp">self</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-612"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-612" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-612"></a>        <span class="n">predecessor_identity</span><span class="p">:</span> <span class="n">DispatchActorId</span><span class="p">,</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-613"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-613" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-613"></a>        <span class="n">predecessor</span><span class="p">:</span> <span class="s2">"ActorDispatcher.ActorAndChannel"</span><span class="p">,</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-613"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-613" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-613"></a>        <span class="n">predecessor</span><span class="p">:</span> <span class="s2">"ActorDispatcher._ActorAndChannel"</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-614"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-614" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-614"></a>        <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-615"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-615" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-615"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"_ContinuationOutcome"</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-616"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-616" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-616"></a><span class="w">        </span><span class="sd">"""Try to route `dispatch` to `predecessor`'s actor as a continuation.</span>
@@ -3620,7 +3559,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-691"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-691" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-691"></a>        <span class="n">new_identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_identity</span><span class="p">(</span><span class="n">dispatch</span><span class="p">)</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-692"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-692" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-692"></a>        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">predecessor_identity</span><span class="p">]</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-693"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-693" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-693"></a>        <span class="n">predecessor</span><span class="o">.</span><span class="n">current_dispatch</span> <span class="o">=</span> <span class="n">dispatch</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-694"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-694" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-694"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">new_identity</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">ActorStatus</span><span class="p">(</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-694"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-694" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-694"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">new_identity</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_ActorStatus</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-695"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-695" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-695"></a>            <span class="n">actor_and_channel</span><span class="o">=</span><span class="n">predecessor</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-696"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-696" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-696"></a>        <span class="p">)</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-697"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-697" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-697"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_recently_continued</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">predecessor_identity</span><span class="p">)</span>
@@ -3635,7 +3574,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-706"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-706" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-706"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_discard_unresponsive_predecessor</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-707"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-707" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-707"></a>        <span class="bp">self</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-708"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-708" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-708"></a>        <span class="n">predecessor_identity</span><span class="p">:</span> <span class="n">DispatchActorId</span><span class="p">,</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-709"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-709" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-709"></a>        <span class="n">predecessor</span><span class="p">:</span> <span class="s2">"ActorDispatcher.ActorAndChannel"</span><span class="p">,</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-709"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-709" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-709"></a>        <span class="n">predecessor</span><span class="p">:</span> <span class="s2">"ActorDispatcher._ActorAndChannel"</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-710"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-710" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-710"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-711"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-711" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-711"></a><span class="w">        </span><span class="sd">"""Stop and remove a predecessor whose continuation outcome is unknown.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-712"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-712" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-712"></a>
@@ -3655,7 +3594,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-726"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-726" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-726"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-727"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-727" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-727"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_try_handover</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-728"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-728" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-728"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-729"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-729" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-729"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="s2">"ActorDispatcher.ActorAndChannel"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-729"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-729" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-729"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="s2">"ActorDispatcher._ActorAndChannel"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-730"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-730" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-730"></a><span class="w">        </span><span class="sd">"""Try a continuation handover for `dispatch`.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-731"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-731" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-731"></a>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-732"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-732" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-732"></a><span class="sd">        Args:</span>
@@ -3736,13 +3675,13 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-807"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-807" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-807"></a>                <span class="n">dispatch</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-808"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-808" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-808"></a>                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-809"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-809" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-809"></a>            <span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-810"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-810" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-810"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">identity</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">ActorStatus</span><span class="p">(</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-810"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-810" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-810"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">identity</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_ActorStatus</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-811"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-811" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-811"></a>                <span class="n">failed_dispatch</span><span class="o">=</span><span class="n">dispatch</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-812"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-812" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-812"></a>            <span class="p">)</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-813"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-813" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-813"></a>        <span class="k">else</span><span class="p">:</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-814"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-814" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-814"></a>            <span class="c1"># No exception occurred, so we can add the actor to the list</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-815"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-815" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-815"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">identity</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">ActorStatus</span><span class="p">(</span>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-816"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-816" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-816"></a>                <span class="n">actor_and_channel</span><span class="o">=</span><span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">ActorAndChannel</span><span class="p">(</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-815"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-815" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-815"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">[</span><span class="n">identity</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_ActorStatus</span><span class="p">(</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-816"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-816" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-816"></a>                <span class="n">actor_and_channel</span><span class="o">=</span><span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_ActorAndChannel</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-817"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-817" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-817"></a>                    <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-818"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-818" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-818"></a>                    <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-819"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-819" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-819"></a>                    <span class="n">sender</span><span class="o">=</span><span class="n">channel</span><span class="o">.</span><span class="n">new_sender</span><span class="p">(),</span>
@@ -3880,7 +3819,7 @@ the actor refuses, or <code>accept_continuation</code> raises or times out --
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-951"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-951" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-951"></a>                        <span class="s2">"Dispatch identity changed"</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-952"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-952" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-952"></a>                    <span class="p">)</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-953"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-953" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-953"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-954"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-954" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-954"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_status</span><span class="p">[</span><span class="n">dispatch</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">DispatchStatus</span><span class="p">(</span>
+</span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-954"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-954" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-954"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_status</span><span class="p">[</span><span class="n">dispatch</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_DispatchStatus</span><span class="p">(</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-955"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-955" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-955"></a>                <span class="n">dispatch</span><span class="o">=</span><span class="n">dispatch</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-956"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-956" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-956"></a>                <span class="n">identity</span><span class="o">=</span><span class="n">identity</span><span class="p">,</span>
 </span><span id="frequenz.dispatch.ActorDispatcher--source--__span-0-957"><a id="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-957" name="frequenz.dispatch.ActorDispatcher--source--__codelineno-0-957"></a>            <span class="p">)</span>
@@ -4070,415 +4009,7 @@ unless the class explicitly documents it is safe to do so.</p>
 
 </div>
 
-<h5 id="frequenz.dispatch.ActorDispatcher-classes">Classes<a href="#frequenz.dispatch.ActorDispatcher-classes" class="headerlink" title="Permanent link">¤</a></h5>
 
-<div class="doc doc-object doc-class">
-
-
-
-<h6 id="frequenz.dispatch.ActorDispatcher.ActorAndChannel" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">ActorAndChannel</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel" class="headerlink" title="Permanent link">¤</a></h6>
-
-
-    <div class="doc doc-contents ">
-
-
-
-        <p>An actor and its dispatch update sender.</p>
-
-
-
-
-
-
-
-
-              <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/frequenz/dispatch/_actor_dispatcher.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-376">376</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-377">377</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-378">378</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-379">379</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-380">380</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-381">381</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-382">382</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-383">383</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-384">384</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-385">385</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-386">386</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-387">387</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-388">388</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-389">389</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-390">390</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-391">391</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-392">392</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-393">393</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-394">394</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-395">395</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-396">396</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-397">397</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-376"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-376" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-376"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-377"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-377" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-377"></a><span class="k">class</span><span class="w"> </span><span class="nc">ActorAndChannel</span><span class="p">:</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-378"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-378" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-378"></a><span class="w">    </span><span class="sd">"""An actor and its dispatch update sender."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-379"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-379" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-379"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-380"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-380" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-380"></a>    <span class="n">actor</span><span class="p">:</span> <span class="n">Actor</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-381"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-381" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-381"></a><span class="w">    </span><span class="sd">"""The actor."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-382"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-382" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-382"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-383"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-383" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-383"></a>    <span class="n">channel</span><span class="p">:</span> <span class="n">Broadcast</span><span class="p">[</span><span class="n">DispatchInfo</span><span class="p">]</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-384"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-384" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-384"></a><span class="w">    </span><span class="sd">"""The channel for dispatch updates."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-385"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-385" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-385"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-386"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-386" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-386"></a>    <span class="n">sender</span><span class="p">:</span> <span class="n">Sender</span><span class="p">[</span><span class="n">DispatchInfo</span><span class="p">]</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-387"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-387" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-387"></a><span class="w">    </span><span class="sd">"""The sender for dispatch updates."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-388"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-388" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-388"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-389"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-389" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-389"></a>    <span class="n">current_dispatch</span><span class="p">:</span> <span class="n">Dispatch</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-390"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-390" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-390"></a><span class="w">    </span><span class="sd">"""The most recent dispatch this actor is known to be running under.</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-391"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-391" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-391"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-392"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-392" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-392"></a><span class="sd">    Updated on every ordinary same-identity update AND on every successful</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-393"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-393" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-393"></a><span class="sd">    continuation, so that `continuation_predicate` always compares a new</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-394"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-394" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-394"></a><span class="sd">    dispatch against the FRESHEST known state of a running actor (this is</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-395"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-395" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-395"></a><span class="sd">    what makes multi-step continuation chains work: a third dispatch is</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-396"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-396" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-396"></a><span class="sd">    compared against the second, not the first).</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__span-0-397"><a id="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-397" name="frequenz.dispatch.ActorDispatcher.ActorAndChannel--source--__codelineno-0-397"></a><span class="sd">    """</span>
-</span></code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-<h7 id="frequenz.dispatch.ActorDispatcher.ActorAndChannel-attributes">Attributes<a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel-attributes" class="headerlink" title="Permanent link">¤</a></h7>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h8 id="frequenz.dispatch.ActorDispatcher.ActorAndChannel.actor" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">actor</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel.actor" class="headerlink" title="Permanent link">¤</a></h8>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">actor</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.sdk.actor.Actor" href="https://frequenz-floss.github.io/frequenz-sdk-python/v1.0-pre/reference/frequenz/sdk/actor/#frequenz.sdk.actor.Actor">Actor</a></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>The actor.</p>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h8 id="frequenz.dispatch.ActorDispatcher.ActorAndChannel.channel" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">channel</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel.channel" class="headerlink" title="Permanent link">¤</a></h8>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">channel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Broadcast" href="https://frequenz-floss.github.io/frequenz-channels-python/v1/reference/frequenz/channels/#frequenz.channels.Broadcast">Broadcast</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
-
-
-  
-      dataclass
-   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">]</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>The channel for dispatch updates.</p>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h8 id="frequenz.dispatch.ActorDispatcher.ActorAndChannel.current_dispatch" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">current_dispatch</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel.current_dispatch" class="headerlink" title="Permanent link">¤</a></h8>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">current_dispatch</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.Dispatch
-
-
-  
-      dataclass
-   (frequenz.dispatch._dispatch.Dispatch)" href="#frequenz.dispatch.Dispatch">Dispatch</a></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>The most recent dispatch this actor is known to be running under.</p>
-<p>Updated on every ordinary same-identity update AND on every successful
-continuation, so that <code>continuation_predicate</code> always compares a new
-dispatch against the FRESHEST known state of a running actor (this is
-what makes multi-step continuation chains work: a third dispatch is
-compared against the second, not the first).</p>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h8 id="frequenz.dispatch.ActorDispatcher.ActorAndChannel.sender" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">sender</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.ActorAndChannel.sender" class="headerlink" title="Permanent link">¤</a></h8>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">sender</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="frequenz.channels.Sender" href="https://frequenz-floss.github.io/frequenz-channels-python/v1/reference/frequenz/channels/#frequenz.channels.Sender">Sender</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.dispatch.DispatchInfo
-
-
-  
-      dataclass
-   (frequenz.dispatch._actor_dispatcher.DispatchInfo)" href="#frequenz.dispatch.DispatchInfo">DispatchInfo</a></span><span class="p">]</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>The sender for dispatch updates.</p>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h6 id="frequenz.dispatch.ActorDispatcher.ActorStatus" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">ActorStatus</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.ActorStatus" class="headerlink" title="Permanent link">¤</a></h6>
-
-
-    <div class="doc doc-contents ">
-
-
-
-        <p>The running actor or failed dispatch for one actor identity.</p>
-
-
-
-
-
-
-
-
-              <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/frequenz/dispatch/_actor_dispatcher.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-399">399</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-400">400</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-401">401</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-402">402</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-403">403</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-404">404</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__span-0-399"><a id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-399" name="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-399"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__span-0-400"><a id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-400" name="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-400"></a><span class="k">class</span><span class="w"> </span><span class="nc">ActorStatus</span><span class="p">:</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__span-0-401"><a id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-401" name="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-401"></a><span class="w">    </span><span class="sd">"""The running actor or failed dispatch for one actor identity."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__span-0-402"><a id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-402" name="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-402"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__span-0-403"><a id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-403" name="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-403"></a>    <span class="n">actor_and_channel</span><span class="p">:</span> <span class="s2">"ActorDispatcher.ActorAndChannel | None"</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__span-0-404"><a id="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-404" name="frequenz.dispatch.ActorDispatcher.ActorStatus--source--__codelineno-0-404"></a>    <span class="n">failed_dispatch</span><span class="p">:</span> <span class="n">Dispatch</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span></code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h6 id="frequenz.dispatch.ActorDispatcher.DispatchStatus" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">DispatchStatus</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus" class="headerlink" title="Permanent link">¤</a></h6>
-
-
-    <div class="doc doc-contents ">
-
-
-
-        <p>The latest dispatch and identity routed for one dispatch ID.</p>
-
-
-
-
-
-
-
-
-              <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/frequenz/dispatch/_actor_dispatcher.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-406">406</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-407">407</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-408">408</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-409">409</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-410">410</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-411">411</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__span-0-406"><a id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-406" name="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-406"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__span-0-407"><a id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-407" name="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-407"></a><span class="k">class</span><span class="w"> </span><span class="nc">DispatchStatus</span><span class="p">:</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__span-0-408"><a id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-408" name="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-408"></a><span class="w">    </span><span class="sd">"""The latest dispatch and identity routed for one dispatch ID."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__span-0-409"><a id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-409" name="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-409"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__span-0-410"><a id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-410" name="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-410"></a>    <span class="n">dispatch</span><span class="p">:</span> <span class="n">Dispatch</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__span-0-411"><a id="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-411" name="frequenz.dispatch.ActorDispatcher.DispatchStatus--source--__codelineno-0-411"></a>    <span class="n">identity</span><span class="p">:</span> <span class="n">DispatchActorId</span>
-</span></code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h6 id="frequenz.dispatch.ActorDispatcher.MergeContext" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">MergeContext</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#frequenz.dispatch.ActorDispatcher.MergeContext" class="headerlink" title="Permanent link">¤</a></h6>
-
-
-    <div class="doc doc-contents ">
-
-
-
-        <p>The merge filter and the dispatches it evaluates.</p>
-
-
-
-
-
-
-
-
-              <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/frequenz/dispatch/_actor_dispatcher.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-413">413</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-414">414</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-415">415</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-416">416</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-417">417</a></span>
-<span class="normal"><a href="#frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-418">418</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__span-0-413"><a id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-413" name="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-413"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__span-0-414"><a id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-414" name="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-414"></a><span class="k">class</span><span class="w"> </span><span class="nc">MergeContext</span><span class="p">:</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__span-0-415"><a id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-415" name="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-415"></a><span class="w">    </span><span class="sd">"""The merge filter and the dispatches it evaluates."""</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__span-0-416"><a id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-416" name="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-416"></a>
-</span><span id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__span-0-417"><a id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-417" name="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-417"></a>    <span class="n">dispatch_filter</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">Dispatch</span><span class="p">],</span> <span class="n">Dispatch</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__span-0-418"><a id="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-418" name="frequenz.dispatch.ActorDispatcher.MergeContext--source--__codelineno-0-418"></a>    <span class="n">known_dispatches</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">Dispatch</span><span class="p">]</span>
-</span></code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
 <h5 id="frequenz.dispatch.ActorDispatcher-functions">Methods:<a href="#frequenz.dispatch.ActorDispatcher-functions" class="headerlink" title="Permanent link">¤</a></h5>
 
 <div class="doc doc-object doc-function">
@@ -5178,8 +4709,8 @@ trusted.</p>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-482"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-482" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-482"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_rx</span> <span class="o">=</span> <span class="n">running_status_receiver</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-483"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-483" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-483"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_retry_timer_rx</span> <span class="o">=</span> <span class="n">MonotonicTimer</span><span class="p">(</span><span class="n">retry_interval</span><span class="p">,</span> <span class="n">SkipMissedAndDrift</span><span class="p">())</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-484"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-484" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-484"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_actor_factory</span> <span class="o">=</span> <span class="n">actor_factory</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-485"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-485" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-485"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">ActorStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-486"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-486" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-486"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">DispatchStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-485"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-485" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-485"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_actors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_ActorStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-486"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-486" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-486"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">DispatchId</span><span class="p">,</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_DispatchStatus</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-487"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-487" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-487"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_recently_continued</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">DispatchActorId</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-488"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-488" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-488"></a><span class="w">    </span><span class="sd">"""Identities whose actor was just re-keyed away by a continuation.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-489"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-489" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-489"></a>
@@ -5188,7 +4719,7 @@ trusted.</p>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-492"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-492" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-492"></a><span class="sd">    instead of WARNING. Each identity is removed from this set the first</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-493"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-493" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-493"></a><span class="sd">    time that happens, so it can't grow without bound.</span>
 </span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-494"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-494" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-494"></a><span class="sd">    """</span>
-</span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-495"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-495" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-495"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_merge_context</span><span class="p">:</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">MergeContext</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="frequenz.dispatch.ActorDispatcher.__init__--source--__span-0-495"><a id="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-495" name="frequenz.dispatch.ActorDispatcher.__init__--source--__codelineno-0-495"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_merge_context</span><span class="p">:</span> <span class="n">ActorDispatcher</span><span class="o">.</span><span class="n">_MergeContext</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
