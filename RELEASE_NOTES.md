@@ -2,11 +2,9 @@
 
 ## Summary
 
-<!-- Here goes a general summary of what this release is about -->
+This release adds opt-in support for handing over a running actor between exactly adjacent dispatches, and adds support for `frequenz-channels` v2.0.0, while still supporting v1.13. It also fixes actors being left running when a dispatch's merge identity changes, and a scheduler timer crash.
 
 ## Upgrading
-
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 * `ActorDispatcher.ActorAndChannel` was exposed by mistake. This internal helper is now private and is no longer available under its old name.
 * Dispatch now accepts `frequenz-channels >= 1.13.0, < 3`, including v2.
@@ -14,8 +12,6 @@
 * The internal timers now use `MonotonicTimer`, and channel shutdown uses `aclose`. These replace APIs that `frequenz-channels` v2 removes.
 
 ## New Features
-
-<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 * Added opt-in support for reusing a continuation-capable actor across exactly adjacent, compatible dispatches, enabled only through `Dispatcher.start_managing(continuation_predicate=...)`. New public names: `ContinuationCapable`, `is_exact_continuation()`, `DispatchInfo.continuation_of` and `DispatchInfo.dispatch`. Ambiguous or unsupported handovers keep the normal stop/start behavior.
 
